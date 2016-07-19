@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ZhihuDaily</string>
+    <string name="shared_img" translatable="false">shared_img</string>
+</resources>
