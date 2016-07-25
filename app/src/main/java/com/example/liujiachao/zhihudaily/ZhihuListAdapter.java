@@ -12,6 +12,7 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.liujiachao.zhihudaily.mvp.view.BannerView;
 import com.example.liujiachao.zhihudaily.utils.Dater;
 
 import java.util.List;
@@ -33,6 +34,12 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private List<ZhihuItemInfo> zhihuItemList;
     private List<ZhihuTop> tops;
     private OnShowNewsDetail mlistener;
+
+    public ZhihuListAdapter(OnShowNewsDetail listener) {
+        mlistener = listener;
+        zhihuItemList = DB.findAll(ZhihuItemInfo.class);
+        tops = DB.findAll(ZhihuTop.class);
+    }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -105,8 +112,18 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
+    public int getItemViewType(int position) {
+        if(position == 0) {
+            return TYPE_BANNER;
+        } else {
+            return TYPE_ITEM;
+        }
+    }
+
+    @Override
     public int getItemCount() {
-        return 0;
+        return zhihuItemList.size() + 1;
+
     }
 
     public class BannerViewHolder extends RecyclerView.ViewHolder {

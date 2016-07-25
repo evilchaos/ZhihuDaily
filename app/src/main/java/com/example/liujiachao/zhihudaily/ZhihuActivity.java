@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 
+//访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
 public class ZhihuActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
@@ -24,7 +25,7 @@ public class ZhihuActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(context);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        zhihuListAdapter = new ZhihuListAdapter();
+        zhihuListAdapter = new ZhihuListAdapter(this);
         recyclerView.setAdapter(zhihuListAdapter);
 
 
