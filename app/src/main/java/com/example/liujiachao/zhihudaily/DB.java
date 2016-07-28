@@ -6,6 +6,7 @@ import io.realm.RealmResults;
 
 /**
  * Created by liujiachao on 2016/7/25.
+ * 操作数据库的方法都封装到该类里面去
  */
 public class DB {
     public static Realm realm;

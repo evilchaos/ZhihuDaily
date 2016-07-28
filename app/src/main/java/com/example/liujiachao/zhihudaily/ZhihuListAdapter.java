@@ -28,8 +28,7 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private static  int TYPE_DATE = 1;
     // view item
     private static int TYPE_ITEM = 2;
-    //footer item
-    private static int TYPE_FOOTER = 3;
+
 
     private List<ZhihuItemInfo> zhihuItemList;
     private List<ZhihuTop> tops;

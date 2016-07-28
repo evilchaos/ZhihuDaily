@@ -1,17 +1,25 @@
 package com.example.liujiachao.zhihudaily;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 
+import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
+
 //访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
-public class ZhihuActivity extends AppCompatActivity {
+public class ZhihuActivity extends AppCompatActivity implements OnShowNewsDetail {
     public RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private ZhihuListAdapter zhihuListAdapter;
+    private ConvenientBanner banner;
+    private ZhihuNewsPresenter presenter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,6 +27,8 @@ public class ZhihuActivity extends AppCompatActivity {
         initViews();
 
     }
+
+
 
     private void initViews() {
         Context context = getBaseContext();
@@ -28,7 +38,55 @@ public class ZhihuActivity extends AppCompatActivity {
         zhihuListAdapter = new ZhihuListAdapter(this);
         recyclerView.setAdapter(zhihuListAdapter);
 
+        //先加载banner（作为recyclerView的第一项），之后再初始化banner
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    OnListScrolled();
+                }
+            }
+        });
 
 
+
+
+    }
+
+    private void OnListScrolled() {
+        initBanner();
+        //滑到底了，得再重新加载数据
+        int lastVisiPos = layoutManager.findLastVisibleItemPosition();
+        if (lastVisiPos + 1 == zhihuListAdapter.getItemCount()) {
+            presenter.loadBefore();
+        }
+
+    }
+
+    private void initBanner() {
+        if (banner == null && recyclerView.getChildCount() != 0 &&
+                layoutManager.findFirstVisibleItemPosition() == 0) {
+            banner = (ConvenientBanner)layoutManager.findViewByPosition(0);
+            banner.setScrollDuration(500);
+            banner.startTurning(2000);
+        }
+    }
+
+
+    @Override
+    public void onShowNewsDetail(RecyclerView.ViewHolder holder) {
+
+        if (holder instanceof ZhihuListAdapter.ItemViewHolder) {
+            ZhihuListAdapter.ItemViewHolder itemViewHolder = (ZhihuListAdapter.ItemViewHolder)holder;
+            Intent intent = new Intent(ZhihuActivity.this,ZhihuNewsDetailActivity.class);
+            intent.putExtra("id", itemViewHolder.zhihuItemInfo.getId());
+            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
+             ZhihuActivity.this,itemViewHolder.mImage,"shared_img");
+
+            startActivity(intent);
+
+            itemViewHolder.mTitle.setTextColor(getColor(R.color.darker_gray));
+        }
     }
 }
