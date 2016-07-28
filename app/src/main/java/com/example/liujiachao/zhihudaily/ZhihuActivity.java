@@ -36,6 +36,7 @@ public class ZhihuActivity extends AppCompatActivity implements OnShowNewsDetail
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         zhihuListAdapter = new ZhihuListAdapter(this);
+        presenter = new ZhihuNewsPresenter();
         recyclerView.setAdapter(zhihuListAdapter);
 
         //先加载banner（作为recyclerView的第一项），之后再初始化banner
