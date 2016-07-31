@@ -25,4 +25,13 @@ public class DB {
 
         return realm.where(realmObjectClass).findAll();
     }
+
+    public static void Save(RealmObject realmObject) {
+        if (realm.isClosed()) {
+            realm = Realm.getDefaultInstance();
+        }
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(realmObject);
+        realm.commitTransaction();
+    }
 }

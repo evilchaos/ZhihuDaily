@@ -2,39 +2,49 @@ package com.example.liujiachao.zhihudaily.mvp.presenter;
 
 import android.content.Context;
 
-import com.example.liujiachao.zhihudaily.NewsView;
+import com.example.liujiachao.zhihudaily.API;
 import com.example.liujiachao.zhihudaily.OnLoadDataListener;
 import com.example.liujiachao.zhihudaily.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.ZhihuJson;
 import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
+import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 
 /**
  * Created by liujiachao on 2016/7/28.
  */
 public class ZhihuNewsPresenter implements OnLoadDataListener {
 
-    private ZhihuNewsView<ZhihuJson> mNewsView;
+    private ZhihuNewsView mNewsView;
     private ZhihuNewsModel mNewsDetail;
 
-    public void ZhihuNewsPresenter(Context context,){
+    public void ZhihuNewsPresenter(Context context,ZhihuNewsView mNewsView){
+        this.mNewsView = mNewsView;
+        mNewsDetail = new ZhihuNewsModel();
+
 
     }
-   public void loadNews() {
-
+   public void loadLatest() {
+        mNewsView.showProgress();
+        mNewsDetail.getZhihuNews(API.TYPE_LATEST,this);
 
     };
     public void loadBefore() {
+        mNewsDetail.getZhihuNews(API.TYPE_BEFORE,this);
 
     };
 
     @Override
     public void onSuccess() {
+        mNewsView.addZhihuNews(null);
+        mNewsView.hideProgress();
 
     }
 
     @Override
     public void onFailure(String msg) {
 
+        mNewsView.hideProgress();
+        mNewsView.loadFailde("load zhihu news failed");
     }
 }

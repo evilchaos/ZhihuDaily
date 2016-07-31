@@ -18,6 +18,7 @@ import io.realm.RealmObject;
 
 /**
  * Created by liujiachao on 2016/7/29.
+ * 封装了Gson,解析JSON数据
  */
 public class Json {
     public static Type token = new TypeToken<RealmList<RealmString>>(){}.getType();

@@ -2,23 +2,28 @@ package com.example.liujiachao.zhihudaily;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.widget.LinearLayout;
 
+
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
+import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 
 //访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
-public class ZhihuActivity extends AppCompatActivity implements OnShowNewsDetail {
+public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, OnShowNewsDetail,SwipeRefreshLayout.OnRefreshListener {
     public RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private ZhihuListAdapter zhihuListAdapter;
     private ConvenientBanner banner;
     private ZhihuNewsPresenter presenter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     @Override
@@ -32,11 +37,17 @@ public class ZhihuActivity extends AppCompatActivity implements OnShowNewsDetail
 
     private void initViews() {
         Context context = getBaseContext();
+        setContentView(R.layout.home_page);
         layoutManager = new LinearLayoutManager(context);
+        swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         zhihuListAdapter = new ZhihuListAdapter(this);
         presenter = new ZhihuNewsPresenter();
+        swipeRefreshLayout.setOnRefreshListener(this);
+        initBanner();
+        onRefresh();
         recyclerView.setAdapter(zhihuListAdapter);
 
         //先加载banner（作为recyclerView的第一项），之后再初始化banner
@@ -89,5 +100,38 @@ public class ZhihuActivity extends AppCompatActivity implements OnShowNewsDetail
 
             itemViewHolder.mTitle.setTextColor(getColor(R.color.darker_gray));
         }
+    }
+
+
+    //swipefreshlayout.onfreshlistener类中的方法,监听到刷新手势时，该方法被调用
+    @Override
+    public void onRefresh() {
+        presenter.loadLatest();
+
+    }
+
+    @Override
+    public void showProgress() {
+        if (swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(true);
+        }
+
+    }
+
+    @Override
+    public void addZhihuNews(ZhihuJson zhihuJson) {
+        zhihuListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void hideProgress() {
+        if(swipeRefreshLayout != null) {
+            swipeRefreshLayout.setRefreshing(false);
+        }
+    }
+
+    @Override
+    public void loadFailed(String msg) {
+        Snackbar.make(recyclerView,"网络出现了点问题",Snackbar.LENGTH_LONG);
     }
 }

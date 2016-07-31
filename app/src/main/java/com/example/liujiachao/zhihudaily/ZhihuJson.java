@@ -11,6 +11,8 @@ import io.realm.annotations.PrimaryKey;
 public class ZhihuJson extends RealmObject {
     @PrimaryKey
     private String date;
+
+
     private RealmList<ZhihuTop> zhihu_top;
     private RealmList<ZhihuItemInfo> zhihu_item_info;
 

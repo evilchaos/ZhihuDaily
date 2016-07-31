@@ -21,7 +21,11 @@ public class ZhihuItemInfo extends RealmObject {
     private String title;
     private RealmList<RealmString> images;
 
-    public ZhihuItemInfo(int date,int type) {
+    public ZhihuItemInfo() {
+
+    }
+
+    public  ZhihuItemInfo(int date,int type) {
         id = date;//for header we use date as id
         this.type = type;
     }
@@ -54,4 +58,7 @@ public class ZhihuItemInfo extends RealmObject {
         this.title = title;
     }
 
+    public void setImages(RealmList<RealmString> images) {
+        this.images = images;
+    }
 }
