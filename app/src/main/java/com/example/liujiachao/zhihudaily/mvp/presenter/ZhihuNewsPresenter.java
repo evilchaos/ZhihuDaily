@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.liujiachao.zhihudaily.API;
 import com.example.liujiachao.zhihudaily.OnLoadDataListener;
+import com.example.liujiachao.zhihudaily.ZhihuActivity;
 import com.example.liujiachao.zhihudaily.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.ZhihuJson;
@@ -18,7 +19,10 @@ public class ZhihuNewsPresenter implements OnLoadDataListener {
     private ZhihuNewsView mNewsView;
     private ZhihuNewsModel mNewsDetail;
 
-    public void ZhihuNewsPresenter(Context context,ZhihuNewsView mNewsView){
+
+
+
+    public void ZhihuNewsPresenter(ZhihuNewsView mNewsView){
         this.mNewsView = mNewsView;
         mNewsDetail = new ZhihuNewsModel();
 
@@ -45,6 +49,6 @@ public class ZhihuNewsPresenter implements OnLoadDataListener {
     public void onFailure(String msg) {
 
         mNewsView.hideProgress();
-        mNewsView.loadFailde("load zhihu news failed");
+        mNewsView.loadFailed("load zhihu news failed");
     }
 }

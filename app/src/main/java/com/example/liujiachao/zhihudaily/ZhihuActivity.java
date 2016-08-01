@@ -16,6 +16,9 @@ import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 
+import io.realm.Realm;
+import io.realm.RealmConfiguration;
+
 //访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
 public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, OnShowNewsDetail,SwipeRefreshLayout.OnRefreshListener {
     public RecyclerView recyclerView;
@@ -34,17 +37,19 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     }
 
 
-
     private void initViews() {
         Context context = getBaseContext();
         setContentView(R.layout.home_page);
+        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
+        Realm.setDefaultConfiguration(realmConfiguration);
+        DB.realm = Realm.getDefaultInstance();
         layoutManager = new LinearLayoutManager(context);
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         zhihuListAdapter = new ZhihuListAdapter(this);
-        presenter = new ZhihuNewsPresenter();
+        presenter = new ZhihuNewsPresenter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
         initBanner();
         onRefresh();
