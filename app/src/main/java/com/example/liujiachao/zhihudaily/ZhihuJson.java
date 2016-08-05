@@ -13,15 +13,15 @@ public class ZhihuJson extends RealmObject {
     private String date;
 
 
-    private RealmList<ZhihuTop> topList;
-    private RealmList<ZhihuItemInfo> infoList;
+    private RealmList<ZhihuTop> top_stories;
+    private RealmList<ZhihuItemInfo> stories;
 
-    public RealmList<ZhihuItemInfo> getInfoList(){
-        return infoList;
+    public RealmList<ZhihuItemInfo> getStories(){
+        return stories;
     }
 
-    public RealmList<ZhihuTop> getTopList() {
-        return topList;
+    public RealmList<ZhihuTop> getTop_stories() {
+        return top_stories;
     }
 
     public String getDate() {
@@ -32,12 +32,12 @@ public class ZhihuJson extends RealmObject {
         this.date = date;
     }
 
-    public void setInfoList(RealmList<ZhihuItemInfo> infoList) {
-        this.infoList = infoList;
+    public void setStories(RealmList<ZhihuItemInfo> infoList) {
+        this.stories = stories;
     }
 
-    public void setTopList(RealmList<ZhihuTop> topList) {
-        this.topList = topList;
+    public void setTop_stories(RealmList<ZhihuTop> topList) {
+        this.top_stories = topList;
     }
 
 

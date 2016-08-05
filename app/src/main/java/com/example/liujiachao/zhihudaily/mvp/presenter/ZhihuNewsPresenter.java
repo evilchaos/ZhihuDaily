@@ -22,9 +22,9 @@ public class ZhihuNewsPresenter implements OnLoadDataListener {
 
 
 
-    public void ZhihuNewsPresenter(ZhihuNewsView mNewsView){
+    public  ZhihuNewsPresenter(ZhihuNewsView mNewsView){
         this.mNewsView = mNewsView;
-        mNewsDetail = new ZhihuNewsModel();
+        this.mNewsDetail = new ZhihuNewsModel();
 
 
     }

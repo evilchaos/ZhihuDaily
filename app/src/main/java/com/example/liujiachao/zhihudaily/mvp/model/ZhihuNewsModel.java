@@ -1,5 +1,7 @@
 package com.example.liujiachao.zhihudaily.mvp.model;
 
+import android.util.Log;
+
 import com.example.liujiachao.zhihudaily.API;
 import com.example.liujiachao.zhihudaily.DB;
 import com.example.liujiachao.zhihudaily.Json;

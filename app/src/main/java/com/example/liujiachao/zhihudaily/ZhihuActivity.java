@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 
@@ -27,6 +28,7 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     private ConvenientBanner banner;
     private ZhihuNewsPresenter presenter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private ZhihuNewsModel zhihuNewsModel;
 
 
     @Override
@@ -49,6 +51,7 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         zhihuListAdapter = new ZhihuListAdapter(this);
+        zhihuNewsModel = new ZhihuNewsModel();
         presenter = new ZhihuNewsPresenter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
         initBanner();
