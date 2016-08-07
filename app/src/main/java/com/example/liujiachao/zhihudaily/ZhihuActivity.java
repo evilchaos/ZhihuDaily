@@ -51,6 +51,8 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         zhihuListAdapter = new ZhihuListAdapter(this);
+        recyclerView.setAdapter(zhihuListAdapter);
+        recyclerView.setAdapter(zhihuListAdapter);
         zhihuNewsModel = new ZhihuNewsModel();
         presenter = new ZhihuNewsPresenter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
