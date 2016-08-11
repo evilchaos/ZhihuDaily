@@ -17,6 +17,8 @@ import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -52,7 +54,6 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
         recyclerView.setLayoutManager(layoutManager);
         zhihuListAdapter = new ZhihuListAdapter(this);
         recyclerView.setAdapter(zhihuListAdapter);
-        recyclerView.setAdapter(zhihuListAdapter);
         zhihuNewsModel = new ZhihuNewsModel();
         presenter = new ZhihuNewsPresenter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -70,9 +71,6 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
                 }
             }
         });
-
-
-
 
     }
 

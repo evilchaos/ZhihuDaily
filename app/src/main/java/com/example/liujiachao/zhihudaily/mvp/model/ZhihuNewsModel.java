@@ -5,19 +5,27 @@ import android.util.Log;
 import com.example.liujiachao.zhihudaily.API;
 import com.example.liujiachao.zhihudaily.DB;
 import com.example.liujiachao.zhihudaily.Json;
+import com.example.liujiachao.zhihudaily.NewsItem;
 import com.example.liujiachao.zhihudaily.OnLoadDataListener;
 import com.example.liujiachao.zhihudaily.OnLoadDetailListener;
 import com.example.liujiachao.zhihudaily.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.ZhihuJson;
+import com.example.liujiachao.zhihudaily.ZhihuListAdapter;
 import com.example.liujiachao.zhihudaily.ZhihuTop;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.realm.Realm;
+import io.realm.RealmList;
 import io.realm.Sort;
 import okhttp3.Call;
 import okhttp3.Response;
+
+import static com.example.liujiachao.zhihudaily.DB.saveList;
 
 /**
  * Created by liujiachao on 2016/7/29.
@@ -91,7 +99,29 @@ public class ZhihuNewsModel {
             realm.copyToRealmOrUpdate(zhihuJson);
             realm.where(ZhihuJson.class).findAllSorted("date", Sort.DESCENDING);
             realm.commitTransaction();
+
+            List<NewsItem> list = getItemList(zhihuJson);
+            DB.saveList(list);
         }
+    }
+
+    private List<NewsItem> getItemList(ZhihuJson zhihuJson) {
+        List<NewsItem> list = new ArrayList<>();
+        NewsItem newsItem = new NewsItem();
+        String date = zhihuJson.getDate();
+        newsItem.setType(ZhihuListAdapter.TYPE_DATE);
+        newsItem.setDate(date);
+        list.add(newsItem);
+
+        RealmList<ZhihuItemInfo> stories = zhihuJson.getStories();
+        for(ZhihuItemInfo info : stories) {
+            NewsItem tmp = new NewsItem();
+            tmp.setDate(date);
+            tmp.setType(ZhihuListAdapter.TYPE_ITEM);
+            tmp.setItemInfo(info);
+            list.add(tmp);
+        }
+        return list;
     }
 
     public void getZhihuNewsDetail(final ZhihuItemInfo zhihuItemInfo, final OnLoadDetailListener listener) {

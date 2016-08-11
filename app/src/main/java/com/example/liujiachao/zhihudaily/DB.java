@@ -1,5 +1,7 @@
 package com.example.liujiachao.zhihudaily;
 
+import java.util.List;
+
 import io.realm.Realm;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
@@ -32,6 +34,15 @@ public class DB {
         }
         realm.beginTransaction();
         realm.copyToRealmOrUpdate(realmObject);
+        realm.commitTransaction();
+    }
+
+    public static <T extends RealmObject> void saveList(List<T> realmObjects) {
+        if (realm.isClosed()){
+            realm = Realm.getDefaultInstance();
+        }
+        realm.beginTransaction();
+        realm.copyToRealmOrUpdate(realmObjects);
         realm.commitTransaction();
     }
 }
