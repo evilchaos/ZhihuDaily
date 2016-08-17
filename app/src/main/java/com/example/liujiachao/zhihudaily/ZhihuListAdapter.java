@@ -56,9 +56,6 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             View view = inflater.inflate(R.layout.zhihu_scroll_banner,parent,false);
             return new BannerViewHolder(view);
 
-        } else if(viewType == TYPE_DATE) {
-            View view = inflater.inflate(R.layout.zhihu_date,parent,false);
-            return new DateViewHolder(view);
         } else  {
             View view = inflater.inflate(R.layout.news_item,parent,false);
             return new  ItemViewHolder(view);
@@ -70,37 +67,55 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Context context = holder.itemView.getContext();
 
-        if(holder instanceof DateViewHolder) {
-            final DateViewHolder dateViewHolder = (DateViewHolder) holder;
-                dateViewHolder.DateText.setText(getNewsLabel(news.get(position - 1).getDate()));
-        } else if (holder instanceof BannerViewHolder) {
-            BannerViewHolder bannerViewHolder = (BannerViewHolder)holder;
-            bannerViewHolder.banner.setPages(new CBViewHolderCreator<BannerView>() {
-                @Override
-                public BannerView createHolder() {
-                    return new BannerView();
-                }
-            },tops);
-                    //.setPageIndicator(new int[]{R.drawable.ic_page_indicator,R.drawable.ic_page_indicator_focused});
-            bannerViewHolder.banner.notifyDataSetChanged();
-        } else if (holder instanceof ItemViewHolder){
-            final ItemViewHolder itemViewHolder = (ItemViewHolder)holder;
-            itemViewHolder.mTitle.setText(news.get(position -1).getItemInfo().getTitle());
-            itemViewHolder.zhihuItemInfo = news.get(position -1).getItemInfo();
-            Glide.with(context).load(news.get(position -1).getItemInfo().getImages().get(0).getVal()).
-                    diskCacheStrategy(DiskCacheStrategy.ALL).crossFade().
-                    into(itemViewHolder.mImage);
-            itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-                    if(mlistener != null) {
-                        mlistener.onShowNewsDetail(itemViewHolder);
+        if (holder instanceof BannerViewHolder) {
+                BannerViewHolder bannerViewHolder = (BannerViewHolder)holder;
+                bannerViewHolder.banner.setPages(new CBViewHolderCreator<BannerView>() {
+                    @Override
+                    public BannerView createHolder() {
+                        return new BannerView();
+                    }
+                },tops);
+                        //.setPageIndicator(new int[]{R.drawable.ic_page_indicator,R.drawable.ic_page_indicator_focused});
+                bannerViewHolder.banner.notifyDataSetChanged();
+            } else if (holder instanceof ItemViewHolder){
+                final ItemViewHolder itemViewHolder = (ItemViewHolder)holder;
+                if(position == 1) {
+                    itemViewHolder.header.setText(" 今日热闻");
+                    itemViewHolder.header.setClickable(false);
+                    itemViewHolder.mItem.setVisibility(View.GONE);
+                    itemViewHolder.header.setVisibility(View.VISIBLE);
+                } else {
+                    if((news.get(position -1).getDate()).equals(news.get(position - 2).getDate())) {
+                        itemViewHolder.header.setVisibility(View.GONE);
+                        itemViewHolder.mItem.setVisibility(View.VISIBLE);
+                        itemViewHolder.mTitle.setText(news.get(position - 1).getTitle());
+                        Glide.with(context).load(news.get(position - 1).getImage())
+                                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                                .crossFade().into(itemViewHolder.mImage);
+                    } else {
+                        itemViewHolder.header.setText(getNewsLabel(news.get(position -1).getDate()));
+                        itemViewHolder.header.setClickable(false);
+                        itemViewHolder.header.setVisibility(View.VISIBLE);
+                        itemViewHolder.mItem.setVisibility(View.GONE);
                     }
                 }
-            });
 
-        }
+//                itemViewHolder.mTitle.setText(news.get(position -1).getItemInfo().getTitle());
+//                itemViewHolder.zhihuItemInfo = news.get(position -1).getItemInfo();
+//                Glide.with(context).load(news.get(position -1).getItemInfo().getImages().get(0).getVal()).
+//                        diskCacheStrategy(DiskCacheStrategy.ALL).crossFade().
+//                        into(itemViewHolder.mImage);
+                itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        if(mlistener != null) {
+                            mlistener.onShowNewsDetail(itemViewHolder);
+                        }
+                    }
+                });
+
+            }
 
     }
 
@@ -108,8 +123,6 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public int getItemViewType(int position) {
         if(position == 0) {
             return TYPE_BANNER;
-        } else if(news.get(position -1).getType() == TYPE_DATE){
-            return TYPE_DATE;
         } else {
             return TYPE_ITEM;
         }
@@ -146,11 +159,14 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
         public ItemViewHolder (View view) {
             super(view);
+            header = (TextView)view.findViewById(R.id.story_header);
             mImage =(ImageView)view.findViewById(R.id.news_img);
             mTitle = (TextView)view.findViewById(R.id.news_title);
             mItem = view.findViewById(R.id.news_item);
 
         }
+
+        public TextView header;
         public ImageView mImage;
         public TextView mTitle;
         public View mItem;

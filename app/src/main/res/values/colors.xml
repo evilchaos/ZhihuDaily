@@ -6,6 +6,7 @@
     <color name="lighter_gray">#ddd</color>
     <!-- From: file:/usr/local/google/buildbot/src/googleplex-android/mnc-supportlib-release/frameworks/support/v7/cardview/res/values/colors.xml -->
         <eat-comment/>
+        <color name="blue">#00a2ea</color>
         <color name="cardview_dark_background">#FF202020</color>
         <color name="cardview_light_background">#FFFAFAFA</color>
         <color name="cardview_shadow_end_color">#03000000</color>

@@ -1,5 +1,6 @@
 package com.example.liujiachao.zhihudaily.mvp.model;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.example.liujiachao.zhihudaily.API;
@@ -8,15 +9,18 @@ import com.example.liujiachao.zhihudaily.Json;
 import com.example.liujiachao.zhihudaily.NewsItem;
 import com.example.liujiachao.zhihudaily.OnLoadDataListener;
 import com.example.liujiachao.zhihudaily.OnLoadDetailListener;
+import com.example.liujiachao.zhihudaily.SPSave;
 import com.example.liujiachao.zhihudaily.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.ZhihuJson;
 import com.example.liujiachao.zhihudaily.ZhihuListAdapter;
 import com.example.liujiachao.zhihudaily.ZhihuTop;
+import com.example.liujiachao.zhihudaily.utils.Dater;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -35,7 +39,7 @@ public class ZhihuNewsModel {
     private int type;
     //连接请求时间限制,超过该时间则超时，返回错误；否则重新发起连接请求
     public static final int GET_DURATION = 2000;
-
+    private String date;
     private long lastTime;
 
     public void getZhihuNews(final int type, final OnLoadDataListener listener) {
@@ -74,6 +78,10 @@ public class ZhihuNewsModel {
                 ZhihuJson zhihuJson = Json.parseZhihuNews(response.body().string());
                 //将这些数据插入到数据库中
                 saveZhihuNews(zhihuJson);
+                date = zhihuJson.getDate();
+                if(type == API.TYPE_BEFORE) {
+                    SPSave.save("DATE",date);
+                }
 
                 return response.body().string();
             }
@@ -84,12 +92,14 @@ public class ZhihuNewsModel {
             //zhy封装的okhttp库--okhttputils
             OkHttpUtils.get().url(API.NEWS_LATEST).tag(API.TAG_ZHIHU).build().execute(callback);
         } else if (type == API.TYPE_BEFORE) {
-            OkHttpUtils.get().url(API.NEWS_BEFORE).tag(API.TAG_ZHIHU).build().execute(callback);
+            date = SPSave.get("DATE",date);
+            OkHttpUtils.get().url(API.NEWS_BEFORE + date).tag(API.TAG_ZHIHU).build().execute(callback);
         }
     }
 
     private void saveZhihuNews(ZhihuJson zhihuJson) {
         if(zhihuJson != null) {
+            List<NewsItem> list = getItemList(zhihuJson);
             Realm realm = Realm.getDefaultInstance();
             realm.beginTransaction();
             //如果是新消息，那么banner栏保存的数据也要清除，因为这些数据可能已过时
@@ -97,11 +107,18 @@ public class ZhihuNewsModel {
                 realm.where(ZhihuTop.class).findAll().clear();
             }
             realm.copyToRealmOrUpdate(zhihuJson);
+            realm.copyToRealmOrUpdate(list);
             realm.where(ZhihuJson.class).findAllSorted("date", Sort.DESCENDING);
             realm.commitTransaction();
 
-            List<NewsItem> list = getItemList(zhihuJson);
-            DB.saveList(list);
+            //List<NewsItem> list = getItemList(zhihuJson);
+            //DB.saveList(list);
+//            if (realm.isClosed()){
+//                realm = Realm.getDefaultInstance();
+//            }
+//            realm.beginTransaction();
+//            realm.copyToRealmOrUpdate(list);
+//            realm.commitTransaction();
         }
     }
 
@@ -109,17 +126,19 @@ public class ZhihuNewsModel {
         List<NewsItem> list = new ArrayList<>();
         NewsItem newsItem = new NewsItem();
         String date = zhihuJson.getDate();
-        newsItem.setType(ZhihuListAdapter.TYPE_DATE);
-        newsItem.setDate(date);
-        list.add(newsItem);
+        //newsItem.setType(ZhihuListAdapter.TYPE_DATE);
+        //newsItem.setDate(date);
+        //list.add(newsItem);
 
         RealmList<ZhihuItemInfo> stories = zhihuJson.getStories();
         for(ZhihuItemInfo info : stories) {
             NewsItem tmp = new NewsItem();
             tmp.setDate(date);
-            tmp.setType(ZhihuListAdapter.TYPE_ITEM);
-            tmp.setItemInfo(info);
+            tmp.setTitle(info.getTitle());
+            tmp.setId(info.getId());
+            tmp.setImage(info.getImages().get(0).getVal());
             list.add(tmp);
+
         }
         return list;
     }
