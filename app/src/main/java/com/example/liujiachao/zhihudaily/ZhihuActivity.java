@@ -18,6 +18,7 @@ import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.Realm;
@@ -101,8 +102,15 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     public void onShowNewsDetail(RecyclerView.ViewHolder holder) {
 
         if (holder instanceof ZhihuListAdapter.ItemViewHolder) {
+            ArrayList<Integer> idList = new ArrayList<Integer>();
+            List<NewsItem> newsItem = DB.findAll(NewsItem.class);
+            for (NewsItem item : newsItem) {
+                idList.add(item.getId());
+            }
+
             ZhihuListAdapter.ItemViewHolder itemViewHolder = (ZhihuListAdapter.ItemViewHolder)holder;
             Intent intent = new Intent(ZhihuActivity.this,ZhihuNewsDetailActivity.class);
+            intent.putIntegerArrayListExtra("all_id",idList);
             intent.putExtra("id", itemViewHolder.zhihuItemInfo.getId());
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
              ZhihuActivity.this,itemViewHolder.mImage,"shared_img");

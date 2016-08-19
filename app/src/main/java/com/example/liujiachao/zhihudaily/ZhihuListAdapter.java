@@ -99,12 +99,6 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         itemViewHolder.mItem.setVisibility(View.GONE);
                     }
                 }
-
-//                itemViewHolder.mTitle.setText(news.get(position -1).getItemInfo().getTitle());
-//                itemViewHolder.zhihuItemInfo = news.get(position -1).getItemInfo();
-//                Glide.with(context).load(news.get(position -1).getItemInfo().getImages().get(0).getVal()).
-//                        diskCacheStrategy(DiskCacheStrategy.ALL).crossFade().
-//                        into(itemViewHolder.mImage);
                 itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
                     @Override

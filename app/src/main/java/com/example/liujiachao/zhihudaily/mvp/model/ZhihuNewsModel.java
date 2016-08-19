@@ -9,6 +9,7 @@ import com.example.liujiachao.zhihudaily.Json;
 import com.example.liujiachao.zhihudaily.NewsItem;
 import com.example.liujiachao.zhihudaily.OnLoadDataListener;
 import com.example.liujiachao.zhihudaily.OnLoadDetailListener;
+import com.example.liujiachao.zhihudaily.OnLoadNewsExtraListener;
 import com.example.liujiachao.zhihudaily.SPSave;
 import com.example.liujiachao.zhihudaily.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
@@ -169,6 +170,10 @@ public class ZhihuNewsModel {
             }
         };
         OkHttpUtils.get().url(API.BASE_URL + zhihuItemInfo.getId()).tag(API.TAG_ZHIHU).build().execute(callback);
+
+    }
+
+    public void getZhihuNewsExtra(final ZhihuItemInfo zhihuItemInfo,final OnLoadNewsExtraListener listener) {
 
     }
 }

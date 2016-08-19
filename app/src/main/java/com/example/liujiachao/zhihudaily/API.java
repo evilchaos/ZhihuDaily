@@ -31,6 +31,7 @@ public class API {
     public static final Object TAG_ZHIHU = "zhihu";
     public static final String TAG_SPLASH = "splash";
     //Zhihu API
+    public static final String NEWS_EXTRA = "http://news-at.zhihu.com/api/4/story-extra/";
     public static final String BASE_URL = "http://news-at.zhihu.com/api/4/news/";
     public static final String NEWS_LATEST = "http://news-at.zhihu.com/api/4/news/latest";
     public static final String NEWS_BEFORE = "http://news-at.zhihu.com/api/4/news/before/";

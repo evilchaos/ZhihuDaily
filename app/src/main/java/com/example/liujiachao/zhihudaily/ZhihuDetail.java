@@ -11,7 +11,7 @@ public class ZhihuDetail extends RealmObject{
     private  String title;
     private String body;
     private String image;
-    private String url;
+    private String share_url;
 
     @PrimaryKey
     private  int id;
@@ -29,7 +29,7 @@ public class ZhihuDetail extends RealmObject{
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.share_url = url;
     }
 
     public  String getTitle() {
@@ -45,7 +45,7 @@ public class ZhihuDetail extends RealmObject{
     }
 
     public  String getUrl() {
-        return url;
+        return share_url;
     }
 
     public int getId() {

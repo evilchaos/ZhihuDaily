@@ -42,7 +42,10 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
         viewPager = (ViewPager)findViewById(R.id.viewPager);
 
         viewPager.addOnPageChangeListener(this);
+        idList =  getIntent().getIntegerArrayListExtra("all_id");
+        int id  = getIntent().getIntExtra("id",0);
         viewPager.setAdapter(new NewsDetailAdapter(getSupportFragmentManager(),idList));
+        viewPager.setCurrentItem(id);
 
 
     }
