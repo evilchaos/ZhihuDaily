@@ -18,8 +18,8 @@ public class ZhihuDetailPresenter implements OnLoadDetailListener {
         ZhihuNewsModel zhihuNewsModel = new ZhihuNewsModel();
     }
 
-    public void loadNewsDetail(ZhihuItemInfo zhihuItemInfo) {
-        zhihuNewsModel.getZhihuNewsDetail(zhihuItemInfo,this);
+    public void loadNewsDetail(int news_id) {
+        zhihuNewsModel.getZhihuNewsDetail(news_id,this);
 
     }
 

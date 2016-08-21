@@ -111,6 +111,10 @@ public class Json {
         return mGson.fromJson(detail, ZhihuDetail.class);
     }
 
+    public static StoryExtra parseStoryExtra(String storyExtra) {
+        return mGson.fromJson(storyExtra,StoryExtra.class);
+    }
+
 
 
 }

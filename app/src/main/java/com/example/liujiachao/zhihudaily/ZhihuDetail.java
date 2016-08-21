@@ -1,5 +1,8 @@
 package com.example.liujiachao.zhihudaily;
 
+import java.util.List;
+
+import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
 
@@ -12,6 +15,9 @@ public class ZhihuDetail extends RealmObject{
     private String body;
     private String image;
     private String share_url;
+    private RealmList<Recommender> recommenders;
+    private List<String> css;
+
 
     @PrimaryKey
     private  int id;
@@ -28,9 +34,6 @@ public class ZhihuDetail extends RealmObject{
         this.image = image;
     }
 
-    public void setUrl(String url) {
-        this.share_url = url;
-    }
 
     public  String getTitle() {
         return  title;
@@ -44,9 +47,6 @@ public class ZhihuDetail extends RealmObject{
         return  image;
     }
 
-    public  String getUrl() {
-        return share_url;
-    }
 
     public int getId() {
         return id;
@@ -54,5 +54,29 @@ public class ZhihuDetail extends RealmObject{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public String getShare_url() {
+        return share_url;
+    }
+
+    public void setShare_url(String share_url) {
+        this.share_url = share_url;
+    }
+
+    public RealmList<Recommender> getRecommenders() {
+        return recommenders;
+    }
+
+    public void setRecommenders(RealmList<Recommender> recommenders) {
+        this.recommenders = recommenders;
+    }
+
+    public List<String> getCss() {
+        return css;
+    }
+
+    public void setCss(List<String> css) {
+        this.css = css;
     }
 }

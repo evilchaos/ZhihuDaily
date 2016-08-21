@@ -1,10 +1,14 @@
 package com.example.liujiachao.zhihudaily;
 
+import android.os.Bundle;
+import android.support.v4.app.BundleCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import java.util.ArrayList;
+
+import static com.example.liujiachao.zhihudaily.ZhihuNewsDetailFragment.*;
 
 /**
  * Created by liujiachao on 2016/8/18.
@@ -21,7 +25,7 @@ public class NewsDetailAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
 
-        return null;
+       return ZhihuNewsDetailFragment.newInstance(idList.get(position));
     }
 
     @Override

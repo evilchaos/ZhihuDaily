@@ -1,12 +1,22 @@
 package com.example.liujiachao.zhihudaily;
 
-import android.app.Fragment;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.liujiachao.zhihudaily.mvp.presenter.StoryExtraPresenter;
+import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuDetailPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.NewsDetailView;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 
@@ -14,6 +24,26 @@ import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
  * Created by liujiachao on 2016/8/18.
  */
 public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView {
+    protected View rootView;
+    private ImageView storyImage;
+    private TextView storyTitle;
+    private TextView imageSouce;
+    private WebView detailContainer;
+    private LinearLayout storyRecommenders;
+
+    private ZhihuDetail zhihuDetail;
+    private int id;
+
+
+
+    public static ZhihuNewsDetailFragment newInstance(int id) {
+        ZhihuNewsDetailFragment fragment = new ZhihuNewsDetailFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("id",id);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void setInitialSavedState(SavedState state) {
         super.setInitialSavedState(state);
@@ -22,13 +52,36 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+
+        if (rootView == null) {
+            rootView = inflater.inflate(R.layout.zhihu_detail_fragment,container,false);
+            storyImage = (ImageView) rootView.findViewById(R.id.story_image);
+            storyTitle = (TextView) rootView.findViewById(R.id.story_title);
+            imageSouce = (TextView) rootView.findViewById(R.id.image_source);
+            detailContainer = (WebView)rootView.findViewById(R.id.detail_container);
+            storyRecommenders = (LinearLayout) rootView.findViewById(R.id.story_recommonders);
+
+
+
+        }
+        return rootView;
+
     }
 
     //Fragment的懒加载机制，在该方法里面获取newsdetail
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        ZhihuDetailPresenter presenter = new ZhihuDetailPresenter(this);
+        if(isVisibleToUser) {
+            id = getArguments().getInt("id");
+            zhihuDetail = DB.getById(id,ZhihuDetail.class);
+            if(zhihuDetail == null ) {
+                presenter.loadNewsDetail(id);
+            } else {
+                showDetails(zhihuDetail);
+            }
+        }
     }
 
 
@@ -44,6 +97,34 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
 
     @Override
     public void showDetails(ZhihuDetail zhihuDetail) {
+        if (!TextUtils.isEmpty(zhihuDetail.getImage())) {
+            Glide.with(ZhihuDailyApplication.context).load(zhihuDetail.getImage())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .crossFade().into(storyImage);
+        } else {
+            storyImage.setVisibility(View.INVISIBLE);
+        }
+
+        storyTitle.setText(zhihuDetail.getTitle());
+        if (zhihuDetail.getRecommenders() == null) {
+            storyRecommenders.setVisibility(View.GONE);
+        } else {
+            storyRecommenders.removeViews(1,storyRecommenders.getChildCount() - 1);
+            for (Recommender rec : zhihuDetail.getRecommenders()) {
+                ImageView image = (ImageView) View.inflate(getActivity(),R.layout.recommender_item,null);
+                Glide.with(ZhihuDailyApplication.context).load(rec.getAvatar())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade().into(image);
+                storyRecommenders.addView(image);
+            }
+        }
+
+        String css = "";
+        for (String css_url : zhihuDetail.getCss()) {
+            css += "<link rec"
+        }
+
+
+
 
     }
 

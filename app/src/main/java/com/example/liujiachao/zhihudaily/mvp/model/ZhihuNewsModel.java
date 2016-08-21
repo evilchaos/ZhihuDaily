@@ -11,6 +11,7 @@ import com.example.liujiachao.zhihudaily.OnLoadDataListener;
 import com.example.liujiachao.zhihudaily.OnLoadDetailListener;
 import com.example.liujiachao.zhihudaily.OnLoadNewsExtraListener;
 import com.example.liujiachao.zhihudaily.SPSave;
+import com.example.liujiachao.zhihudaily.StoryExtra;
 import com.example.liujiachao.zhihudaily.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.ZhihuJson;
@@ -144,7 +145,7 @@ public class ZhihuNewsModel {
         return list;
     }
 
-    public void getZhihuNewsDetail(final ZhihuItemInfo zhihuItemInfo, final OnLoadDetailListener listener) {
+    public void getZhihuNewsDetail(final int news_id , final OnLoadDetailListener listener) {
         final Callback<ZhihuDetail> callback = new Callback<ZhihuDetail>() {
             @Override
             public ZhihuDetail parseNetworkResponse(Response response, int id) throws Exception {
@@ -155,7 +156,7 @@ public class ZhihuNewsModel {
             @Override
             public void onError(Call call, Exception e, int id) {
                 if(System.currentTimeMillis() - lastTime < GET_DURATION ) {
-                    OkHttpUtils.get().url(API.BASE_URL + zhihuItemInfo.getId()).tag(API.TAG_ZHIHU).build().execute(this);
+                    OkHttpUtils.get().url(API.BASE_URL + news_id).tag(API.TAG_ZHIHU).build().execute(this);
                     return;
                 }
                 listener.onLoadDetailFailed("loading zhihu detail failed");
@@ -169,11 +170,34 @@ public class ZhihuNewsModel {
 
             }
         };
-        OkHttpUtils.get().url(API.BASE_URL + zhihuItemInfo.getId()).tag(API.TAG_ZHIHU).build().execute(callback);
+        OkHttpUtils.get().url(API.BASE_URL + news_id).tag(API.TAG_ZHIHU).build().execute(callback);
 
     }
 
-    public void getZhihuNewsExtra(final ZhihuItemInfo zhihuItemInfo,final OnLoadNewsExtraListener listener) {
+    public void getZhihuNewsExtra(final int id,final OnLoadNewsExtraListener listener) {
+        final Callback<StoryExtra> callback = new Callback<StoryExtra>() {
+            @Override
+            public StoryExtra parseNetworkResponse(Response response, int id) throws Exception {
+                return Json.parseStoryExtra(response.body().string());
+            }
+
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                if(System.currentTimeMillis() - lastTime < GET_DURATION) {
+                    OkHttpUtils.get().url(API.NEWS_EXTRA + id).tag(API.TAG_ZHIHU).build().execute(this);
+                    return;
+                }
+                listener.OnLoadNewsExtraFailed("loading story extra failed");
+
+            }
+
+            @Override
+            public void onResponse(StoryExtra response, int id) {
+                DB.Save(response);
+                listener.OnLoadNewsExtraSuccess(response);
+            }
+        };
+        OkHttpUtils.get().url(API.NEWS_EXTRA + id).tag(API.TAG_ZHIHU).build().execute(callback);
 
     }
 }
