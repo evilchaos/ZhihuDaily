@@ -1,6 +1,7 @@
 package com.example.liujiachao.zhihudaily;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
@@ -25,8 +26,11 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     private TextView praiseMenu;
     private TextView praiseNumMenu;
     ViewPager viewPager;
+    StoryExtra storyExtra;
+    StoryExtraPresenter presenter;
 
     private ArrayList<Integer> idList;
+    //private int id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +42,7 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
 
         idList =  getIntent().getIntegerArrayListExtra("all_id");
         int id  = getIntent().getIntExtra("id",0);
-        StoryExtra storyExtra = DB.getById(id,StoryExtra.class);
+        storyExtra = DB.getById(id,StoryExtra.class);
 
         setContentView(R.layout.zhihu_detail_activity);
         backMenu = (TextView) findViewById(R.id.back);
@@ -51,17 +55,16 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
 
         viewPager = (ViewPager)findViewById(R.id.viewPager);
         viewPager.addOnPageChangeListener(this);
-        viewPager.setAdapter(new NewsDetailAdapter(getSupportFragmentManager(),idList));
+        viewPager.setAdapter(new NewsDetailAdapter(getSupportFragmentManager(), idList));
         viewPager.setCurrentItem(id);
 
 
-        StoryExtraPresenter presenter = new StoryExtraPresenter(this);
+        presenter = new StoryExtraPresenter(this);
         if(storyExtra == null) {
             presenter.loadStoryExtra(id);
         } else {
             showExtraInfo(storyExtra);
         }
-
 
     }
 
@@ -70,8 +73,18 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
 
     }
 
+    //切换fragment时，对应的menu bar上的数据也要更新
     @Override
     public void onPageSelected(int position) {
+        storyExtra = DB.getById(idList.get(position),StoryExtra.class);
+        if (storyExtra == null) {
+            presenter.loadStoryExtra(idList.get(position));
+        } else {
+            showExtraInfo(storyExtra);
+        }
+        if(!idList.contains(idList.get(position))) {
+            idList.add(idList.get(position));
+        }
 
     }
 

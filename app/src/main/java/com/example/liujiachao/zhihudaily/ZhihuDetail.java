@@ -17,6 +17,7 @@ public class ZhihuDetail extends RealmObject{
     private String share_url;
     private RealmList<Recommender> recommenders;
     private List<String> css;
+    private List<String> js;
 
 
     @PrimaryKey
@@ -78,5 +79,13 @@ public class ZhihuDetail extends RealmObject{
 
     public void setCss(List<String> css) {
         this.css = css;
+    }
+
+    public List<String> getJs() {
+        return js;
+    }
+
+    public void setJs(List<String> js) {
+        this.js = js;
     }
 }

@@ -3,6 +3,7 @@ package com.example.liujiachao.zhihudaily;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -120,16 +121,43 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
 
         String css = "";
         for (String css_url : zhihuDetail.getCss()) {
-            css += "<link rec"
+            css += "<link rec=\"stylesheet\" href=" + css_url + ">\n";
         }
 
+        String js = "";
+        for (String js_url : zhihuDetail.getJs()) {
+            js += "<script src=" + js_url + ">\n";
+        }
 
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>\n").append("<head>\n").append(css).append(js).append("</head>\n")
+                .append("<body>").append(zhihuDetail.getBody()).append("</body>\n")
+                .append("</html>\n");
 
+        detailContainer.loadData(sb.toString(),"text/html;charset=UTF-8", "UTF-8");
 
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        detailContainer.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        detailContainer.onPause();
+    }
+
+    @Override
     public void showLoadFailed(String msg) {
+        if(rootView != null) {
+            Snackbar.make(rootView,"网络不给力，请稍后再试",Snackbar.LENGTH_LONG).show();
+        }
+
+
+
 
     }
 }
