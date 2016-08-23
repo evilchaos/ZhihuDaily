@@ -1,7 +1,9 @@
 package com.example.liujiachao.zhihudaily;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -98,9 +100,11 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     }
 
 
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onShowNewsDetail(RecyclerView.ViewHolder holder) {
 
+        //通过首页中载入的消息item个数，来确定fragment的数量
         if (holder instanceof ZhihuListAdapter.ItemViewHolder) {
             ArrayList<Integer> idList = new ArrayList<Integer>();
             List<NewsItem> newsItem = DB.findAll(NewsItem.class);
@@ -117,7 +121,7 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
 
             startActivity(intent);
 
-            itemViewHolder.mTitle.setTextColor(getColor(R.color.darker_gray));
+            itemViewHolder.mTitle.setTextColor(this.getResources().getColor(R.color.darker_gray));
         }
     }
 

@@ -1,5 +1,7 @@
 package com.example.liujiachao.zhihudaily;
 
+import com.example.liujiachao.zhihudaily.mvp.model.RealmString;
+
 import java.util.List;
 
 import io.realm.RealmList;
@@ -16,8 +18,8 @@ public class ZhihuDetail extends RealmObject{
     private String image;
     private String share_url;
     private RealmList<Recommender> recommenders;
-    private List<String> css;
-    private List<String> js;
+    private RealmList<RealmString> css;
+    private RealmList<RealmString> js;
 
 
     @PrimaryKey
@@ -73,19 +75,19 @@ public class ZhihuDetail extends RealmObject{
         this.recommenders = recommenders;
     }
 
-    public List<String> getCss() {
+    public RealmList<RealmString> getCss() {
         return css;
     }
 
-    public void setCss(List<String> css) {
+    public void setCss(RealmList<RealmString> css) {
         this.css = css;
     }
 
-    public List<String> getJs() {
+    public RealmList<RealmString> getJs() {
         return js;
     }
 
-    public void setJs(List<String> js) {
+    public void setJs(RealmList<RealmString> js) {
         this.js = js;
     }
 }

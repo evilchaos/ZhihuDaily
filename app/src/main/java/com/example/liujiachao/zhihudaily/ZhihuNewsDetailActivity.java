@@ -30,7 +30,11 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     StoryExtraPresenter presenter;
 
     private ArrayList<Integer> idList;
-    //private int id;
+
+//    private int long_comments;
+//    private int popularity;
+//    private int short_comments;
+//    private int comments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,8 +46,6 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
 
         idList =  getIntent().getIntegerArrayListExtra("all_id");
         int id  = getIntent().getIntExtra("id",0);
-        storyExtra = DB.getById(id,StoryExtra.class);
-
         setContentView(R.layout.zhihu_detail_activity);
         backMenu = (TextView) findViewById(R.id.back);
         shareMenu = (TextView)findViewById(R.id.share);
@@ -53,18 +55,17 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
         praiseMenu = (TextView)findViewById(R.id.praise);
         praiseNumMenu = (TextView)findViewById(R.id.praise_num);
 
+        presenter = new StoryExtraPresenter(this);
+        presenter.loadStoryExtra(id);
+
         viewPager = (ViewPager)findViewById(R.id.viewPager);
         viewPager.addOnPageChangeListener(this);
         viewPager.setAdapter(new NewsDetailAdapter(getSupportFragmentManager(), idList));
         viewPager.setCurrentItem(id);
 
 
-        presenter = new StoryExtraPresenter(this);
-        if(storyExtra == null) {
-            presenter.loadStoryExtra(id);
-        } else {
-            showExtraInfo(storyExtra);
-        }
+
+
 
     }
 
@@ -76,15 +77,9 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     //切换fragment时，对应的menu bar上的数据也要更新
     @Override
     public void onPageSelected(int position) {
-        storyExtra = DB.getById(idList.get(position),StoryExtra.class);
-        if (storyExtra == null) {
-            presenter.loadStoryExtra(idList.get(position));
-        } else {
-            showExtraInfo(storyExtra);
-        }
-        if(!idList.contains(idList.get(position))) {
-            idList.add(idList.get(position));
-        }
+
+        presenter.loadStoryExtra(idList.get(position));
+
 
     }
 

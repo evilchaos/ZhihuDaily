@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.liujiachao.zhihudaily.mvp.model.RealmString;
 import com.example.liujiachao.zhihudaily.mvp.presenter.StoryExtraPresenter;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuDetailPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.NewsDetailView;
@@ -120,13 +121,13 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
         }
 
         String css = "";
-        for (String css_url : zhihuDetail.getCss()) {
-            css += "<link rec=\"stylesheet\" href=" + css_url + ">\n";
+        for (RealmString css_url : zhihuDetail.getCss()) {
+            css += "<link rec=\"stylesheet\" href=" + css_url.getVal() + ">\n";
         }
 
         String js = "";
-        for (String js_url : zhihuDetail.getJs()) {
-            js += "<script src=" + js_url + ">\n";
+        for (RealmString js_url : zhihuDetail.getJs()) {
+            js += "<script src=" + js_url.getVal() + ">\n";
         }
 
         StringBuilder sb = new StringBuilder();

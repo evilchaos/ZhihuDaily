@@ -5,7 +5,7 @@ import io.realm.RealmObject;
 /**
  * Created by evilchaos on 16/8/20.
  */
-public class StoryExtra extends RealmObject {
+public class StoryExtra {
     private int long_comments;
     private int popularity;
     private int short_comments;

@@ -89,6 +89,7 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                         itemViewHolder.header.setVisibility(View.GONE);
                         itemViewHolder.mItem.setVisibility(View.VISIBLE);
                         itemViewHolder.mTitle.setText(news.get(position - 1).getTitle());
+                        itemViewHolder.zhihuItemInfo = zhihuItemList.get(position - 1);
                         Glide.with(context).load(news.get(position - 1).getImage())
                                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                                 .crossFade().into(itemViewHolder.mImage);
