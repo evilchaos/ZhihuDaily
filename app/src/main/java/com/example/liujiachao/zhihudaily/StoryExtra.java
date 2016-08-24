@@ -11,6 +11,13 @@ public class StoryExtra {
     private int short_comments;
     private int comments;
 
+    public StoryExtra(int long_comments, int popularity, int short_comments, int comments) {
+        this.long_comments = long_comments;
+        this.popularity = popularity;
+        this.short_comments = short_comments;
+        this.comments = comments;
+    }
+
     public void setLong_comments(int long_comments) {
         this.long_comments = long_comments;
     }

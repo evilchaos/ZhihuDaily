@@ -178,8 +178,9 @@ public class ZhihuNewsModel {
         final Callback<StoryExtra> callback = new Callback<StoryExtra>() {
             @Override
             public StoryExtra parseNetworkResponse(Response response, int id) throws Exception {
-                return Json.parseStoryExtra(response.body().string());
-
+                StoryExtra storyExtra;
+                storyExtra = Json.parseStoryExtra(response.body().string());
+                return storyExtra;
             }
 
             @Override

@@ -82,24 +82,23 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 if(position == 1) {
                     itemViewHolder.header.setText(" 今日热闻");
                     itemViewHolder.header.setClickable(false);
-                    itemViewHolder.mItem.setVisibility(View.GONE);
                     itemViewHolder.header.setVisibility(View.VISIBLE);
                 } else {
                     if((news.get(position -1).getDate()).equals(news.get(position - 2).getDate())) {
                         itemViewHolder.header.setVisibility(View.GONE);
-                        itemViewHolder.mItem.setVisibility(View.VISIBLE);
-                        itemViewHolder.mTitle.setText(news.get(position - 1).getTitle());
-                        itemViewHolder.zhihuItemInfo = zhihuItemList.get(position - 1);
-                        Glide.with(context).load(news.get(position - 1).getImage())
-                                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                                .crossFade().into(itemViewHolder.mImage);
                     } else {
                         itemViewHolder.header.setText(getNewsLabel(news.get(position -1).getDate()));
                         itemViewHolder.header.setClickable(false);
                         itemViewHolder.header.setVisibility(View.VISIBLE);
-                        itemViewHolder.mItem.setVisibility(View.GONE);
                     }
                 }
+                // ItemViewHolder逻辑
+                itemViewHolder.mTitle.setText(news.get(position - 1).getTitle());
+                itemViewHolder.zhihuItemInfo = zhihuItemList.get(position - 1);
+                Glide.with(context).load(news.get(position - 1).getImage())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .crossFade().into(itemViewHolder.mImage);
+
                 itemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
 
                     @Override

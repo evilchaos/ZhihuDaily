@@ -15,12 +15,12 @@ public class ZhihuDetailPresenter implements OnLoadDetailListener {
 
     public ZhihuDetailPresenter(NewsDetailView newsDetailView) {
         this.newsDetailView = newsDetailView;
-        ZhihuNewsModel zhihuNewsModel = new ZhihuNewsModel();
+        this.zhihuNewsModel = new ZhihuNewsModel();
     }
 
     public void loadNewsDetail(int news_id) {
         zhihuNewsModel.getZhihuNewsDetail(news_id,this);
-
+        int a = 1;
     }
 
     @Override
