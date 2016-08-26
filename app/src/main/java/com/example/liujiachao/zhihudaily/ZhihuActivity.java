@@ -115,7 +115,7 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
             ZhihuListAdapter.ItemViewHolder itemViewHolder = (ZhihuListAdapter.ItemViewHolder)holder;
             Intent intent = new Intent(ZhihuActivity.this,ZhihuNewsDetailActivity.class);
             intent.putIntegerArrayListExtra("all_id",idList);
-            intent.putExtra("id", itemViewHolder.zhihuItemInfo.getId());
+            intent.putExtra("id", idList.indexOf(itemViewHolder.zhihuItemInfo.getId()));
             ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
              ZhihuActivity.this,itemViewHolder.mImage,"shared_img");
 

@@ -35,7 +35,10 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
 
     private ZhihuDetail zhihuDetail;
     private int id;
+    private ZhihuDetailPresenter presenter = new ZhihuDetailPresenter(this);
 
+    private boolean isVisible;
+    private boolean isPrepared;
 
 
     public static ZhihuNewsDetailFragment newInstance(int id) {
@@ -62,9 +65,8 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
             imageSouce = (TextView) rootView.findViewById(R.id.image_source);
             detailContainer = (WebView)rootView.findViewById(R.id.detail_container);
             storyRecommenders = (LinearLayout) rootView.findViewById(R.id.story_recommonders);
-
-
-
+            isPrepared = true;
+            lazyLoad();
         }
         return rootView;
 
@@ -74,18 +76,24 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        ZhihuDetailPresenter presenter = new ZhihuDetailPresenter(this);
         if(isVisibleToUser) {
-            id = getArguments().getInt("id");
-            zhihuDetail = DB.getById(id,ZhihuDetail.class);
-            if(zhihuDetail == null ) {
-                presenter.loadNewsDetail(id);
-            } else {
-                showDetails(zhihuDetail);
-            }
+            isVisible = true;
+            lazyLoad();
         }
     }
 
+    private void lazyLoad() {
+        if(!isPrepared || !isVisible){
+            return;
+        }
+        id = getArguments().getInt("id");
+        zhihuDetail = DB.getById(id,ZhihuDetail.class);
+        if(zhihuDetail == null ) {
+            presenter.loadNewsDetail(id);
+        } else {
+            showDetails(zhihuDetail);
+        }
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
