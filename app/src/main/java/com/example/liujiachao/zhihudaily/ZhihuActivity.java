@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
+import android.support.v7.widget.Toolbar;
 import android.widget.LinearLayout;
 
 
@@ -35,6 +36,7 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     private ZhihuNewsPresenter presenter;
     private SwipeRefreshLayout swipeRefreshLayout;
     private ZhihuNewsModel zhihuNewsModel;
+    private Toolbar toolbar;
     Context context;
 
 
@@ -52,9 +54,13 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
         RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
         Realm.setDefaultConfiguration(realmConfiguration);
         DB.realm = Realm.getDefaultInstance();
+        toolbar =(Toolbar)findViewById(R.id.common_toolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("首页");
         layoutManager = new LinearLayoutManager(context);
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         zhihuListAdapter = new ZhihuListAdapter(this);
