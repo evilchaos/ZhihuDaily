@@ -6,13 +6,17 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.View;
 import android.widget.LinearLayout;
 
 
@@ -35,6 +39,9 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     private ConvenientBanner banner;
     private ZhihuNewsPresenter presenter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private RecyclerView swipe_rec_menu;
+    private DrawerLayout drawerLayout;
+
     private ZhihuNewsModel zhihuNewsModel;
     private Toolbar toolbar;
     Context context;
@@ -56,10 +63,41 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
         DB.realm = Realm.getDefaultInstance();
         toolbar =(Toolbar)findViewById(R.id.common_toolbar);
         setSupportActionBar(toolbar);
+        //toolbar.setNavigationIcon();
         getSupportActionBar().setTitle("首页");
+
+        //左上角图标可用
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(true);
+
+        //getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+        //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        swipe_rec_menu = (RecyclerView)findViewById(R.id.swipe_rec_menu);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
+
+        ActionBarDrawerToggle drawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.app_name, R.string.app_name){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+            }
+        };
+
+        drawerToggle.syncState();
+        drawerLayout.setDrawerListener(drawerToggle);
+
+        swipe_rec_menu.setAdapter(new RecMenuAdapter());
+
         layoutManager = new LinearLayoutManager(context);
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
+
+
 
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
@@ -162,5 +200,11 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     @Override
     public void loadFailed(String msg) {
         Snackbar.make(recyclerView,"网络出现了点问题",Snackbar.LENGTH_LONG);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_action_menu,menu);
+        return true;
     }
 }
