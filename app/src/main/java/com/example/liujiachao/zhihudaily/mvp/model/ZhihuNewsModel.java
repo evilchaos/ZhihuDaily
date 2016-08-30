@@ -7,11 +7,13 @@ import com.example.liujiachao.zhihudaily.API;
 import com.example.liujiachao.zhihudaily.DB;
 import com.example.liujiachao.zhihudaily.Json;
 import com.example.liujiachao.zhihudaily.NewsItem;
+import com.example.liujiachao.zhihudaily.OnLoadDailyThemesListener;
 import com.example.liujiachao.zhihudaily.OnLoadDataListener;
 import com.example.liujiachao.zhihudaily.OnLoadDetailListener;
 import com.example.liujiachao.zhihudaily.OnLoadNewsExtraListener;
 import com.example.liujiachao.zhihudaily.SPSave;
 import com.example.liujiachao.zhihudaily.StoryExtra;
+import com.example.liujiachao.zhihudaily.ThemeData;
 import com.example.liujiachao.zhihudaily.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.ZhihuJson;
@@ -146,6 +148,7 @@ public class ZhihuNewsModel {
     }
 
     public void getZhihuNewsDetail(final int news_id , final OnLoadDetailListener listener) {
+        lastTime = System.currentTimeMillis();
         final Callback<ZhihuDetail> callback = new Callback<ZhihuDetail>() {
             @Override
             public ZhihuDetail parseNetworkResponse(Response response, int id) throws Exception {
@@ -175,6 +178,7 @@ public class ZhihuNewsModel {
     }
 
     public void getZhihuNewsExtra(final int news_id,final OnLoadNewsExtraListener listener) {
+        lastTime = System.currentTimeMillis();
         final Callback<StoryExtra> callback = new Callback<StoryExtra>() {
             @Override
             public StoryExtra parseNetworkResponse(Response response, int id) throws Exception {
@@ -200,4 +204,31 @@ public class ZhihuNewsModel {
         OkHttpUtils.get().url(API.NEWS_EXTRA + news_id).tag(API.TAG_ZHIHU).build().execute(callback);
 
     }
+
+    public void getZhihuDailyThemes(final OnLoadDailyThemesListener listener) {
+
+        lastTime = System.currentTimeMillis();
+        final Callback<ThemeData> callback = new Callback<ThemeData>() {
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                if(System.currentTimeMillis() - lastTime < GET_DURATION) {
+                    OkHttpUtils.get().url(API.DAILY_THEMES).tag(API.TAG_ZHIHU).build().execute(this);
+                    return;
+                }
+            }
+
+            @Override
+            public void onResponse(ThemeData response, int id) {
+                listener.OnLoadDailyThemesSuccess(response);
+            }
+
+            @Override
+            public ThemeData parseNetworkResponse(Response response, int id) throws Exception {
+                return Json.parseZhihuDailyThemes(response.body().string());
+            }
+        };
+        OkHttpUtils.get().url(API.DAILY_THEMES).tag(API.TAG_ZHIHU).build().execute(callback);
+
+    }
+
 }

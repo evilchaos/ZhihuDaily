@@ -115,6 +115,10 @@ public class Json {
         return mGson.fromJson(storyExtra,StoryExtra.class);
     }
 
+    public static ThemeData parseZhihuDailyThemes(String themeData) {
+        return mGson.fromJson(themeData,ThemeData.class);
+    }
+
 
 
 }

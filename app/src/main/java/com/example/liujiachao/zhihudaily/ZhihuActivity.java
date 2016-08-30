@@ -18,7 +18,9 @@ import android.widget.LinearLayout;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
+import com.example.liujiachao.zhihudaily.mvp.presenter.ThemeDataPresenter;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
+import com.example.liujiachao.zhihudaily.mvp.view.ThemeDataView;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 
 import java.util.ArrayList;
@@ -28,17 +30,19 @@ import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
 //访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
-public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, OnShowNewsDetail,SwipeRefreshLayout.OnRefreshListener {
+public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView,ThemeDataView,OnShowNewsDetail,SwipeRefreshLayout.OnRefreshListener {
     public RecyclerView recyclerView;
     private LinearLayoutManager layoutManager;
     private ZhihuListAdapter zhihuListAdapter;
     private ConvenientBanner banner;
-    private ZhihuNewsPresenter presenter;
+    private ZhihuNewsPresenter zhihuNewsPresenter;
+    private ThemeDataPresenter  themeDataPresenter;
     private SwipeRefreshLayout swipeRefreshLayout;
-    private ZhihuNewsModel zhihuNewsModel;
-    private Toolbar toolbar;
-    Context context;
 
+    private Toolbar toolbar;
+    private Context context;
+
+    private ThemeData themeData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,23 +55,25 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     private void initViews() {
         context = getBaseContext();
         setContentView(R.layout.home_page);
-        RealmConfiguration realmConfiguration = new RealmConfiguration.Builder(this).build();
-        Realm.setDefaultConfiguration(realmConfiguration);
-        DB.realm = Realm.getDefaultInstance();
         toolbar =(Toolbar)findViewById(R.id.common_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("首页");
         layoutManager = new LinearLayoutManager(context);
         swipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view);
-
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         zhihuListAdapter = new ZhihuListAdapter(this);
         recyclerView.setAdapter(zhihuListAdapter);
-        zhihuNewsModel = new ZhihuNewsModel();
-        presenter = new ZhihuNewsPresenter(this);
+
+        zhihuNewsPresenter = new ZhihuNewsPresenter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
+
+        themeDataPresenter = new ThemeDataPresenter(this);
+        themeDataPresenter.loadThemeData();
+
+
+
         initBanner();
         onRefresh();
         recyclerView.setAdapter(zhihuListAdapter);
@@ -91,7 +97,7 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
         //滑到底了，得再重新加载数据
         int lastVisiPos = layoutManager.findLastVisibleItemPosition();
         if (lastVisiPos + 1 == zhihuListAdapter.getItemCount()) {
-            presenter.loadBefore();
+            zhihuNewsPresenter.loadBefore();
         }
 
     }
@@ -135,7 +141,7 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     //swipefreshlayout.onfreshlistener类中的方法,监听到刷新手势时，该方法被调用
     @Override
     public void onRefresh() {
-        presenter.loadLatest();
+        zhihuNewsPresenter.loadLatest();
 
     }
 
@@ -162,5 +168,10 @@ public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView, O
     @Override
     public void loadFailed(String msg) {
         Snackbar.make(recyclerView,"网络出现了点问题",Snackbar.LENGTH_LONG);
+    }
+
+    @Override
+    public void PassThemeDataToActivity(ThemeData themeData) {
+        this.themeData = themeData;
     }
 }
