@@ -4,11 +4,11 @@ package com.example.liujiachao.zhihudaily;
  * Created by liujiachao on 2016/8/29.
  */
 public class Theme {
-    int color;
-    String thumbnail;
-    String description;
-    int id;
-    String name;
+    private int color;
+    private String thumbnail;
+    private String description;
+    private int id;
+    private String name;
 
     public int getColor() {
         return color;
