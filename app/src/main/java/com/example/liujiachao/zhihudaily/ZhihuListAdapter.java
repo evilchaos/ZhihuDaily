@@ -1,6 +1,5 @@
 package com.example.liujiachao.zhihudaily;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,7 +13,7 @@ import com.bigkoo.convenientbanner.holder.CBViewHolderCreator;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liujiachao.zhihudaily.mvp.view.BannerView;
-import com.example.liujiachao.zhihudaily.utils.Dater;
+import com.example.liujiachao.zhihudaily.utils.DB;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;

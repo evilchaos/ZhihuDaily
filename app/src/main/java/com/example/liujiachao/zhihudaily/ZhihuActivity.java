@@ -13,11 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.View;
-import android.widget.LinearLayout;
 
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
@@ -26,12 +24,10 @@ import com.example.liujiachao.zhihudaily.mvp.presenter.ThemeDataPresenter;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ThemeDataView;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
+import com.example.liujiachao.zhihudaily.utils.DB;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import io.realm.Realm;
-import io.realm.RealmConfiguration;
 
 //访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
 public class ZhihuActivity extends AppCompatActivity implements ZhihuNewsView,ThemeDataView,OnShowNewsDetail,SwipeRefreshLayout.OnRefreshListener {

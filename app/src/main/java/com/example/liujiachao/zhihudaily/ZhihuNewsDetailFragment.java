@@ -17,10 +17,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liujiachao.zhihudaily.mvp.model.RealmString;
-import com.example.liujiachao.zhihudaily.mvp.presenter.StoryExtraPresenter;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuDetailPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.NewsDetailView;
-import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
+import com.example.liujiachao.zhihudaily.utils.DB;
 
 /**
  * Created by liujiachao on 2016/8/18.
@@ -87,7 +86,7 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
             return;
         }
         id = getArguments().getInt("id");
-        zhihuDetail = DB.getById(id,ZhihuDetail.class);
+        zhihuDetail = DB.getById(id, ZhihuDetail.class);
         if(zhihuDetail == null ) {
             presenter.loadNewsDetail(id);
         } else {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.liujiachao.zhihudaily.widgets.MenuTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id = "@+id/menu_theme_item"
+    android:textColor="@android:color/black"
+    android:textSize="16sp"
+    />
+
+

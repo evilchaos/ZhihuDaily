@@ -3,6 +3,8 @@ package com.example.liujiachao.zhihudaily;
 import android.app.Application;
 import android.content.Context;
 
+import com.example.liujiachao.zhihudaily.utils.DB;
+
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 

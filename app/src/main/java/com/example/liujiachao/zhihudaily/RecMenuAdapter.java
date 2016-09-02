@@ -1,10 +1,15 @@
 package com.example.liujiachao.zhihudaily;
 
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.liujiachao.zhihudaily.widgets.MenuTextView;
 
 import java.util.List;
 
@@ -16,6 +21,8 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private List<MyTheme> myThemeList;
     final static int TYPE_HEADER = 0;
     final static int TYPE_ITEM = 1;
+    final static int SELECTED_GRAY = Color.parseColor("#f0f0f0");
+    final static int UNSELECTED_WHITE = Color.WHITE;
 
     public RecMenuAdapter(List<MyTheme> myThemeList) {
         this.myThemeList = myThemeList;
@@ -23,11 +30,47 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return null;
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        if (viewType == TYPE_HEADER) {
+            View view = inflater.inflate(R.layout.menu_header_layout,parent,false);
+            return new HeaderViewHolder(view);
+        } else  {
+            View view = inflater.inflate(R.layout.menu_theme_item,parent,false);
+            return new MenuItemViewHolder(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+
+        if (holder instanceof HeaderViewHolder) {
+            HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
+        } else {
+            MenuItemViewHolder menuItemViewHolder = (MenuItemViewHolder)holder;
+            final MyTheme myTheme = myThemeList.get(position - 1);
+
+            if (myTheme.isSelected()) {
+                menuItemViewHolder.menuTextView.setBackgroundColor(SELECTED_GRAY);
+            } else {
+                menuItemViewHolder.menuTextView.setBackgroundColor(UNSELECTED_WHITE);
+            }
+            menuItemViewHolder.menuTextView.setSubscribed(myTheme.isSubscribed());
+            menuItemViewHolder.menuTextView.setText(myTheme.getTheme().getName());
+
+            menuItemViewHolder.menuTextView.setOnMenuHandleListener(new MenuTextView.OnMenuHandleListener() {
+                @Override
+                public void onRedrawMenu() {
+                    myTheme.setSubscribed(true);
+                    notifyDataSetChanged();
+                    Toast.makeText(ZhihuDailyApplication.context,"无法订阅", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onHandleEvent() {
+
+                }
+            });
+        }
 
     }
 
@@ -56,7 +99,20 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public HeaderViewHolder(View view) {
             super(view);
-            //imageView = view.findViewById;
+            imageView = (ImageView)view.findViewById(R.id.iv_avatar);
+            loginView = (TextView)view.findViewById(R.id.tv_login);
+            collectView = (TextView)view.findViewById(R.id.tv_collect);
+            downloadView = (TextView)view.findViewById(R.id.tv_download);
+            homeView = (TextView)view.findViewById(R.id.tv_home);
+        }
+    }
+
+    public class MenuItemViewHolder extends RecyclerView.ViewHolder {
+        public MenuTextView menuTextView;
+
+        public MenuItemViewHolder(View view) {
+            super(view);
+            menuTextView = (MenuTextView) itemView.findViewById(R.id.menu_theme_item);
         }
     }
 }

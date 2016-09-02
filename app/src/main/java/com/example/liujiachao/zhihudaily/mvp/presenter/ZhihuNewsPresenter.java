@@ -1,13 +1,7 @@
 package com.example.liujiachao.zhihudaily.mvp.presenter;
 
-import android.content.Context;
-
-import com.example.liujiachao.zhihudaily.API;
+import com.example.liujiachao.zhihudaily.utils.API;
 import com.example.liujiachao.zhihudaily.OnLoadDataListener;
-import com.example.liujiachao.zhihudaily.ZhihuActivity;
-import com.example.liujiachao.zhihudaily.ZhihuDetail;
-import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
-import com.example.liujiachao.zhihudaily.ZhihuJson;
 import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 

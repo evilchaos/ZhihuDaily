@@ -1,10 +1,7 @@
 package com.example.liujiachao.zhihudaily.mvp.model;
 
-import android.content.SharedPreferences;
-import android.util.Log;
-
-import com.example.liujiachao.zhihudaily.API;
-import com.example.liujiachao.zhihudaily.DB;
+import com.example.liujiachao.zhihudaily.utils.API;
+import com.example.liujiachao.zhihudaily.utils.DB;
 import com.example.liujiachao.zhihudaily.Json;
 import com.example.liujiachao.zhihudaily.NewsItem;
 import com.example.liujiachao.zhihudaily.OnLoadDailyThemesListener;
@@ -17,14 +14,11 @@ import com.example.liujiachao.zhihudaily.ThemeData;
 import com.example.liujiachao.zhihudaily.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.ZhihuJson;
-import com.example.liujiachao.zhihudaily.ZhihuListAdapter;
 import com.example.liujiachao.zhihudaily.ZhihuTop;
-import com.example.liujiachao.zhihudaily.utils.Dater;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import io.realm.Realm;
@@ -32,8 +26,6 @@ import io.realm.RealmList;
 import io.realm.Sort;
 import okhttp3.Call;
 import okhttp3.Response;
-
-import static com.example.liujiachao.zhihudaily.DB.saveList;
 
 /**
  * Created by liujiachao on 2016/7/29.

@@ -35,8 +35,52 @@
         android:background="@color/blue"
         >
 
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:id = "@+id/tv_collect"
+            android:drawableLeft="@drawable/favorites"
+            android:drawablePadding="5dp"
+            android:gravity="center"
+            android:text="我的收藏"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="离线下载"
+            android:id = "@+id/tv_download"
+            android:drawableLeft="@drawable/download"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp"
+            android:paddingBottom="10dp"
+            android:textStyle="bold"
+            android:drawablePadding="5dp"
+            />
 
     </LinearLayout>
-    
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id = "@+id/tv_home"
+        android:drawableLeft="@drawable/home"
+        android:drawablePadding="10dp"
+        android:padding="15dp"
+        android:gravity="center_vertical"
+        android:text = "首页"
+        android:background="@color/selected_gray"
+        android:textColor="@color/blue"
+        android:textSize = "16sp"
+        />
 
 </LinearLayout>
