@@ -1,5 +1,7 @@
 package com.example.liujiachao.zhihudaily;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -23,8 +25,10 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     final static int TYPE_ITEM = 1;
     final static int SELECTED_GRAY = Color.parseColor("#f0f0f0");
     final static int UNSELECTED_WHITE = Color.WHITE;
+    Context context;
 
-    public RecMenuAdapter(List<MyTheme> myThemeList) {
+    public RecMenuAdapter(Context context,List<MyTheme> myThemeList) {
+        this.context = context;
         this.myThemeList = myThemeList;
     }
 
@@ -45,6 +49,28 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder instanceof HeaderViewHolder) {
             HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
+            headerViewHolder.headerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    switch (v.getId()) {
+                        case R.id.linear_login:
+                            Intent login_intent = new Intent(context,LoginActivity.class);
+                            context.startActivity(login_intent);
+                            break;
+
+                        case R.id.tv_collect:
+                            Intent collect_intent = new Intent(context,LoginActivity.class);
+                            context.startActivity(collect_intent);
+                            break;
+
+                        case R.id.tv_download:
+                            Intent download_intent = new Intent(context,DownloadService.class);
+                            context.startService(download_intent);
+                            break;
+                    }
+                }
+            });
+
         } else {
             MenuItemViewHolder menuItemViewHolder = (MenuItemViewHolder)holder;
             final MyTheme myTheme = myThemeList.get(position - 1);
@@ -96,6 +122,7 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         public TextView collectView;
         public TextView downloadView;
         public TextView homeView;
+        public View headerView;
 
         public HeaderViewHolder(View view) {
             super(view);
@@ -104,6 +131,7 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             collectView = (TextView)view.findViewById(R.id.tv_collect);
             downloadView = (TextView)view.findViewById(R.id.tv_download);
             homeView = (TextView)view.findViewById(R.id.tv_home);
+            headerView = view.findViewById(R.id.header_menu_view);
         }
     }
 
