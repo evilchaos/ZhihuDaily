@@ -3,6 +3,7 @@ package com.example.liujiachao.zhihudaily;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -20,6 +21,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Toast;
 
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
@@ -29,12 +31,13 @@ import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ThemeDataView;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 import com.example.liujiachao.zhihudaily.utils.DB;
+import com.example.liujiachao.zhihudaily.widgets.MenuTextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 //访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
-public class ZhihuActivity extends AppCompatActivity implements ThemeDataView {
+public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,MenuCallback {
 
     private ThemeDataPresenter  themeDataPresenter;
 
@@ -45,7 +48,6 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView {
 
 
     private Toolbar toolbar;
-    private Context context;
 
     private ThemeData themeData;
     private List<MyTheme> myThemeList;
@@ -64,12 +66,11 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView {
         themeDataPresenter = new ThemeDataPresenter(this);
         themeDataPresenter.loadThemeData();
 
-        context = getBaseContext();
         setContentView(R.layout.navi_fragment);
         toolbar =(Toolbar)findViewById(R.id.common_toolbar);
         setSupportActionBar(toolbar);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_fragment,new ZhihuHomeFragment());
+        fragmentTransaction.replace(R.id.content_fragment, new ZhihuHomeFragment());
         fragmentTransaction.commit();
 
         getSupportActionBar().setTitle("首页");
@@ -97,9 +98,43 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView {
         drawerLayout.setDrawerListener(drawerToggle);
 
 
-        recMenuAdapter = new RecMenuAdapter(context,myThemeList);
+        recMenuAdapter = new RecMenuAdapter(myThemeList,this);
+        recMenuAdapter.setOnItemClickListener(new RecMenuAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                switch (view.getId()) {
+                    case R.id.linear_login:
+                        Intent login_intent = new Intent(ZhihuActivity.this, LoginActivity.class);
+                        startActivity(login_intent);
+                        break;
+
+                    case R.id.tv_collect:
+                        Intent collect_intent = new Intent(ZhihuActivity.this, LoginActivity.class);
+                        startActivity(collect_intent);
+                        break;
+
+                    case R.id.tv_download:
+                        Intent download_intent = new Intent(ZhihuActivity.this, DownloadService.class);
+                        startService(download_intent);
+                        break;
+
+                    case R.id.tv_home:
+                        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                        ft.replace(R.id.content_fragment, new ZhihuHomeFragment());
+                        ft.commit();
+                        drawerLayout.setBackgroundColor(Color.parseColor("#f0f0f0"));
+                        drawerLayout.closeDrawers();
+                        getSupportActionBar().setTitle("首页");
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+
 
         swipe_rec_menu.setAdapter(recMenuAdapter);
+
 
     }
 
@@ -161,5 +196,20 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView {
         }
 
         return super.onKeyDown(keyCode, event);
+    }
+
+
+    @Override
+    public void onRedrawMenu(int position) {
+        myThemeList.get(position - 1).setSubscribed(true);
+        Toast.makeText(ZhihuActivity.this,"无法真正订阅",Toast.LENGTH_SHORT).show();
+        recMenuAdapter.notifyDataSetChanged();//mark一下，此处要改，数据集顺序可能改变
+    }
+
+    @Override
+    public void onHandleEvent(int position) {
+
+
+
     }
 }

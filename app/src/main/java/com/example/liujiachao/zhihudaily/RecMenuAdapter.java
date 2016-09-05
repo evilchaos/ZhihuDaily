@@ -1,5 +1,6 @@
 package com.example.liujiachao.zhihudaily;
 
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,18 +19,20 @@ import java.util.List;
 /**
  * Created by evilchaos on 16/8/28.
  */
-public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private List<MyTheme> myThemeList;
     final static int TYPE_HEADER = 0;
     final static int TYPE_ITEM = 1;
     final static int SELECTED_GRAY = Color.parseColor("#f0f0f0");
     final static int UNSELECTED_WHITE = Color.WHITE;
-    Context context;
+    private OnItemClickListener mOnItemClickListener;
+    private MenuCallback mCallback;
 
-    public RecMenuAdapter(Context context,List<MyTheme> myThemeList) {
-        this.context = context;
+
+    public RecMenuAdapter(List<MyTheme> myThemeList,MenuCallback mCallback) {
         this.myThemeList = myThemeList;
+        this.mCallback = mCallback;
     }
 
     @Override
@@ -45,34 +48,20 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
 
         if (holder instanceof HeaderViewHolder) {
-            HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
+            final HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
             headerViewHolder.headerView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    switch (v.getId()) {
-                        case R.id.linear_login:
-                            Intent login_intent = new Intent(context,LoginActivity.class);
-                            context.startActivity(login_intent);
-                            break;
-
-                        case R.id.tv_collect:
-                            Intent collect_intent = new Intent(context,LoginActivity.class);
-                            context.startActivity(collect_intent);
-                            break;
-
-                        case R.id.tv_download:
-                            Intent download_intent = new Intent(context,DownloadService.class);
-                            context.startService(download_intent);
-                            break;
-                    }
+                    int pos = headerViewHolder.getLayoutPosition();
+                    mOnItemClickListener.onItemClick(headerViewHolder.headerView,pos);
                 }
             });
 
         } else {
-            MenuItemViewHolder menuItemViewHolder = (MenuItemViewHolder)holder;
+            final MenuItemViewHolder menuItemViewHolder = (MenuItemViewHolder)holder;
             final MyTheme myTheme = myThemeList.get(position - 1);
 
             if (myTheme.isSelected()) {
@@ -83,17 +72,17 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             menuItemViewHolder.menuTextView.setSubscribed(myTheme.isSubscribed());
             menuItemViewHolder.menuTextView.setText(myTheme.getTheme().getName());
 
+
             menuItemViewHolder.menuTextView.setOnMenuHandleListener(new MenuTextView.OnMenuHandleListener() {
                 @Override
                 public void onRedrawMenu() {
-                    myTheme.setSubscribed(true);
-                    notifyDataSetChanged();
-                    Toast.makeText(ZhihuDailyApplication.context,"无法订阅", Toast.LENGTH_SHORT).show();
+                    mCallback.onRedrawMenu(position);
+
                 }
 
                 @Override
                 public void onHandleEvent() {
-
+                    mCallback.onHandleEvent(position);
                 }
             });
         }
@@ -114,6 +103,7 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             return TYPE_ITEM;
         }
     }
+
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
@@ -143,4 +133,16 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             menuTextView = (MenuTextView) itemView.findViewById(R.id.menu_theme_item);
         }
     }
+
+    public interface OnItemClickListener {
+        void onItemClick(View view ,int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+
+
+
 }
