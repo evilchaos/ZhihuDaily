@@ -12,6 +12,8 @@ public class ZhihuJson extends RealmObject {
     @PrimaryKey
     private String date;
 
+    public ZhihuJson() {
+    }
 
     private RealmList<ZhihuTop> top_stories;
     private RealmList<ZhihuItemInfo> stories;

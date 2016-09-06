@@ -119,6 +119,10 @@ public class Json {
         return mGson.fromJson(themeData,ThemeData.class);
     }
 
+    public static ThemeContent parseZhihuThemeContent(String themeContent) {
+        return mGson.fromJson(themeContent,ThemeContent.class);
+    }
+
 
 
 }

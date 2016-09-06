@@ -1,5 +1,7 @@
 package com.example.liujiachao.zhihudaily.mvp.model;
 
+import com.example.liujiachao.zhihudaily.OnLoadThemeContentListener;
+import com.example.liujiachao.zhihudaily.ThemeContent;
 import com.example.liujiachao.zhihudaily.utils.API;
 import com.example.liujiachao.zhihudaily.utils.DB;
 import com.example.liujiachao.zhihudaily.Json;
@@ -221,6 +223,29 @@ public class ZhihuNewsModel {
         };
         OkHttpUtils.get().url(API.DAILY_THEMES).tag(API.TAG_ZHIHU).build().execute(callback);
 
+    }
+
+    public void getZhihuThemeContent(final int theme_id,final OnLoadThemeContentListener listener) {
+        lastTime = System.currentTimeMillis();
+        final Callback<ThemeContent> callback = new Callback<ThemeContent>() {
+            @Override
+            public ThemeContent parseNetworkResponse(Response response, int id) throws Exception {
+                return Json.parseZhihuThemeContent(response.body().toString());
+            }
+
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                if (System.currentTimeMillis() - lastTime < GET_DURATION) {
+                    OkHttpUtils.get().url(API.THEME_CONTENT + theme_id).tag(API.TAG_ZHIHU).build().execute(this);
+                }
+            }
+
+            @Override
+            public void onResponse(ThemeContent response, int id) {
+                listener.onLoadThemeContentSuccess(response);
+            }
+        };
+        OkHttpUtils.get().url(API.THEME_CONTENT + theme_id).tag(API.TAG_ZHIHU).build().execute(callback);
     }
 
 }

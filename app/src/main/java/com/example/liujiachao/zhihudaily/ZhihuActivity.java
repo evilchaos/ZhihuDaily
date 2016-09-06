@@ -21,6 +21,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -39,19 +40,17 @@ import java.util.List;
 //访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
 public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,MenuCallback {
 
+    final static int HOME_WHIET = Color.WHITE;
+
     private ThemeDataPresenter  themeDataPresenter;
-
-
     private RecyclerView swipe_rec_menu;
     private DrawerLayout drawerLayout;
-    private boolean isTheme;
-
-
+    private boolean isTheme = false;
     private Toolbar toolbar;
-
     private ThemeData themeData;
     private List<MyTheme> myThemeList;
     private RecMenuAdapter recMenuAdapter;
+    private TextView tv_home;
 
 
     @Override
@@ -96,7 +95,7 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
 
         drawerToggle.syncState();
         drawerLayout.setDrawerListener(drawerToggle);
-
+        tv_home = (TextView)findViewById(R.id.tv_home);
 
         recMenuAdapter = new RecMenuAdapter(myThemeList,this);
         recMenuAdapter.setOnItemClickListener(new RecMenuAdapter.OnItemClickListener() {
@@ -132,13 +131,8 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
             }
         });
 
-
         swipe_rec_menu.setAdapter(recMenuAdapter);
-
-
     }
-
-
 
     @Override
 
@@ -208,7 +202,31 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
 
     @Override
     public void onHandleEvent(int position) {
+        Theme theme = myThemeList.get(position - 1).getTheme();
+        ThemeFragment themeFragment = new ThemeFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt("theme_id", theme.getId());
+        themeFragment.setArguments(bundle);
 
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.content_fragment, themeFragment);
+        ft.commit();
+
+        getSupportActionBar().setTitle(theme.getName());
+        drawerLayout.closeDrawers();
+        tv_home.setBackgroundColor(HOME_WHIET);
+
+        myThemeList.get(position - 1).setSelected(true);
+        isTheme = true;
+        myThemeList.get(position - 1).setSelected(true);
+
+        for (MyTheme myTheme : myThemeList) {
+            boolean tmp = myTheme == myThemeList.get(position - 1);
+            myTheme.setSelected(tmp);
+        }
+
+        invalidateOptionsMenu();//菜单项已经改变，重新创造菜单
+        recMenuAdapter.notifyDataSetChanged();
 
 
     }
