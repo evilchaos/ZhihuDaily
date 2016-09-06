@@ -1,7 +1,7 @@
 package com.example.liujiachao.zhihudaily.mvp.presenter;
 
 import com.example.liujiachao.zhihudaily.utils.API;
-import com.example.liujiachao.zhihudaily.OnLoadDataListener;
+import com.example.liujiachao.zhihudaily.listener.OnLoadDataListener;
 import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 

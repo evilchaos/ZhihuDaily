@@ -1,22 +1,22 @@
 package com.example.liujiachao.zhihudaily.mvp.model;
 
-import com.example.liujiachao.zhihudaily.OnLoadThemeContentListener;
-import com.example.liujiachao.zhihudaily.ThemeContent;
+import com.example.liujiachao.zhihudaily.listener.OnLoadThemeContentListener;
+import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.utils.API;
 import com.example.liujiachao.zhihudaily.utils.DB;
-import com.example.liujiachao.zhihudaily.Json;
-import com.example.liujiachao.zhihudaily.NewsItem;
-import com.example.liujiachao.zhihudaily.OnLoadDailyThemesListener;
-import com.example.liujiachao.zhihudaily.OnLoadDataListener;
-import com.example.liujiachao.zhihudaily.OnLoadDetailListener;
-import com.example.liujiachao.zhihudaily.OnLoadNewsExtraListener;
-import com.example.liujiachao.zhihudaily.SPSave;
-import com.example.liujiachao.zhihudaily.StoryExtra;
-import com.example.liujiachao.zhihudaily.ThemeData;
-import com.example.liujiachao.zhihudaily.ZhihuDetail;
-import com.example.liujiachao.zhihudaily.ZhihuItemInfo;
-import com.example.liujiachao.zhihudaily.ZhihuJson;
-import com.example.liujiachao.zhihudaily.ZhihuTop;
+import com.example.liujiachao.zhihudaily.utils.Json;
+import com.example.liujiachao.zhihudaily.entity.NewsItem;
+import com.example.liujiachao.zhihudaily.listener.OnLoadDailyThemesListener;
+import com.example.liujiachao.zhihudaily.listener.OnLoadDataListener;
+import com.example.liujiachao.zhihudaily.listener.OnLoadDetailListener;
+import com.example.liujiachao.zhihudaily.listener.OnLoadNewsExtraListener;
+import com.example.liujiachao.zhihudaily.utils.SPSave;
+import com.example.liujiachao.zhihudaily.entity.StoryExtra;
+import com.example.liujiachao.zhihudaily.entity.ThemeData;
+import com.example.liujiachao.zhihudaily.entity.ZhihuDetail;
+import com.example.liujiachao.zhihudaily.entity.ZhihuItemInfo;
+import com.example.liujiachao.zhihudaily.entity.ZhihuJson;
+import com.example.liujiachao.zhihudaily.entity.ZhihuTop;
 import com.zhy.http.okhttp.OkHttpUtils;
 import com.zhy.http.okhttp.callback.Callback;
 

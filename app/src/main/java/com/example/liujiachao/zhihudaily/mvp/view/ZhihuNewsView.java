@@ -1,6 +1,6 @@
 package com.example.liujiachao.zhihudaily.mvp.view;
 
-import com.example.liujiachao.zhihudaily.ZhihuJson;
+import com.example.liujiachao.zhihudaily.entity.ZhihuJson;
 
 /**
  * Created by liujiachao on 2016/7/29.

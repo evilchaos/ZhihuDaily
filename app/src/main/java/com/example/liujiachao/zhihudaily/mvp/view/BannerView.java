@@ -14,13 +14,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liujiachao.zhihudaily.R;
-import com.example.liujiachao.zhihudaily.ZhihuActivity;
-import com.example.liujiachao.zhihudaily.ZhihuNewsDetailActivity;
-import com.example.liujiachao.zhihudaily.ZhihuTop;
-
-import org.w3c.dom.Text;
-
-import static com.example.liujiachao.zhihudaily.R.string.shared_img;
+import com.example.liujiachao.zhihudaily.activity.ZhihuActivity;
+import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
+import com.example.liujiachao.zhihudaily.entity.ZhihuTop;
 
 /**
  * Created by evilchaos on 16/7/23.
