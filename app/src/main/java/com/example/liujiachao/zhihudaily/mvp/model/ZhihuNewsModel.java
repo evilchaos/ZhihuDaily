@@ -67,7 +67,6 @@ public class ZhihuNewsModel {
                    }
                }
                 listener.onFailure("loading zhihu news failed");
-
             }
 
             @Override
@@ -157,7 +156,6 @@ public class ZhihuNewsModel {
                     return;
                 }
                 listener.onLoadDetailFailed("loading zhihu detail failed");
-
             }
 
             @Override
@@ -232,7 +230,6 @@ public class ZhihuNewsModel {
             public String  parseNetworkResponse(Response response, int id) throws Exception {
                 ThemeContent themeContent = Json.parseZhihuThemeContent(response.body().string());
                 DB.Save(themeContent);
-
                 return response.body().string();
             }
 

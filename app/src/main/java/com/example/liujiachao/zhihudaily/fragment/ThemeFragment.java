@@ -45,7 +45,7 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
     }
 
     @Override
-    public void addThemeContent(ThemeContent themeContent) {
+    public void addThemeContent(String themeContent) {
         themeListAdapter.notifyDataSetChanged();
     }
 
