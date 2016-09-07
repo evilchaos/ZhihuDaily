@@ -40,7 +40,6 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
         themeContentPresenter = new ThemeContentPresenter(this);
         theme_id = getArguments().getInt("theme_id");
         themeContentPresenter.loadThemeContent(theme_id);
-
         return themeFragmentView;
 
     }

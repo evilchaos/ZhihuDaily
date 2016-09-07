@@ -3,14 +3,20 @@ package com.example.liujiachao.zhihudaily.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import com.example.liujiachao.zhihudaily.entity.ThemeItem;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
+
+import java.util.List;
 
 /**
  * Created by liujiachao on 2016/9/6.
  */
 public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    OnShowNewsDetail mOnShowNewsDetail;
+    private OnShowNewsDetail mOnShowNewsDetail;
+    private List<ThemeItem> themeItemList;
+
+
 
     public ThemeListAdapter(OnShowNewsDetail mOnShowNewsDetail) {
         this.mOnShowNewsDetail = mOnShowNewsDetail;

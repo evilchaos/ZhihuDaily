@@ -227,10 +227,13 @@ public class ZhihuNewsModel {
 
     public void getZhihuThemeContent(final int theme_id,final OnLoadThemeContentListener listener) {
         lastTime = System.currentTimeMillis();
-        final Callback<ThemeContent> callback = new Callback<ThemeContent>() {
+        final Callback<String> callback = new Callback<String>() {
             @Override
-            public ThemeContent parseNetworkResponse(Response response, int id) throws Exception {
-                return Json.parseZhihuThemeContent(response.body().toString());
+            public String  parseNetworkResponse(Response response, int id) throws Exception {
+                ThemeContent themeContent = Json.parseZhihuThemeContent(response.body().string());
+                DB.Save(themeContent);
+
+                return response.body().string();
             }
 
             @Override
@@ -241,7 +244,7 @@ public class ZhihuNewsModel {
             }
 
             @Override
-            public void onResponse(ThemeContent response, int id) {
+            public void onResponse(String response, int id) {
                 listener.onLoadThemeContentSuccess(response);
             }
         };

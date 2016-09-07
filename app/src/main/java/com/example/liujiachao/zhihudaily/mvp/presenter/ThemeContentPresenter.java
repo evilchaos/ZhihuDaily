@@ -22,7 +22,7 @@ public class ThemeContentPresenter implements OnLoadThemeContentListener {
     }
 
     @Override
-    public void onLoadThemeContentSuccess(ThemeContent themeContent) {
+    public void onLoadThemeContentSuccess(String themeContent) {
         themeContentView.addThemeContent(themeContent);
     }
 }
