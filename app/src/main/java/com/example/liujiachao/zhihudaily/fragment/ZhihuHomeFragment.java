@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.example.liujiachao.zhihudaily.entity.Edit;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
@@ -154,6 +155,11 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
         }
 
     }
+
+//    @Override
+//    public void onShowEditorDetail() {
+//
+//    }
 
     @Override
     public void showProgress() {

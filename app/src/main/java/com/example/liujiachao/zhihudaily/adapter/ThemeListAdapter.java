@@ -1,21 +1,28 @@
 package com.example.liujiachao.zhihudaily.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liujiachao.zhihudaily.R;
+import com.example.liujiachao.zhihudaily.entity.Edit;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.entity.ThemeItem;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.utils.DB;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.realm.RealmResults;
@@ -30,6 +37,7 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private OnShowNewsDetail mOnShowNewsDetail;
     private List<ThemeItem> themeItemList;
     private RealmResults<ThemeContent> themeContent;
+    private List<Edit> edits;
 
 
 
@@ -37,6 +45,7 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         this.mOnShowNewsDetail = mOnShowNewsDetail;
         themeItemList = DB.findAll(ThemeItem.class);
         themeContent = DB.findAll(ThemeContent.class);
+        edits = DB.findAll(Edit.class);
     }
 
     @Override
@@ -54,11 +63,57 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        Context context = holder.itemView.getContext();
+        final Context context = holder.itemView.getContext();
         if (holder instanceof ThemeHeaderViewHolder) {
             final ThemeHeaderViewHolder themeHeaderViewHolder = (ThemeHeaderViewHolder)holder;
-            Glide.with(context).load(themeItemList.)
-            themeHeaderViewHolder.headImageView
+            Glide.with(context).load(themeContent.get(0).getBackground())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
+                    .into(themeHeaderViewHolder.headImageView);
+            themeHeaderViewHolder.themeTitle.setText(themeContent.get(0).getName());
+            if (themeContent.get(0).getImage_source() != null) {
+                themeHeaderViewHolder.themeTitle.setText(themeContent.get(0).getImage_source());
+            }
+
+            if (edits == null) {
+                //comment_avatar.png
+                ImageView editImg = new ImageView(context);
+                editImg.setImageResource(R.drawable.comment_avatar);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                ,ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.rightMargin = 10;
+                params.addRule(RelativeLayout.CENTER_VERTICAL);
+                editImg.setLayoutParams(params);
+                themeHeaderViewHolder.editContainer.addView(editImg);
+            }
+
+            for (int index = 0; index < edits.size(); index++ ) {
+                Edit edit = edits.get(index);
+                String img_url = edit.getAvatar();
+//                String name = edit.getName();
+//                String bio = edit.getBio();
+                ImageView editImg = new ImageView(context);
+                Glide.with(context).load(edit.getAvatar())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
+                        .into(editImg);
+                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                        ,ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.rightMargin = 10;
+                params.addRule(RelativeLayout.CENTER_VERTICAL);
+                editImg.setLayoutParams(params);
+                themeHeaderViewHolder.editContainer.addView(editImg);
+            }
+
+            themeHeaderViewHolder.editContainer.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("edits",(Serializable)edits);
+                    intent.putExtras(bundle);
+                    context.startActivity(intent);
+
+                }
+            });
         }
 
     }

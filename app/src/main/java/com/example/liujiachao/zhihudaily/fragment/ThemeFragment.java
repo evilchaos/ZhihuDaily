@@ -1,6 +1,7 @@
 package com.example.liujiachao.zhihudaily.fragment;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -9,12 +10,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.liujiachao.zhihudaily.activity.EditorDetailActivity;
+import com.example.liujiachao.zhihudaily.entity.Edit;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.adapter.ThemeListAdapter;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ThemeContentPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ThemeContentView;
+
+import java.util.List;
 
 /**
  * Created by liujiachao on 2016/9/6.
@@ -54,4 +59,11 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
     public void onShowNewsDetail(RecyclerView.ViewHolder holder) {
 
     }
+
+//    @Override
+//    public void onShowEditorDetail() {
+//        Intent intent = new Intent(getActivity(), EditorDetailActivity.class);
+//        intent.putExtra("theme_id",theme_id);
+//        startActivity(intent);
+//    }
 }
