@@ -3,6 +3,7 @@ package com.example.liujiachao.zhihudaily.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -114,11 +115,11 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
             Glide.with(ZhihuDailyApplication.context).load(zhihuDetail.getImage())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .crossFade().into(storyImage);
+            storyTitle.setText(zhihuDetail.getTitle());
         } else {
-            storyImage.setVisibility(View.INVISIBLE);
+            storyImage.setVisibility(View.GONE);
         }
 
-        storyTitle.setText(zhihuDetail.getTitle());
         if (zhihuDetail.getRecommenders() == null) {
             storyRecommenders.setVisibility(View.GONE);
         } else {

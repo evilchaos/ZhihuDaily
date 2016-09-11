@@ -64,11 +64,6 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
         viewPager.addOnPageChangeListener(this);
         viewPager.setAdapter(new NewsDetailAdapter(getSupportFragmentManager(), idList));
         viewPager.setCurrentItem(id);
-
-
-
-
-
     }
 
     @Override

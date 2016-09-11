@@ -84,25 +84,21 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 params.addRule(RelativeLayout.CENTER_VERTICAL);
                 editImg.setLayoutParams(params);
                 themeHeaderViewHolder.editContainer.addView(editImg);
+            } else {
+                for (int index = 0; index < edits.size(); index++ ) {
+                    Edit edit = edits.get(index);
+                    ImageView editImg = new ImageView(context);
+                    Glide.with(context).load(edit.getAvatar())
+                            .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
+                            .into(editImg);
+                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                            ,ViewGroup.LayoutParams.WRAP_CONTENT);
+                    params.rightMargin = 10;
+                    params.addRule(RelativeLayout.CENTER_VERTICAL);
+                    editImg.setLayoutParams(params);
+                    themeHeaderViewHolder.editContainer.addView(editImg);
+                }
             }
-
-            for (int index = 0; index < edits.size(); index++ ) {
-                Edit edit = edits.get(index);
-                String img_url = edit.getAvatar();
-//                String name = edit.getName();
-//                String bio = edit.getBio();
-                ImageView editImg = new ImageView(context);
-                Glide.with(context).load(edit.getAvatar())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
-                        .into(editImg);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                        ,ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.rightMargin = 10;
-                params.addRule(RelativeLayout.CENTER_VERTICAL);
-                editImg.setLayoutParams(params);
-                themeHeaderViewHolder.editContainer.addView(editImg);
-            }
-
             themeHeaderViewHolder.editContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -112,6 +108,28 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     intent.putExtras(bundle);
                     context.startActivity(intent);
 
+                }
+            });
+        } else {
+            ThemeItem themeItem = themeItemList.get(position - 1);
+            final ThemeItemViewHolder themeItemViewHolder = (ThemeItemViewHolder)holder;
+            themeItemViewHolder.storyHeader.setVisibility(View.GONE);
+            themeItemViewHolder.mTitle.setText(themeItem.getTitle());
+
+            if (themeItem.getImages() != null && themeItem.getImages().size() > 0) {
+                Glide.with(context).load(themeItem.getImages().get(0).getVal())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
+                        .into(themeItemViewHolder.mImage);
+            } else {
+                themeItemViewHolder.mImage.setVisibility(View.GONE);
+            }
+
+            themeItemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnShowNewsDetail != null) {
+                        mOnShowNewsDetail.onShowNewsDetail(themeItemViewHolder);
+                    }
                 }
             });
         }

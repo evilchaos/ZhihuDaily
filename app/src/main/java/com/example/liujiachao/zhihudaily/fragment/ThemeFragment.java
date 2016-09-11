@@ -11,14 +11,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.liujiachao.zhihudaily.activity.EditorDetailActivity;
+import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
 import com.example.liujiachao.zhihudaily.entity.Edit;
+import com.example.liujiachao.zhihudaily.entity.ThemeItem;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.adapter.ThemeListAdapter;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ThemeContentPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ThemeContentView;
+import com.example.liujiachao.zhihudaily.utils.DB;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -57,13 +61,19 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
 
     @Override
     public void onShowNewsDetail(RecyclerView.ViewHolder holder) {
+        List<ThemeItem> themeItemList = DB.findAll(ThemeItem.class);
+        ArrayList<Integer> themeDetailIds = new ArrayList<Integer>();
+        for (ThemeItem themeItem : themeItemList) {
+            themeDetailIds.add(themeItem.getId());
+        }
 
+        ThemeListAdapter.ThemeItemViewHolder themeItemViewHolder = (ThemeListAdapter.ThemeItemViewHolder) holder;
+        Intent intent = new Intent(getActivity(), ZhihuNewsDetailActivity.class);
+        intent.putIntegerArrayListExtra("all_id",themeDetailIds);
+        intent.putExtra("id",themeDetailIds.indexOf(themeItemViewHolder.themeItem.getId()));
+        startActivity(intent);
+
+        themeItemViewHolder.mTitle.setTextColor(this.getResources().getColor(R.color.darker_gray));
     }
 
-//    @Override
-//    public void onShowEditorDetail() {
-//        Intent intent = new Intent(getActivity(), EditorDetailActivity.class);
-//        intent.putExtra("theme_id",theme_id);
-//        startActivity(intent);
-//    }
 }
