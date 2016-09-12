@@ -1,9 +1,14 @@
 package com.example.liujiachao.zhihudaily.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.provider.ContactsContract;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.liujiachao.zhihudaily.adapter.NewsDetailAdapter;
@@ -18,7 +23,7 @@ import java.util.ArrayList;
 /**
  * Created by liujiachao on 2016/7/25.
  */
-public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPageChangeListener ,StoryExtraView {
+public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPageChangeListener ,StoryExtraView, View.OnClickListener {
 
     private TextView backMenu;
     private TextView shareMenu;
@@ -27,11 +32,13 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     private TextView commentNumMenu;
     private TextView praiseMenu;
     private TextView praiseNumMenu;
+    private RelativeLayout toolBar;
     ViewPager viewPager;
     StoryExtra storyExtra;
     StoryExtraPresenter presenter;
 
     private ArrayList<Integer> idList;
+    private int id;
 
 //    private int long_comments;
 //    private int popularity;
@@ -47,7 +54,7 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     private void initViews() {
 
         idList =  getIntent().getIntegerArrayListExtra("all_id");
-        int id  = getIntent().getIntExtra("id",0);
+        id  = getIntent().getIntExtra("id", 0);
         setContentView(R.layout.zhihu_detail_activity);
         backMenu = (TextView) findViewById(R.id.back);
         shareMenu = (TextView)findViewById(R.id.share);
@@ -56,6 +63,9 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
         commentNumMenu = (TextView)findViewById(R.id.comment_num);
         praiseMenu = (TextView)findViewById(R.id.praise);
         praiseNumMenu = (TextView)findViewById(R.id.praise_num);
+        toolBar = (RelativeLayout)findViewById(R.id.toolbar);
+
+        toolBar.setOnClickListener(this);
 
         presenter = new StoryExtraPresenter(this);
         presenter.loadStoryExtra(id);
@@ -74,10 +84,8 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     //切换fragment时，对应的menu bar上的数据也要更新
     @Override
     public void onPageSelected(int position) {
-
+        id = idList.get(position);
         presenter.loadStoryExtra(idList.get(position));
-
-
     }
 
     @Override
@@ -94,11 +102,40 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
         commentNumMenu.setText(comment_num);
         String praise_num = praises > 1000 ? new DecimalFormat("#.0").format(((float)praises)/1000) + "K": praises + "";
         praiseNumMenu.setText(praise_num);
-
     }
 
     @Override
     public void showExtraFailed(String msg) {
 
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()) {
+            case R.id.back:
+                //逻辑
+                finish();
+                break;
+            case R.id.share:
+                //分享功能
+                Snackbar.make(toolBar, "暂无此功能", Snackbar.LENGTH_SHORT).show();
+                break;
+            case R.id.collect:
+                //收藏功能
+                Intent intent = new Intent(ZhihuNewsDetailActivity.this,LoginActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.comment:
+                //评论
+                int story_id = idList.get(id);
+                Intent comm_intent = new Intent(ZhihuNewsDetailActivity.this,CommentActivity.class);
+                comm_intent.putExtra("story_id",story_id);
+                startActivity(comm_intent);
+                break;
+            case R.id.praise:
+                //点赞
+                break;
+        }
     }
 }

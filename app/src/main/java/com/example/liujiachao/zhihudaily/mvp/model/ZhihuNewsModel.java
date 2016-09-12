@@ -1,5 +1,8 @@
 package com.example.liujiachao.zhihudaily.mvp.model;
 
+import com.example.liujiachao.zhihudaily.entity.Comments;
+import com.example.liujiachao.zhihudaily.listener.OnLoadLongCommentsListener;
+import com.example.liujiachao.zhihudaily.listener.OnLoadShortCommentsListener;
 import com.example.liujiachao.zhihudaily.listener.OnLoadThemeContentListener;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.utils.API;
@@ -107,15 +110,6 @@ public class ZhihuNewsModel {
             realm.copyToRealmOrUpdate(list);
             realm.where(ZhihuJson.class).findAllSorted("date", Sort.DESCENDING);
             realm.commitTransaction();
-
-            //List<NewsItem> list = getItemList(zhihuJson);
-            //DB.saveList(list);
-//            if (realm.isClosed()){
-//                realm = Realm.getDefaultInstance();
-//            }
-//            realm.beginTransaction();
-//            realm.copyToRealmOrUpdate(list);
-//            realm.commitTransaction();
         }
     }
 
@@ -123,9 +117,6 @@ public class ZhihuNewsModel {
         List<NewsItem> list = new ArrayList<>();
         NewsItem newsItem = new NewsItem();
         String date = zhihuJson.getDate();
-        //newsItem.setType(ZhihuListAdapter.TYPE_DATE);
-        //newsItem.setDate(date);
-        //list.add(newsItem);
 
         RealmList<ZhihuItemInfo> stories = zhihuJson.getStories();
         for(ZhihuItemInfo info : stories) {
@@ -195,6 +186,52 @@ public class ZhihuNewsModel {
         };
         OkHttpUtils.get().url(API.NEWS_EXTRA + news_id).tag(API.TAG_ZHIHU).build().execute(callback);
 
+    }
+
+    public void getLongComments(final int story_id,final OnLoadLongCommentsListener listener) {
+        lastTime = System.currentTimeMillis();
+        final Callback<Comments> callback = new Callback<Comments>() {
+            @Override
+            public Comments parseNetworkResponse(Response response, int id) throws Exception {
+                return Json.parseComments(response.body().string()) ;
+            }
+
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                if (System.currentTimeMillis() - lastTime < GET_DURATION) {
+                    OkHttpUtils.get().url(String.format(API.STORY_LONG_COMMENTS,story_id)).tag(API.TAG_ZHIHU).build().execute(this);
+                }
+            }
+
+            @Override
+            public void onResponse(Comments response, int id) {
+                listener.onLoadLongCommentsSuccess(response);
+            }
+        };
+        OkHttpUtils.get().url(String.format(API.STORY_LONG_COMMENTS,story_id)).tag(API.TAG_ZHIHU).build().execute(callback);
+    }
+
+    public void getShortComments(final int story_id,final OnLoadShortCommentsListener listener) {
+        lastTime = System.currentTimeMillis();
+        final Callback<Comments> callback = new Callback<Comments>() {
+            @Override
+            public Comments parseNetworkResponse(Response response, int id) throws Exception {
+                return Json.parseComments(response.body().string()) ;
+            }
+
+            @Override
+            public void onError(Call call, Exception e, int id) {
+                if (System.currentTimeMillis() - lastTime < GET_DURATION) {
+                    OkHttpUtils.get().url(String.format(API.STORY_SHORT_COMMENTS,story_id)).tag(API.TAG_ZHIHU).build().execute(this);
+                }
+            }
+
+            @Override
+            public void onResponse(Comments response, int id) {
+                listener.onLoadShortCommentsSuccess(response);
+            }
+        };
+        OkHttpUtils.get().url(String.format(API.STORY_SHORT_COMMENTS,story_id)).tag(API.TAG_ZHIHU).build().execute(callback);
     }
 
     public void getZhihuDailyThemes(final OnLoadDailyThemesListener listener) {

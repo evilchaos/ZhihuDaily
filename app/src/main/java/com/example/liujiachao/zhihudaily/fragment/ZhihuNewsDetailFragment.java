@@ -3,7 +3,6 @@ package com.example.liujiachao.zhihudaily.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -21,7 +20,7 @@ import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.application.ZhihuDailyApplication;
 import com.example.liujiachao.zhihudaily.entity.Recommender;
 import com.example.liujiachao.zhihudaily.entity.ZhihuDetail;
-import com.example.liujiachao.zhihudaily.mvp.model.RealmString;
+import com.example.liujiachao.zhihudaily.entity.RealmString;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuDetailPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.NewsDetailView;
 import com.example.liujiachao.zhihudaily.utils.DB;

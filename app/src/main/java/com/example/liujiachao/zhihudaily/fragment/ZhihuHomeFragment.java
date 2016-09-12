@@ -78,9 +78,6 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
 
         });
 
-
-
-
         return contentFragmentView;
     }
 
@@ -107,8 +104,6 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-
     }
 
     @Override

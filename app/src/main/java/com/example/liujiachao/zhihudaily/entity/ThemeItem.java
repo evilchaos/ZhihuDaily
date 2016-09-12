@@ -1,9 +1,5 @@
 package com.example.liujiachao.zhihudaily.entity;
 
-import com.example.liujiachao.zhihudaily.mvp.model.RealmString;
-
-import java.util.List;
-
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;

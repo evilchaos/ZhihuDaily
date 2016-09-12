@@ -1,4 +1,4 @@
-package com.example.liujiachao.zhihudaily.mvp.model;
+package com.example.liujiachao.zhihudaily.entity;
 
 import io.realm.RealmObject;
 

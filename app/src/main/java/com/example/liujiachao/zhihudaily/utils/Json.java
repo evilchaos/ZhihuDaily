@@ -1,11 +1,12 @@
 package com.example.liujiachao.zhihudaily.utils;
 
+import com.example.liujiachao.zhihudaily.entity.Comments;
 import com.example.liujiachao.zhihudaily.entity.StoryExtra;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.entity.ThemeData;
 import com.example.liujiachao.zhihudaily.entity.ZhihuDetail;
 import com.example.liujiachao.zhihudaily.entity.ZhihuJson;
-import com.example.liujiachao.zhihudaily.mvp.model.RealmString;
+import com.example.liujiachao.zhihudaily.entity.RealmString;
 import com.google.gson.ExclusionStrategy;
 import com.google.gson.FieldAttributes;
 import com.google.gson.Gson;
@@ -127,6 +128,8 @@ public class Json {
         return mGson.fromJson(themeContent,ThemeContent.class);
     }
 
-
+    public static Comments parseComments(String storyComments) {
+        return mGson.fromJson(storyComments,Comments.class);
+    }
 
 }
