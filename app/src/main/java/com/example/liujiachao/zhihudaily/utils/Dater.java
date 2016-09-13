@@ -78,4 +78,11 @@ public class Dater {
         return parseStandardDate(lastDay(d));
     }
 
+    public static String parseTime(long time) {
+        SimpleDateFormat format = new SimpleDateFormat("MM-dd HH:mm",Locale.getDefault());
+        Date date = new Date();
+        date.setTime(time);
+        return format.format(date);
+    }
+
 }

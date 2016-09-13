@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    >
+    <ImageView
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:id ="@+id/iv_comment_avatar"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id = "@+id/tv_comment_nickname"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tv_comment_vote"
+                android:drawableLeft="@drawable/comment_vote"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/text_gray"
+                android:drawablePadding="5dp"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id = "@+id/tv_comment_content"
+            android:lineSpacingExtra="3dp"
+            android:layout_marginBottom="3dp"
+            android:textColor="@android:color/black"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id = "@+id/tv_reply_comment_content"
+            android:layout_marginBottom="10dp"
+            android:maxLines="2"
+            android:lineSpacingExtra="3dp"
+            android:textColor="@color/text_gray"
+            android:ellipsize="end"
+            />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id = "@+id/tv_comment_time"
+                android:textColor="@color/text_gray"
+                android:textSize = "10dp"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id = "@+id/tv_comment_expand_or_pack"
+                android:text = "展开"
+                android:layout_alignParentRight="true"
+                android:background="#d5e5f5"
+                android:visibility="gone"
+                android:paddingLeft="4dp"
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp"
+                android:paddingRight="4dp"
+                android:textColor="@color/text_gray"
+                />
+
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

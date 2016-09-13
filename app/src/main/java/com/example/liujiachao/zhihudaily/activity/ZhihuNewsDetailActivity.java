@@ -40,10 +40,10 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     private ArrayList<Integer> idList;
     private int id;
 
-//    private int long_comments;
-//    private int popularity;
-//    private int short_comments;
-//    private int comments;
+    private int long_comments;
+    private int popularity;
+    private int short_comments;
+    private int comments;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,11 +96,13 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     @Override
     public void showExtraInfo(StoryExtra storyExtra) {
 
-        int comments = storyExtra.getComments();
-        int praises = storyExtra.getPopularity();
+        long_comments = storyExtra.getLong_comments();
+        short_comments = storyExtra.getShort_comments();
+        comments = storyExtra.getComments();
+        popularity = storyExtra.getPopularity();
         String comment_num = comments > 1000 ? new DecimalFormat("#.0").format(((float)comments)/1000) + "K" :comments + "";
         commentNumMenu.setText(comment_num);
-        String praise_num = praises > 1000 ? new DecimalFormat("#.0").format(((float)praises)/1000) + "K": praises + "";
+        String praise_num = popularity > 1000 ? new DecimalFormat("#.0").format(((float)popularity)/1000) + "K": popularity + "";
         praiseNumMenu.setText(praise_num);
     }
 
@@ -130,6 +132,9 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
                 //评论
                 int story_id = idList.get(id);
                 Intent comm_intent = new Intent(ZhihuNewsDetailActivity.this,CommentActivity.class);
+                comm_intent.putExtra("long_comments",long_comments);
+                comm_intent.putExtra("short_comments",short_comments);
+                comm_intent.putExtra("comments",comments);
                 comm_intent.putExtra("story_id",story_id);
                 startActivity(comm_intent);
                 break;
