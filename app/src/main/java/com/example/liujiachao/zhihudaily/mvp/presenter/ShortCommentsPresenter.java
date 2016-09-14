@@ -17,7 +17,7 @@ public class ShortCommentsPresenter implements OnLoadShortCommentsListener {
         zhihuNewsModel = new ZhihuNewsModel();
     }
 
-    void loadShortComments(int story_id) {
+    public void loadShortComments(int story_id) {
         zhihuNewsModel.getShortComments(story_id,this);
     }
 

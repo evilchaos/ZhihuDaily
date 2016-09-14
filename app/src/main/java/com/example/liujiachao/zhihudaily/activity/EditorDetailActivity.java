@@ -39,7 +39,5 @@ public class EditorDetailActivity extends AppCompatActivity {
         editorListView = (RecyclerView)findViewById(R.id.rv_editor);
         EditorAdapter editorAdapter = new EditorAdapter(editors);
         editorListView.setAdapter(editorAdapter);
-
-
     }
 }

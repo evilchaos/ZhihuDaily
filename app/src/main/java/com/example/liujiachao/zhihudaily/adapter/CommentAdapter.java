@@ -2,11 +2,20 @@ package com.example.liujiachao.zhihudaily.adapter;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
+import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,6 +24,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.entity.Comment;
 import com.example.liujiachao.zhihudaily.entity.Comments;
+import com.example.liujiachao.zhihudaily.entity.Reply;
 import com.example.liujiachao.zhihudaily.utils.Dater;
 
 import java.text.DecimalFormat;
@@ -28,6 +38,8 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     private List<Comment> comments;
     private Context context;
+    private boolean hasGetLineCount = false;
+    private boolean hasMore = false;
 
     public CommentAdapter(List<Comment> comments) {
         this.comments = comments;
@@ -42,9 +54,10 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        ItemViewHolder viewHolder = (ItemViewHolder)holder;
-        Comment comment = comments.get(position);
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+
+        final ItemViewHolder viewHolder = (ItemViewHolder)holder;
+        final Comment comment = comments.get(position);
         viewHolder.nickname.setText(comment.getAuthor());
         Glide.with(context).load(comment.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL)
                 .crossFade().into(viewHolder.ivAvatar);
@@ -59,11 +72,64 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         viewHolder.vote.setText(vote_num);
         viewHolder.commentContent.setText(comment.getContent());
 
-        if (comment.getReply_to() != null) {
+        Reply reply = comment.getReply_to();
+        if (reply != null) {
+            if (!TextUtils.isEmpty(reply.getAuthor()) || !TextUtils.isEmpty(reply.getContent())) {
+                viewHolder.replyContent.setText("抱歉，原点评已被作者删除");
+                viewHolder.replyContent.setTextColor(context.getResources().getColor(R.color.text_gray));
+                viewHolder.replyContent.setBackgroundColor(context.getResources().getColor(R.color.background));
+            } else {
+                SpannableStringBuilder ssBuilder = new SpannableStringBuilder("//" + reply.getAuthor() + ": " + reply.getContent());
+                ssBuilder.setSpan(new StyleSpan(Typeface.BOLD),0,reply.getAuthor().length() + 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                ssBuilder.setSpan(new ForegroundColorSpan(Color.BLACK),0,reply.getAuthor().length() + 2,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                ssBuilder.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.text_gray))
+                        ,reply.getAuthor().length() + 3,ssBuilder.length() - 1
+                        ,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                viewHolder.replyContent.setText(ssBuilder);
 
+                viewHolder.replyContent.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        if (!hasGetLineCount) {
+                            hasMore = viewHolder.replyContent.getLineCount() > 2 ;
+                            hasGetLineCount = true;
+                        }
+                        viewHolder.expand.setVisibility(hasMore ?View.VISIBLE:View.GONE);
+                        return true;
+                    }
+                });
+
+                if (hasMore) {
+                    viewHolder.expand.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((TextView)v).getText().toString().equals("展开")) {
+                                viewHolder.expand.setText("收起");
+                                viewHolder.replyContent.setMaxLines(Integer.MAX_VALUE);
+                            } else if (((TextView)v).getText().toString().equals("收起")) {
+                                viewHolder.expand.setText("展开");
+                                viewHolder.replyContent.setMaxLines(2);
+                            }
+
+                        }
+                    });
+                }
+            }
         }
 
-
+        viewHolder.vote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!(comment.isVoted())) {
+                    comment.setVoted(true);
+                    comment.setLikes(comment.getLikes() + 1);
+                } else {
+                    comment.setLikes(comment.getLikes() - 1);
+                    comment.setVoted(false);
+                }
+                notifyItemChanged(position);
+            }
+        });
     }
 
     @Override

@@ -7,6 +7,7 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="lighter_gray">#ddd</color>
+    <color name="background">#f3f3f3</color>
     <!-- From: file:/usr/local/google/buildbot/src/googleplex-android/mnc-supportlib-release/frameworks/support/v7/cardview/res/values/colors.xml -->
         <eat-comment/>
         <color name="blue">#00a2ea</color>
