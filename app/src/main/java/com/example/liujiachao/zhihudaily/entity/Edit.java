@@ -12,6 +12,10 @@ public class Edit extends RealmObject implements Serializable {
     private String avatar;
     private String name;
 
+
+    public Edit() {
+    }
+
     public Edit(String bio, String avatar, String name) {
         this.bio = bio;
         this.avatar = avatar;

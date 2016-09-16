@@ -60,18 +60,13 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
         themeDataPresenter = new ThemeDataPresenter(this);
         themeDataPresenter.loadThemeData();
 
-        setContentView(R.layout.navi_fragment);
+        setContentView(R.layout.main_activity);
         toolbar =(Toolbar)findViewById(R.id.common_toolbar);
+        toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.content_fragment, new ZhihuHomeFragment());
         fragmentTransaction.commit();
-
-        getSupportActionBar().setTitle("首页");
-
-        //左上角图标可用
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeButtonEnabled(true);
 
         swipe_rec_menu = (RecyclerView)findViewById(R.id.swipe_rec_menu);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
@@ -92,7 +87,8 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
         drawerLayout.setDrawerListener(drawerToggle);
         tv_home = (TextView)findViewById(R.id.tv_home);
 
-        recMenuAdapter = new RecMenuAdapter(myThemeList,this);
+        recMenuAdapter = new RecMenuAdapter(this);
+        swipe_rec_menu.setAdapter(recMenuAdapter);
         recMenuAdapter.setOnItemClickListener(new RecMenuAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -125,8 +121,6 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
                 }
             }
         });
-
-        swipe_rec_menu.setAdapter(recMenuAdapter);
     }
 
     @Override
@@ -155,8 +149,7 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
             myThemeList.add(myTheme);
             serial_num++;
         }
-
-        this.myThemeList = myThemeList;
+        recMenuAdapter.updateData(myThemeList);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
