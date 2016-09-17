@@ -149,6 +149,7 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
             myThemeList.add(myTheme);
             serial_num++;
         }
+        //该方法在子线程中运行
         recMenuAdapter.updateData(myThemeList);
     }
 

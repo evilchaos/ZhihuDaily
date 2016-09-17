@@ -13,6 +13,7 @@ import com.example.liujiachao.zhihudaily.entity.MyTheme;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.widgets.MenuTextView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ import java.util.List;
  */
 public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
-    private List<MyTheme> myThemeList;
+    private List<MyTheme> myThemeList =  new ArrayList<>();
     final static int TYPE_HEADER = 0;
     final static int TYPE_ITEM = 1;
     final static int SELECTED_GRAY = Color.parseColor("#f0f0f0");
@@ -87,8 +88,13 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-    public void updateData(List<MyTheme> myThemeList) {
-        this.myThemeList = myThemeList;
+
+    public void updateData(List<MyTheme> data) {
+
+       //更改数据源，不能直接赋值
+       //this.myThemeList = myThemeList;
+        myThemeList.clear();
+        myThemeList.addAll(data);
         notifyDataSetChanged();
     }
 
