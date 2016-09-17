@@ -2,6 +2,8 @@ package com.example.liujiachao.zhihudaily.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -36,6 +38,7 @@ import java.util.List;
 public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,MenuCallback {
 
     final static int HOME_WHIET = Color.WHITE;
+    final static int THEME_DATA_MSG = 1;
 
     private ThemeDataPresenter  themeDataPresenter;
     private RecyclerView swipe_rec_menu;
@@ -46,6 +49,7 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
     private List<MyTheme> myThemeList;
     private RecMenuAdapter recMenuAdapter;
     private TextView tv_home;
+    private Handler themeDataHandler;
 
 
     @Override
@@ -89,6 +93,17 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
 
         recMenuAdapter = new RecMenuAdapter(this);
         swipe_rec_menu.setAdapter(recMenuAdapter);
+
+        themeDataHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what){
+                    case THEME_DATA_MSG :
+                        recMenuAdapter.notifyDataSetChanged();
+                        break;
+                }
+            }
+        };
         recMenuAdapter.setOnItemClickListener(new RecMenuAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -149,8 +164,12 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
             myThemeList.add(myTheme);
             serial_num++;
         }
-        //该方法在子线程中运行
+
         recMenuAdapter.updateData(myThemeList);
+        Message msg;
+        msg = Message.obtain();
+        msg.what = THEME_DATA_MSG;
+        themeDataHandler.sendMessage(msg);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

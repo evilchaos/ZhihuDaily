@@ -95,7 +95,7 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
        //this.myThemeList = myThemeList;
         myThemeList.clear();
         myThemeList.addAll(data);
-        notifyDataSetChanged();
+        //notifyDataSetChanged();
     }
 
 
