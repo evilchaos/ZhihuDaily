@@ -30,9 +30,8 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private MenuCallback mCallback;
 
 
-    public RecMenuAdapter(MenuCallback mCallback,List<MyTheme> myThemeList) {
+    public RecMenuAdapter(MenuCallback mCallback) {
         this.mCallback = mCallback;
-        this.myThemeList = null;
     }
 
     @Override
