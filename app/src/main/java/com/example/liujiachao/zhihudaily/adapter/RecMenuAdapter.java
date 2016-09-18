@@ -30,8 +30,9 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private MenuCallback mCallback;
 
 
-    public RecMenuAdapter(MenuCallback mCallback) {
+    public RecMenuAdapter(MenuCallback mCallback,List<MyTheme> myThemeList) {
         this.mCallback = mCallback;
+        this.myThemeList = null;
     }
 
     @Override
@@ -95,13 +96,13 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
        //this.myThemeList = myThemeList;
         myThemeList.clear();
         myThemeList.addAll(data);
-        //notifyDataSetChanged();
+        notifyDataSetChanged();
     }
 
 
     @Override
     public int getItemCount() {
-        return myThemeList == null ? 0:myThemeList.size() + 1 ;
+        return myThemeList == null ? 1:myThemeList.size() + 1 ;
     }
 
     @Override

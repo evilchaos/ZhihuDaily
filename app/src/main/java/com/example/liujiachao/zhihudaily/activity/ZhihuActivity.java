@@ -46,7 +46,7 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
     private boolean isTheme = false;
     private Toolbar toolbar;
     private ThemeData themeData;
-    private List<MyTheme> myThemeList;
+    private ArrayList<MyTheme> myThemeList;
     private RecMenuAdapter recMenuAdapter;
     private TextView tv_home;
     private Handler themeDataHandler;
@@ -61,16 +61,13 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
 
     private void initViews() {
 
-        themeDataPresenter = new ThemeDataPresenter(this);
-        themeDataPresenter.loadThemeData();
-
         setContentView(R.layout.main_activity);
         toolbar =(Toolbar)findViewById(R.id.common_toolbar);
         toolbar.setTitle("首页");
         setSupportActionBar(toolbar);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.content_fragment, new ZhihuHomeFragment());
-        fragmentTransaction.commit();
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.replace(R.id.content_fragment, new ZhihuHomeFragment());
+//        fragmentTransaction.commit();
 
         swipe_rec_menu = (RecyclerView)findViewById(R.id.swipe_rec_menu);
         drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
@@ -91,7 +88,7 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
         drawerLayout.setDrawerListener(drawerToggle);
         tv_home = (TextView)findViewById(R.id.tv_home);
 
-        recMenuAdapter = new RecMenuAdapter(this);
+        recMenuAdapter = new RecMenuAdapter(this,null);
         swipe_rec_menu.setAdapter(recMenuAdapter);
 
         themeDataHandler = new Handler() {
@@ -99,9 +96,12 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
             public void handleMessage(Message msg) {
                 switch (msg.what){
                     case THEME_DATA_MSG :
-                        recMenuAdapter.notifyDataSetChanged();
+                        ArrayList<MyTheme> themeArrayList = (ArrayList<MyTheme>) msg.getData().getSerializable("theme_list");
+                        recMenuAdapter.updateData(themeArrayList);
+                        //recMenuAdapter.notifyDataSetChanged();
                         break;
                 }
+                super.handleMessage(msg);
             }
         };
         recMenuAdapter.setOnItemClickListener(new RecMenuAdapter.OnItemClickListener() {
@@ -136,40 +136,47 @@ public class ZhihuActivity extends AppCompatActivity implements ThemeDataView ,M
                 }
             }
         });
+
+//        themeDataPresenter = new ThemeDataPresenter(this);
+//        themeDataPresenter.loadThemeData();
     }
 
     @Override
 
     public void PassThemeDataToActivity(ThemeData themeData) {
 
-        int serial_num = 0;
-        List<MyTheme> myThemeList = new ArrayList<>();
-        this.themeData = themeData;
-        for (Theme item : themeData.getSubscribed() ) {
-            MyTheme myTheme = new MyTheme();
-            myTheme.setTheme(item);
-            myTheme.setSerial_num(serial_num);
-            myTheme.setSubscribed(true);
-            myTheme.setSelected(false);
-            myThemeList.add(myTheme);
-            serial_num++;
-        }
-
-        for (Theme item : themeData.getOthers()) {
-            MyTheme myTheme = new MyTheme();
-            myTheme.setTheme(item);
-            myTheme.setSerial_num(serial_num);
-            myTheme.setSubscribed(false);
-            myTheme.setSelected(false);
-            myThemeList.add(myTheme);
-            serial_num++;
-        }
-
-        recMenuAdapter.updateData(myThemeList);
-        Message msg;
-        msg = Message.obtain();
-        msg.what = THEME_DATA_MSG;
-        themeDataHandler.sendMessage(msg);
+//        int serial_num = 0;
+//        ArrayList<MyTheme> myThemeList = new ArrayList<>();
+//        this.themeData = themeData;
+//        for (Theme item : themeData.getSubscribed() ) {
+//            MyTheme myTheme = new MyTheme();
+//            myTheme.setTheme(item);
+//            myTheme.setSerial_num(serial_num);
+//            myTheme.setSubscribed(true);
+//            myTheme.setSelected(false);
+//            myThemeList.add(myTheme);
+//            serial_num++;
+//        }
+//
+//        for (Theme item : themeData.getOthers()) {
+//            MyTheme myTheme = new MyTheme();
+//            myTheme.setTheme(item);
+//            myTheme.setSerial_num(serial_num);
+//            myTheme.setSubscribed(false);
+//            myTheme.setSelected(false);
+//            myThemeList.add(myTheme);
+//            serial_num++;
+//        }
+//
+//        this.myThemeList = myThemeList;
+//        //recMenuAdapter.updateData(myThemeList);
+//        Message msg;
+//        msg = Message.obtain();
+//        msg.what = THEME_DATA_MSG;
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("theme_list", myThemeList);
+//        msg.setData(bundle);
+//        themeDataHandler.sendMessage(msg);
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {

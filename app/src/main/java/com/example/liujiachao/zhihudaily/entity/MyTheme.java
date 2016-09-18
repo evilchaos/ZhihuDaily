@@ -2,10 +2,12 @@ package com.example.liujiachao.zhihudaily.entity;
 
 import com.example.liujiachao.zhihudaily.entity.Theme;
 
+import java.io.Serializable;
+
 /**
  * Created by liujiachao on 2016/8/31.
  */
-public class MyTheme {
+public class MyTheme implements Serializable {
 
     private int serial_num;
     private boolean selected;
