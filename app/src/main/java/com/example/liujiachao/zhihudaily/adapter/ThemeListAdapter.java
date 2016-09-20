@@ -65,6 +65,9 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final Context context = holder.itemView.getContext();
         if (holder instanceof ThemeHeaderViewHolder) {
+            if (themeItemList.size() == 0) {
+                return;
+            }
             final ThemeHeaderViewHolder themeHeaderViewHolder = (ThemeHeaderViewHolder)holder;
             Glide.with(context).load(themeContent.get(0).getBackground())
                     .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
@@ -138,7 +141,11 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        return themeItemList.size() + 1 ;
+        if (themeItemList.size() == 0) {
+            return 0;
+        } else {
+            return themeItemList.size() + 1 ;
+        }
     }
 
     @Override

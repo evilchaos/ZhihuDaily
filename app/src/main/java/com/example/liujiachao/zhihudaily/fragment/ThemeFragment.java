@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,6 +46,8 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
         themeListAdapter = new ThemeListAdapter(this);
         themeListView = (RecyclerView)themeFragmentView.findViewById(R.id.recycler_view);
         themeListView.setAdapter(themeListAdapter);
+        LinearLayoutManager manager = new LinearLayoutManager(themeListView.getContext(),LinearLayoutManager.VERTICAL,false);
+        themeListView.setLayoutManager(manager);
 
         themeContentPresenter = new ThemeContentPresenter(this);
         theme_id = getArguments().getInt("theme_id");

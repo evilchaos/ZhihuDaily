@@ -19,6 +19,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +48,9 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayList<MyTheme> themeDatas;
-    private TextView mTvHome;
+    private LinearLayout mTvHome;
     private FragmentActivity mActivity;
+    RecyclerView recyclerView;
     private boolean isTheme = false;
 
     @Nullable
@@ -56,9 +58,6 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_navigation_drawer,container,false);
         mActivity = getActivity();
-        mTvHome = (TextView)view.findViewById(R.id.tv_home);
-
-
         setUpRecyclerView(view);
 
         receiveData();
@@ -67,9 +66,12 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
     }
 
     private void setUpRecyclerView(View view) {
-        RecyclerView recyclerView = (RecyclerView)view.findViewById(R.id.drawerList);
+        recyclerView = (RecyclerView)view.findViewById(R.id.drawerList);
         adapter =  new RecMenuAdapter(this);
         recyclerView.setAdapter(adapter);
+        LinearLayoutManager manager = new LinearLayoutManager(recyclerView.getContext(),LinearLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(manager);
+
         adapter.setOnItemClickListener(new RecMenuAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -95,14 +97,14 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
                         ft.commit();
                         mDrawerLayout.setBackgroundColor(Color.parseColor("#f0f0f0"));
                         mDrawerLayout.closeDrawers();
-                        ((AppCompatActivity)mActivity).getSupportActionBar().setTitle("首页");
+                        ((AppCompatActivity) mActivity).getSupportActionBar().setTitle("首页");
                         break;
                     default:
                         break;
                 }
             }
         });
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
     }
 
     private void receiveData() {
@@ -175,20 +177,21 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
         ft.commit();
 
 
-        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(theme.getName());
-
-
-        mDrawerLayout.closeDrawers();
-        mTvHome.setBackgroundColor(Color.WHITE);
-
-        themeDatas.get(position - 1).setSelected(true);
-        isTheme = true;
-        for (MyTheme myTheme : themeDatas) {
-            boolean tmp = myTheme == themeDatas.get(position - 1);
-            myTheme.setSelected(tmp);
-        }
-        //invalidateOptionsMenu();//菜单项已经改变，重新创造菜单
-        adapter.updateData(themeDatas);
+//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(theme.getName());
+//
+//        mDrawerLayout.closeDrawers();
+////        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+////        mTvHome = (LinearLayout) layoutManager.findViewByPosition(0);
+////        mTvHome.setBackgroundColor(Color.WHITE);
+//
+//        themeDatas.get(position - 1).setSelected(true);
+//        isTheme = true;
+//        for (MyTheme myTheme : themeDatas) {
+//            boolean tmp = myTheme == themeDatas.get(position - 1);
+//            myTheme.setSelected(tmp);
+//        }
+//        //invalidateOptionsMenu();//菜单项已经改变，重新创造菜单
+//        adapter.updateData(themeDatas);
     }
 
     @Override

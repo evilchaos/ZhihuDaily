@@ -62,16 +62,16 @@ public class MenuTextView extends TextView {
             case MotionEvent.ACTION_UP:
                 if (onMenuHandleListener != null) {
                     if (subscribed) {
-                        onMenuHandleListener.onRedrawMenu();
+                        onMenuHandleListener.onHandleEvent();
                         //该日报还没有订阅，且点击了MenuTextView中的图片
                     } else if ((event.getX() > getWidth() - getPaddingRight() - getCompoundDrawables()[2].getIntrinsicWidth())
                             && (event.getX() < getWidth() - getPaddingRight())) {
-                        onMenuHandleListener.onHandleEvent();
+                        onMenuHandleListener.onRedrawMenu();
                         Drawable drawable = context.getResources().getDrawable(R.drawable.menu_arrow);
                         setCompoundDrawablesWithIntrinsicBounds(null,null,drawable,null);
                         setSubscribed(true);
                     } else {
-                        onMenuHandleListener.onRedrawMenu();
+                        onMenuHandleListener.onHandleEvent();
                     }
                 }
 
