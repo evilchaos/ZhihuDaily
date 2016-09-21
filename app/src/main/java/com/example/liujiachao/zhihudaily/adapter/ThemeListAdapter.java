@@ -35,16 +35,16 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final static int HEADER_TYPE = 0;
     private final static int ITEM_TYPE = 1;
     private OnShowNewsDetail mOnShowNewsDetail;
-    private List<ThemeItem> themeItemList;
+    //private List<ThemeItem> themeItemList;
     private RealmResults<ThemeContent> themeContent;
     private List<Edit> edits;
 
 
 
-    public ThemeListAdapter(OnShowNewsDetail mOnShowNewsDetail) {
+    public ThemeListAdapter(OnShowNewsDetail mOnShowNewsDetail,String name) {
         this.mOnShowNewsDetail = mOnShowNewsDetail;
-        themeItemList = DB.findAll(ThemeItem.class);
-        themeContent = DB.findAll(ThemeContent.class);
+        //themeItemList = DB.findAll(ThemeItem.class);
+        themeContent = DB.getByName(name, ThemeContent.class);
         edits = DB.findAll(Edit.class);
     }
 
@@ -64,17 +64,16 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         final Context context = holder.itemView.getContext();
+        ThemeContent tm_content = themeContent.get(0);
         if (holder instanceof ThemeHeaderViewHolder) {
-            if (themeItemList.size() == 0) {
-                return;
-            }
             final ThemeHeaderViewHolder themeHeaderViewHolder = (ThemeHeaderViewHolder)holder;
-            Glide.with(context).load(themeContent.get(0).getBackground())
+            Glide.with(context).load(tm_content.getBackground())
                     .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
                     .into(themeHeaderViewHolder.headImageView);
-            themeHeaderViewHolder.themeTitle.setText(themeContent.get(0).getName());
-            if (themeContent.get(0).getImage_source() != null) {
-                themeHeaderViewHolder.themeTitle.setText(themeContent.get(0).getImage_source());
+            String description = tm_content.getDescription();
+            themeHeaderViewHolder.themeDes.setText(description);
+            if (tm_content.getImage_source() != null) {
+                themeHeaderViewHolder.srcImg.setText(tm_content.getImage_source());
             }
 
             if (edits == null) {
@@ -114,7 +113,7 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
             });
         } else {
-            ThemeItem themeItem = themeItemList.get(position - 1);
+            ThemeItem themeItem = tm_content.getStories().get(position - 1);
             final ThemeItemViewHolder themeItemViewHolder = (ThemeItemViewHolder)holder;
             themeItemViewHolder.storyHeader.setVisibility(View.GONE);
             themeItemViewHolder.mTitle.setText(themeItem.getTitle());
@@ -141,10 +140,10 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        if (themeItemList.size() == 0) {
+        if (themeContent.size() == 0) {
             return 0;
         } else {
-            return themeItemList.size() + 1 ;
+            return themeContent.get(0).getStories().size() + 1 ;
         }
     }
 
@@ -159,14 +158,14 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public class ThemeHeaderViewHolder extends RecyclerView.ViewHolder {
         ImageView headImageView;
-        TextView themeTitle;
+        TextView themeDes;
         TextView srcImg;
         LinearLayout editContainer;
 
         public ThemeHeaderViewHolder(View itemView) {
             super(itemView);
             headImageView = (ImageView)itemView.findViewById(R.id.iv_theme_image);
-            themeTitle = (TextView)itemView.findViewById(R.id.tv_container_theme);
+            themeDes = (TextView)itemView.findViewById(R.id.tv_theme_des);
             srcImg = (TextView)itemView.findViewById(R.id.tv_theme_img_src);
             editContainer = (LinearLayout)itemView.findViewById(R.id.editor_container);
         }

@@ -43,7 +43,9 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
 
         context = getActivity();
         View themeFragmentView = inflater.inflate(R.layout.navi_fragment,null);
-        themeListAdapter = new ThemeListAdapter(this);
+        //获取主题列表名
+        String name = getArguments().getString("name");
+        themeListAdapter = new ThemeListAdapter(this,name);
         themeListView = (RecyclerView)themeFragmentView.findViewById(R.id.recycler_view);
         themeListView.setAdapter(themeListAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(themeListView.getContext(),LinearLayoutManager.VERTICAL,false);
@@ -57,7 +59,7 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
     }
 
     @Override
-    public void addThemeContent(String themeContent) {
+    public void addThemeContent(ThemeContent themeContent) {
         themeListAdapter.notifyDataSetChanged();
     }
 

@@ -28,7 +28,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id = "@+id/tv_container_theme"
+                android:id = "@+id/tv_theme_des"
                 android:textSize ="18dp"
                 android:textColor="@android:color/white"
                 />

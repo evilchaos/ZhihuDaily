@@ -29,22 +29,10 @@
 
     </LinearLayout>
 
-
-
-
-    <!--
-        <android.support.v7.widget.RecyclerView
-            android:layout_gravity="start"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id = "@+id/swipe_rec_menu"
-            />
-     -->
-
     <fragment
         android:id="@+id/nav_drawer_fragment"
         android:name="com.example.liujiachao.zhihudaily.fragment.NavigationDrawerFragment"
-        android:layout_width="270dp"
+        android:layout_width="300dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
         app:layout="@layout/fragment_navigation_drawer"

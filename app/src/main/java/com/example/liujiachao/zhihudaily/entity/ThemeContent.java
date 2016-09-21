@@ -2,17 +2,28 @@ package com.example.liujiachao.zhihudaily.entity;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.PrimaryKey;
 
 /**
  * Created by liujiachao on 2016/9/6.
  */
 public class ThemeContent extends RealmObject {
+
+    @PrimaryKey
+    private String name; // 该主题日报的名称
     private RealmList<ThemeItem> stories; // 该主题日报中的文章列表
     private String background; //该主题日报的背景图片（大图）
-    private String name; // 该主题日报的名称
     private RealmList<Edit> editors; //该主题日报的编辑
     private String image_source;// 图像的版权信息
+    private String description;//该主题日报的介绍
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public ThemeContent() {
     }

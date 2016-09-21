@@ -7,5 +7,5 @@ import com.example.liujiachao.zhihudaily.entity.ThemeContent;
  */
 public interface ThemeContentView {
 
-    void addThemeContent(String themeContent);
+    void addThemeContent(ThemeContent themeContent);
 }

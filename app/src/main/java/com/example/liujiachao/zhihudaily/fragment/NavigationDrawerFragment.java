@@ -170,6 +170,7 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
         ThemeFragment themeFragment = new ThemeFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("theme_id", theme.getId());
+        bundle.putString("name", theme.getName());
         themeFragment.setArguments(bundle);
 
         FragmentTransaction ft = getActivity().getSupportFragmentManager().beginTransaction();
@@ -177,22 +178,27 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
         ft.commit();
 
 
-//        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(theme.getName());
-//
-//        mDrawerLayout.closeDrawers();
-////        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-////        mTvHome = (LinearLayout) layoutManager.findViewByPosition(0);
-////        mTvHome.setBackgroundColor(Color.WHITE);
-//
-//        themeDatas.get(position - 1).setSelected(true);
-//        isTheme = true;
-//        for (MyTheme myTheme : themeDatas) {
-//            boolean tmp = myTheme == themeDatas.get(position - 1);
-//            myTheme.setSelected(tmp);
-//        }
-//        //invalidateOptionsMenu();//菜单项已经改变，重新创造菜单
-//        adapter.updateData(themeDatas);
+        ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(theme.getName());
+
+        mDrawerLayout.closeDrawers();
+        //setHomeBackground();
+
+        themeDatas.get(position - 1).setSelected(true);
+        isTheme = true;
+        for (MyTheme myTheme : themeDatas) {
+            boolean tmp = myTheme == themeDatas.get(position - 1);
+            myTheme.setSelected(tmp);
+        }
+        //invalidateOptionsMenu();//菜单项已经改变，重新创造菜单
+        adapter.updateData(themeDatas);
     }
+
+//    private void setHomeBackground() {
+//        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+//        mTvHome = (LinearLayout) layoutManager.findViewByPosition(0);
+//        TextView homePage = (TextView)mTvHome.findViewById(R.id.tv_home);
+//        homePage.setBackgroundColor(Color.WHITE);
+//    }
 
     @Override
     public void PassThemeDataToActivity(ThemeData themeData) {

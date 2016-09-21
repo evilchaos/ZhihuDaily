@@ -20,6 +20,13 @@ public class DB {
         return realm.where(realmObjectClass).equalTo("id",id).findFirst();
     }
 
+    public static <T extends RealmObject> RealmResults<T> getByName(String name,Class<T> realmObjectClass){
+        if (realm.isClosed()) {
+            realm = Realm.getDefaultInstance();
+        }
+        return realm.where(realmObjectClass).equalTo("name",name).findAll();
+    }
+
     public static <T extends RealmObject> RealmResults<T> findAll(Class<T> realmObjectClass) {
         if (realm.isClosed()) {
             realm = Realm.getDefaultInstance();
