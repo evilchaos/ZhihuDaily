@@ -23,6 +23,9 @@
 
         <activity android:name=".activity.ZhihuNewsDetailActivity">
         </activity>
+
+        <activity android:name=".activity.EditorDetailActivity">
+        </activity>
     </application>
 
 </manifest>

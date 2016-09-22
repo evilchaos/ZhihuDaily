@@ -7,7 +7,7 @@ import io.realm.RealmObject;
 /**
  * Created by liujiachao on 2016/9/6.
  */
-public class Edit extends RealmObject implements Serializable {
+public class Edit implements Serializable {
     private String bio;
     private String avatar;
     private String name;

@@ -277,7 +277,7 @@ public class ZhihuNewsModel {
 
             @Override
             public void onResponse(ThemeContent response, int id) {
-                DB.Save(response);
+                //DB.Save(response);
                 listener.onLoadThemeContentSuccess(response);
             }
         };

@@ -3,7 +3,9 @@ package com.example.liujiachao.zhihudaily.adapter;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +17,20 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liujiachao.zhihudaily.R;
+import com.example.liujiachao.zhihudaily.activity.EditorDetailActivity;
 import com.example.liujiachao.zhihudaily.entity.Edit;
+import com.example.liujiachao.zhihudaily.entity.MyTheme;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.entity.ThemeItem;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.utils.DB;
+import com.example.liujiachao.zhihudaily.utils.DTOP;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.RealmResults;
 
 /**
@@ -35,17 +41,11 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final static int HEADER_TYPE = 0;
     private final static int ITEM_TYPE = 1;
     private OnShowNewsDetail mOnShowNewsDetail;
-    //private List<ThemeItem> themeItemList;
-    private RealmResults<ThemeContent> themeContent;
-    private List<Edit> edits;
-
+    private ArrayList<ThemeContent> themeContent = new ArrayList<>();
 
 
     public ThemeListAdapter(OnShowNewsDetail mOnShowNewsDetail,String name) {
         this.mOnShowNewsDetail = mOnShowNewsDetail;
-        //themeItemList = DB.findAll(ThemeItem.class);
-        themeContent = DB.getByName(name, ThemeContent.class);
-        edits = DB.findAll(Edit.class);
     }
 
     @Override
@@ -76,6 +76,7 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 themeHeaderViewHolder.srcImg.setText(tm_content.getImage_source());
             }
 
+            final List<Edit> edits = tm_content.getEditors();
             if (edits == null) {
                 //comment_avatar.png
                 ImageView editImg = new ImageView(context);
@@ -89,22 +90,21 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             } else {
                 for (int index = 0; index < edits.size(); index++ ) {
                     Edit edit = edits.get(index);
-                    ImageView editImg = new ImageView(context);
+                    CircleImageView circleImageView = new CircleImageView(context);
                     Glide.with(context).load(edit.getAvatar())
                             .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
-                            .into(editImg);
-                    RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                            ,ViewGroup.LayoutParams.WRAP_CONTENT);
-                    params.rightMargin = 10;
-                    params.addRule(RelativeLayout.CENTER_VERTICAL);
-                    editImg.setLayoutParams(params);
-                    themeHeaderViewHolder.editContainer.addView(editImg);
+                            .into(circleImageView);
+                    int px = DTOP.dip2px(context,30);
+                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(px,px);
+                    lp.rightMargin = DTOP.dip2px(context, 10);
+                    circleImageView.setLayoutParams(lp);
+                    themeHeaderViewHolder.editContainer.addView(circleImageView);
                 }
             }
             themeHeaderViewHolder.editContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent();
+                    Intent intent = new Intent(context,EditorDetailActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("edits",(Serializable)edits);
                     intent.putExtras(bundle);
@@ -136,6 +136,14 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
         }
 
+    }
+
+    public void updateData(ArrayList<ThemeContent> data) {
+        //更改数据源，不能直接赋值
+        //this.myThemeList = myThemeList;
+        themeContent.clear();
+        themeContent.addAll(data);
+        notifyDataSetChanged();
     }
 
     @Override

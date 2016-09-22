@@ -3,6 +3,8 @@ package com.example.liujiachao.zhihudaily.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import com.example.liujiachao.zhihudaily.activity.EditorDetailActivity;
 import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
 import com.example.liujiachao.zhihudaily.entity.Edit;
+import com.example.liujiachao.zhihudaily.entity.MyTheme;
 import com.example.liujiachao.zhihudaily.entity.ThemeItem;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.R;
@@ -31,11 +34,13 @@ import java.util.List;
  */
 public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowNewsDetail {
 
+    final static int THEME_LIST_MSG = 2;
     private Context context;
     private ThemeListAdapter themeListAdapter;
     private RecyclerView themeListView;
     private int theme_id;
     private ThemeContentPresenter themeContentPresenter;
+    private Handler themeListHandler;
 
     @Nullable
     @Override
@@ -46,6 +51,7 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
         //获取主题列表名
         String name = getArguments().getString("name");
         themeListAdapter = new ThemeListAdapter(this,name);
+        receiveData();
         themeListView = (RecyclerView)themeFragmentView.findViewById(R.id.recycler_view);
         themeListView.setAdapter(themeListAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(themeListView.getContext(),LinearLayoutManager.VERTICAL,false);
@@ -60,7 +66,35 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
 
     @Override
     public void addThemeContent(ThemeContent themeContent) {
-        themeListAdapter.notifyDataSetChanged();
+
+        ArrayList<ThemeContent> themeContents = new ArrayList<>();
+        themeContents.add(themeContent);
+        sendMessage(themeContents);
+    }
+
+    private void sendMessage(ArrayList<ThemeContent> themeContents) {
+        Message msg;
+        msg = Message.obtain();
+        msg.what = THEME_LIST_MSG;
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("theme_content", themeContents);
+        msg.setData(bundle);
+        themeListHandler.sendMessage(msg);
+    }
+
+    private void receiveData() {
+        themeListHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case THEME_LIST_MSG:
+                        ArrayList<ThemeContent> themeArrayList = (ArrayList<ThemeContent>) msg.getData().getSerializable("theme_content");
+                        themeListAdapter.updateData(themeArrayList);
+                        break;
+                }
+                super.handleMessage(msg);
+            }
+        };
     }
 
 

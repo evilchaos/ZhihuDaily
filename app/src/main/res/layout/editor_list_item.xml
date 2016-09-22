@@ -9,7 +9,7 @@
     android:paddingRight="10dp"
     android:paddingTop="10dp" >
 
-    <ImageView
+    <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/edit_img"
         android:layout_width="50dp"
         android:layout_height="50dp"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/edit_img"
         android:textColor="@android:color/black"
-        android:textSize="12sp" />
+         />
 
     <TextView
         android:id="@+id/edit_bio"
@@ -30,6 +30,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/edit_img"
         android:layout_alignLeft="@id/edit_name"
+        android:textSize="12sp"
         android:textColor="@android:color/darker_gray" />
 
 </RelativeLayout>

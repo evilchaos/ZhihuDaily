@@ -1,5 +1,8 @@
 package com.example.liujiachao.zhihudaily.entity;
 
+import java.io.Serializable;
+import java.util.List;
+
 import io.realm.RealmList;
 import io.realm.RealmObject;
 import io.realm.annotations.PrimaryKey;
@@ -7,13 +10,13 @@ import io.realm.annotations.PrimaryKey;
 /**
  * Created by liujiachao on 2016/9/6.
  */
-public class ThemeContent extends RealmObject {
+public class ThemeContent implements Serializable {
 
     @PrimaryKey
     private String name; // 该主题日报的名称
     private RealmList<ThemeItem> stories; // 该主题日报中的文章列表
     private String background; //该主题日报的背景图片（大图）
-    private RealmList<Edit> editors; //该主题日报的编辑
+    private List<Edit> editors; //该主题日报的编辑
     private String image_source;// 图像的版权信息
     private String description;//该主题日报的介绍
 
@@ -52,11 +55,11 @@ public class ThemeContent extends RealmObject {
         this.name = name;
     }
 
-    public RealmList<Edit> getEditors() {
+    public List<Edit> getEditors() {
         return editors;
     }
 
-    public void setEditors(RealmList<Edit> editors) {
+    public void setEditors(List<Edit> editors) {
         this.editors = editors;
     }
 

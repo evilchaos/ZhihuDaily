@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.entity.Edit;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -22,7 +23,7 @@ import java.util.zip.Inflater;
 public class EditorAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
 
-    private List<Edit> edits;
+    private List<Edit> edits = new ArrayList<>();
 
     public EditorAdapter(List<Edit> edits) {
         this.edits = edits;
