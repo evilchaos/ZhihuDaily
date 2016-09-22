@@ -74,7 +74,7 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
 
         adapter.setOnItemClickListener(new RecMenuAdapter.OnItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onItemClick(View view) {
                 switch (view.getId()) {
                     case R.id.linear_login:
                         Intent login_intent = new Intent(mActivity, LoginActivity.class);

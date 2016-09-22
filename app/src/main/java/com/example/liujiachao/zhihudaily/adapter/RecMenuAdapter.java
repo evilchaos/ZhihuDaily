@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.liujiachao.zhihudaily.interfaces.MenuCallback;
@@ -51,11 +52,31 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         if (holder instanceof HeaderViewHolder) {
             final HeaderViewHolder headerViewHolder = (HeaderViewHolder)holder;
-            headerViewHolder.headerView.setOnClickListener(new View.OnClickListener() {
+            headerViewHolder.collectView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int pos = headerViewHolder.getLayoutPosition();
-                    mOnItemClickListener.onItemClick(headerViewHolder.headerView,pos);
+                    mOnItemClickListener.onItemClick(v);
+                }
+            });
+
+            headerViewHolder.downloadView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onItemClick(v);
+                }
+            });
+
+            headerViewHolder.loginLayoutView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onItemClick(v);
+                }
+            });
+
+            headerViewHolder.homeView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mOnItemClickListener.onItemClick(v);
                 }
             });
 
@@ -116,18 +137,20 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
 
-        public ImageView imageView;
-        public TextView loginView;
+        //public ImageView imageView;
+        //public TextView loginView;
         public TextView collectView;
         public TextView downloadView;
         public TextView homeView;
         public View headerView;
+        public LinearLayout loginLayoutView;
 
         public HeaderViewHolder(View view) {
             super(view);
-            imageView = (ImageView)view.findViewById(R.id.iv_avatar);
-            loginView = (TextView)view.findViewById(R.id.tv_login);
+            //imageView = (ImageView)view.findViewById(R.id.iv_avatar);
+//            loginView = (TextView)view.findViewById(R.id.tv_login);
             collectView = (TextView)view.findViewById(R.id.tv_collect);
+            loginLayoutView = (LinearLayout) view.findViewById(R.id.linear_login);
             downloadView = (TextView)view.findViewById(R.id.tv_download);
             homeView = (TextView)view.findViewById(R.id.tv_home);
             headerView = view.findViewById(R.id.header_menu_view);
@@ -144,7 +167,7 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     }
 
     public interface OnItemClickListener {
-        void onItemClick(View view ,int position);
+        void onItemClick(View view);
     }
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
