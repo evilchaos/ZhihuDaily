@@ -141,8 +141,6 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
             Intent intent = new Intent(getActivity(),ZhihuNewsDetailActivity.class);
             intent.putIntegerArrayListExtra("all_id",idList);
             intent.putExtra("id", idList.indexOf(itemViewHolder.zhihuItemInfo.getId()));
-            ActivityOptionsCompat optionsCompat = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    getActivity(),itemViewHolder.mImage,"shared_img");
 
             startActivity(intent);
 

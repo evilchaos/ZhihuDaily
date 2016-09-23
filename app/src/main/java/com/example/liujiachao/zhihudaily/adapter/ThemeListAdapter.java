@@ -41,6 +41,7 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     private final static int HEADER_TYPE = 0;
     private final static int ITEM_TYPE = 1;
     private OnShowNewsDetail mOnShowNewsDetail;
+    private boolean isEditorLoaded = false;
     private ArrayList<ThemeContent> themeContent = new ArrayList<>();
 
 
@@ -56,7 +57,7 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             View view = inflater.inflate(R.layout.theme_news_header,parent,false);
             return  new ThemeHeaderViewHolder(view);
         } else {
-            View view = inflater.inflate(R.layout.news_item,parent,false);
+            View view = inflater.inflate(R.layout.news_item, parent, false);
             return new ThemeItemViewHolder(view);
         }
     }
@@ -77,30 +78,12 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
 
             final List<Edit> edits = tm_content.getEditors();
-            if (edits == null) {
-                //comment_avatar.png
-                ImageView editImg = new ImageView(context);
-                editImg.setImageResource(R.drawable.comment_avatar);
-                RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
-                ,ViewGroup.LayoutParams.WRAP_CONTENT);
-                params.rightMargin = 10;
-                params.addRule(RelativeLayout.CENTER_VERTICAL);
-                editImg.setLayoutParams(params);
-                themeHeaderViewHolder.editContainer.addView(editImg);
-            } else {
-                for (int index = 0; index < edits.size(); index++ ) {
-                    Edit edit = edits.get(index);
-                    CircleImageView circleImageView = new CircleImageView(context);
-                    Glide.with(context).load(edit.getAvatar())
-                            .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
-                            .into(circleImageView);
-                    int px = DTOP.dip2px(context,30);
-                    LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(px,px);
-                    lp.rightMargin = DTOP.dip2px(context, 10);
-                    circleImageView.setLayoutParams(lp);
-                    themeHeaderViewHolder.editContainer.addView(circleImageView);
-                }
+
+            if (!isEditorLoaded) {
+                addEditor(context,themeHeaderViewHolder,edits);
             }
+
+
             themeHeaderViewHolder.editContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -136,6 +119,34 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             });
         }
 
+    }
+
+    private void addEditor(Context context,ThemeHeaderViewHolder themeHeaderViewHolder,List<Edit> edits) {
+        if (edits == null) {
+            //comment_avatar.png
+            ImageView editImg = new ImageView(context);
+            editImg.setImageResource(R.drawable.comment_avatar);
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT
+                    ,ViewGroup.LayoutParams.WRAP_CONTENT);
+            params.rightMargin = 10;
+            params.addRule(RelativeLayout.CENTER_VERTICAL);
+            editImg.setLayoutParams(params);
+            themeHeaderViewHolder.editContainer.addView(editImg);
+        } else {
+            for (int index = 0; index < edits.size(); index++ ) {
+                Edit edit = edits.get(index);
+                CircleImageView circleImageView = new CircleImageView(context);
+                Glide.with(context).load(edit.getAvatar())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
+                        .into(circleImageView);
+                int px = DTOP.dip2px(context,30);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(px,px);
+                lp.rightMargin = DTOP.dip2px(context, 10);
+                circleImageView.setLayoutParams(lp);
+                themeHeaderViewHolder.editContainer.addView(circleImageView);
+            }
+        }
+        isEditorLoaded = true;
     }
 
     public void updateData(ArrayList<ThemeContent> data) {

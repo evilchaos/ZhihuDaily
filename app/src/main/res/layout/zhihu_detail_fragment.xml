@@ -71,13 +71,11 @@
 
 
 
-        <WebView
+        <com.example.liujiachao.zhihudaily.widgets.UWebView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id ="@+id/detail_container"
-            >
-
-        </WebView>
+            />
 
 
     </LinearLayout>

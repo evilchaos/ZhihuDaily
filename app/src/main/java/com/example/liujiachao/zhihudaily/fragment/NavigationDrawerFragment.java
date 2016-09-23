@@ -32,7 +32,6 @@ import com.example.liujiachao.zhihudaily.entity.ThemeData;
 import com.example.liujiachao.zhihudaily.interfaces.MenuCallback;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ThemeDataPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ThemeDataView;
-import com.example.liujiachao.zhihudaily.service.DownloadService;
 
 import java.util.ArrayList;
 
@@ -87,8 +86,7 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
                         break;
 
                     case R.id.tv_download:
-                        Intent download_intent = new Intent(mActivity, DownloadService.class);
-                        getActivity().startService(download_intent);
+                        Toast.makeText(mActivity, "暂无离线下载功能", Toast.LENGTH_SHORT).show();
                         break;
 
                     case R.id.tv_home:

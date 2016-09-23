@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        android:background="@color/blue"
+        android:id = "@+id/login_toolbar"
+        app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/login_bg"
+        android:orientation="vertical"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src ="@drawable/splash_logo"
+            android:layout_marginTop="110dp"
+            android:layout_gravity="center_horizontal"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="使用微博登录"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="240dp"
+            />
+
+
+        <TextView
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="285dp"
+            android:text ="新浪微博"
+            android:drawableLeft="@drawable/account_sina"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/selector_btn"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="60dp"
+            android:textColor="@android:color/black"
+            android:drawablePadding="10dip"
+            android:id = "@+id/sina_login"
+            />
+
+        <TextView
+            android:layout_width="240dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="340dp"
+            android:text ="腾迅微博"
+            android:drawableLeft="@drawable/account_tencent"
+            android:layout_gravity="center_horizontal"
+            android:background="@drawable/selector_btn"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:paddingLeft="60dp"
+            android:textColor="@android:color/black"
+            android:drawablePadding="10dip"
+            android:id = "@+id/tencent_login"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:text="知乎日报不会未经同意通过你的微博账号发布任何信息"
+            android:textColor="#88ffffff"
+            android:textSize="10sp" />
+    </FrameLayout>
+</LinearLayout>

@@ -24,6 +24,7 @@ import com.example.liujiachao.zhihudaily.entity.RealmString;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuDetailPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.NewsDetailView;
 import com.example.liujiachao.zhihudaily.utils.DB;
+import com.example.liujiachao.zhihudaily.widgets.UWebView;
 
 /**
  * Created by liujiachao on 2016/8/18.
@@ -33,7 +34,7 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
     private ImageView storyImage;
     private TextView storyTitle;
     private TextView imageSouce;
-    private WebView detailContainer;
+    private UWebView detailContainer;
     private LinearLayout storyRecommenders;
 
     private ZhihuDetail zhihuDetail;
@@ -66,7 +67,7 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
             storyImage = (ImageView) rootView.findViewById(R.id.story_image);
             storyTitle = (TextView) rootView.findViewById(R.id.story_title);
             imageSouce = (TextView) rootView.findViewById(R.id.image_source);
-            detailContainer = (WebView)rootView.findViewById(R.id.detail_container);
+            detailContainer = (UWebView)rootView.findViewById(R.id.detail_container);
             storyRecommenders = (LinearLayout) rootView.findViewById(R.id.story_recommonders);
             isPrepared = true;
             lazyLoad();
@@ -138,13 +139,13 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
 
         String js = "";
         for (RealmString js_url : zhihuDetail.getJs()) {
-            js += "<script src=" + js_url.getVal() + ">\n";
+            js += "<script src=" + js_url.getVal() + "/>\n";
         }
 
         StringBuilder sb = new StringBuilder();
         sb.append("<html>\n").append("<head>\n").append(css).append(js).append("</head>\n")
                 .append("<body>").append(zhihuDetail.getBody()).append("</body>\n")
-                .append("</html>\n");
+                .append("</html>");
 
         detailContainer.loadData(sb.toString(),"text/html;charset=UTF-8", "UTF-8");
 

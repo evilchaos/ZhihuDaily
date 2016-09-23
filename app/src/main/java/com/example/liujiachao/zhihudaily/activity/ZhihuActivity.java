@@ -22,7 +22,6 @@ import android.widget.Toast;
 
 
 import com.example.liujiachao.zhihudaily.fragment.NavigationDrawerFragment;
-import com.example.liujiachao.zhihudaily.service.DownloadService;
 import com.example.liujiachao.zhihudaily.interfaces.MenuCallback;
 import com.example.liujiachao.zhihudaily.entity.MyTheme;
 import com.example.liujiachao.zhihudaily.R;
