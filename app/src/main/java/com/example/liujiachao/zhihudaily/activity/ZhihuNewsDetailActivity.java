@@ -65,10 +65,15 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
         praiseNumMenu = (TextView)findViewById(R.id.praise_num);
         toolBar = (RelativeLayout)findViewById(R.id.toolbar);
 
-        toolBar.setOnClickListener(this);
+        //toolBar.setOnClickListener(this);
+        backMenu.setOnClickListener(this);
+        shareMenu.setOnClickListener(this);
+        collectMenu.setOnClickListener(this);
+        commentMenu.setOnClickListener(this);
+        praiseMenu.setOnClickListener(this);
 
         presenter = new StoryExtraPresenter(this);
-        presenter.loadStoryExtra(id);
+        presenter.loadStoryExtra(idList.get(id));
 
         viewPager = (ViewPager)findViewById(R.id.viewPager);
         viewPager.addOnPageChangeListener(this);

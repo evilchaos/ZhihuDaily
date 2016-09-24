@@ -116,12 +116,16 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .crossFade().into(storyImage);
             storyTitle.setText(zhihuDetail.getTitle());
+            if (!TextUtils.isEmpty(zhihuDetail.getImage_source())) {
+                imageSouce.setText(zhihuDetail.getImage_source());
+            }
         } else {
             storyImage.setVisibility(View.GONE);
         }
 
-        if (zhihuDetail.getRecommenders() == null) {
-            storyRecommenders.setVisibility(View.GONE);
+
+        if (zhihuDetail.getRecommenders().size() > 0) {
+            storyRecommenders.setVisibility(View.VISIBLE);
         } else {
             storyRecommenders.removeViews(1,storyRecommenders.getChildCount() - 1);
             for (Recommender rec : zhihuDetail.getRecommenders()) {
@@ -134,7 +138,7 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
 
         String css = "";
         for (RealmString css_url : zhihuDetail.getCss()) {
-            css += "<link rec=\"stylesheet\" href=" + css_url.getVal() + ">\n";
+            css += "<link rel=\"stylesheet\" href=" + css_url.getVal() + ">\n";
         }
 
         String js = "";
@@ -142,9 +146,11 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
             js += "<script src=" + js_url.getVal() + "/>\n";
         }
 
+        String body = zhihuDetail.getBody().replaceAll("<div class=\"img-place-holder\"></div>", "");
+
         StringBuilder sb = new StringBuilder();
         sb.append("<html>\n").append("<head>\n").append(css).append(js).append("</head>\n")
-                .append("<body>").append(zhihuDetail.getBody()).append("</body>\n")
+                .append("<body>").append(body).append("</body>\n")
                 .append("</html>");
 
         detailContainer.loadData(sb.toString(),"text/html;charset=UTF-8", "UTF-8");

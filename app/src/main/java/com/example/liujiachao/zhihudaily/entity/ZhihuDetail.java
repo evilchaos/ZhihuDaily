@@ -16,10 +16,20 @@ public class ZhihuDetail extends RealmObject{
     private RealmList<Recommender> recommenders;
     private RealmList<RealmString> css;
     private RealmList<RealmString> js;
+    private String image_source;
+
 
 
     @PrimaryKey
     private  int id;
+
+    public String getImage_source() {
+        return image_source;
+    }
+
+    public void setImage_source(String image_source) {
+        this.image_source = image_source;
+    }
 
     public void setTitle(String title) {
         this.title = title;
