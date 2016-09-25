@@ -22,6 +22,7 @@ import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.adapter.ThemeListAdapter;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
+import com.example.liujiachao.zhihudaily.interfaces.OnShowThemeDetail;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ThemeContentPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ThemeContentView;
 import com.example.liujiachao.zhihudaily.utils.DB;
@@ -32,7 +33,7 @@ import java.util.List;
 /**
  * Created by liujiachao on 2016/9/6.
  */
-public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowNewsDetail {
+public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowThemeDetail {
 
     final static int THEME_LIST_MSG = 2;
     private Context context;
@@ -99,8 +100,8 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
 
 
     @Override
-    public void onShowNewsDetail(RecyclerView.ViewHolder holder) {
-        List<ThemeItem> themeItemList = DB.findAll(ThemeItem.class);
+    public void onShowThemeDetail(RecyclerView.ViewHolder holder, List<ThemeItem> themeItemList, int position) {
+        List<ThemeItem> themeItems = themeItemList;
         ArrayList<Integer> themeDetailIds = new ArrayList<Integer>();
         for (ThemeItem themeItem : themeItemList) {
             themeDetailIds.add(themeItem.getId());
@@ -109,10 +110,9 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowN
         ThemeListAdapter.ThemeItemViewHolder themeItemViewHolder = (ThemeListAdapter.ThemeItemViewHolder) holder;
         Intent intent = new Intent(getActivity(), ZhihuNewsDetailActivity.class);
         intent.putIntegerArrayListExtra("all_id",themeDetailIds);
-        intent.putExtra("id",themeDetailIds.indexOf(themeItemViewHolder.themeItem.getId()));
+        intent.putExtra("id",themeDetailIds.indexOf(themeItems.get(position).getId()));
         startActivity(intent);
 
         themeItemViewHolder.mTitle.setTextColor(this.getResources().getColor(R.color.darker_gray));
     }
-
 }

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -24,7 +25,11 @@ import com.example.liujiachao.zhihudaily.entity.RealmString;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuDetailPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.NewsDetailView;
 import com.example.liujiachao.zhihudaily.utils.DB;
+import com.example.liujiachao.zhihudaily.utils.DTOP;
 import com.example.liujiachao.zhihudaily.widgets.UWebView;
+
+import de.hdodenhof.circleimageview.CircleImageView;
+import io.realm.RealmList;
 
 /**
  * Created by liujiachao on 2016/8/18.
@@ -36,6 +41,7 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
     private TextView imageSouce;
     private UWebView detailContainer;
     private LinearLayout storyRecommenders;
+    private FrameLayout detailImgHeader;
 
     private ZhihuDetail zhihuDetail;
     private int id;
@@ -69,6 +75,8 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
             imageSouce = (TextView) rootView.findViewById(R.id.image_source);
             detailContainer = (UWebView)rootView.findViewById(R.id.detail_container);
             storyRecommenders = (LinearLayout) rootView.findViewById(R.id.story_recommonders);
+            detailImgHeader = (FrameLayout)rootView.findViewById(R.id.detail_img_header);
+
             isPrepared = true;
             lazyLoad();
         }
@@ -120,19 +128,26 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
                 imageSouce.setText(zhihuDetail.getImage_source());
             }
         } else {
-            storyImage.setVisibility(View.GONE);
+            detailImgHeader.setVisibility(View.GONE);
         }
 
-
-        if (zhihuDetail.getRecommenders().size() > 0) {
+        RealmList<Recommender>  recommenders = zhihuDetail.getRecommenders();
+        if (recommenders != null && recommenders.size() > 0) {
             storyRecommenders.setVisibility(View.VISIBLE);
-        } else {
-            storyRecommenders.removeViews(1,storyRecommenders.getChildCount() - 1);
-            for (Recommender rec : zhihuDetail.getRecommenders()) {
-                ImageView image = (ImageView) View.inflate(getActivity(),R.layout.recommender_item,null);
-                Glide.with(ZhihuDailyApplication.context).load(rec.getAvatar())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade().into(image);
-                storyRecommenders.addView(image);
+            storyRecommenders.removeViews(1, storyRecommenders.getChildCount() - 1);
+
+            for (Recommender rec : recommenders) {
+                CircleImageView circleImageView = new CircleImageView(getActivity());
+
+                Glide.with(getActivity()).load(rec.getAvatar())
+                .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade().into(circleImageView);
+
+                int px = DTOP.dip2px(getActivity(),30);
+                LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(px,px);
+                lp.rightMargin = DTOP.dip2px(getActivity(), 10);
+                circleImageView.setLayoutParams(lp);
+
+                storyRecommenders.addView(circleImageView);
             }
         }
 
@@ -146,7 +161,9 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
             js += "<script src=" + js_url.getVal() + "/>\n";
         }
 
-        String body = zhihuDetail.getBody().replaceAll("<div class=\"img-place-holder\"></div>", "");
+        //这个地方有bug,出现bug的原因是zhiDetail中某些字段，如body为空，此时要加载share_url内容
+        String mBody = zhihuDetail.getBody();
+        String body = mBody.replaceAll("<div class=\"img-place-holder\"></div>", "");
 
         StringBuilder sb = new StringBuilder();
         sb.append("<html>\n").append("<head>\n").append(css).append(js).append("</head>\n")

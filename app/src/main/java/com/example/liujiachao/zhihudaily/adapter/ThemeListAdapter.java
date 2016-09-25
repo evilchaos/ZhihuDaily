@@ -23,6 +23,7 @@ import com.example.liujiachao.zhihudaily.entity.MyTheme;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.entity.ThemeItem;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
+import com.example.liujiachao.zhihudaily.interfaces.OnShowThemeDetail;
 import com.example.liujiachao.zhihudaily.utils.DB;
 import com.example.liujiachao.zhihudaily.utils.DTOP;
 
@@ -40,13 +41,13 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     private final static int HEADER_TYPE = 0;
     private final static int ITEM_TYPE = 1;
-    private OnShowNewsDetail mOnShowNewsDetail;
+    private OnShowThemeDetail mOnShowThemeDetail;
     private boolean isEditorLoaded = false;
     private ArrayList<ThemeContent> themeContent = new ArrayList<>();
 
 
-    public ThemeListAdapter(OnShowNewsDetail mOnShowNewsDetail,String name) {
-        this.mOnShowNewsDetail = mOnShowNewsDetail;
+    public ThemeListAdapter(OnShowThemeDetail mOnShowThemeDetail,String name) {
+        this.mOnShowThemeDetail = mOnShowThemeDetail;
     }
 
     @Override
@@ -63,9 +64,9 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final Context context = holder.itemView.getContext();
-        ThemeContent tm_content = themeContent.get(0);
+        final ThemeContent tm_content = themeContent.get(0);
         if (holder instanceof ThemeHeaderViewHolder) {
             final ThemeHeaderViewHolder themeHeaderViewHolder = (ThemeHeaderViewHolder)holder;
             Glide.with(context).load(tm_content.getBackground())
@@ -100,6 +101,7 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             final ThemeItemViewHolder themeItemViewHolder = (ThemeItemViewHolder)holder;
             themeItemViewHolder.storyHeader.setVisibility(View.GONE);
             themeItemViewHolder.mTitle.setText(themeItem.getTitle());
+            themeItemViewHolder.themeItem = themeItem;
 
             if (themeItem.getImages() != null && themeItem.getImages().size() > 0) {
                 Glide.with(context).load(themeItem.getImages().get(0).getVal())
@@ -112,8 +114,9 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             themeItemViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mOnShowNewsDetail != null) {
-                        mOnShowNewsDetail.onShowNewsDetail(themeItemViewHolder);
+                    if (mOnShowThemeDetail != null) {
+                        List<ThemeItem> themeItems = tm_content.getStories();
+                        mOnShowThemeDetail.onShowThemeDetail(themeItemViewHolder,themeItems,position - 1);
                     }
                 }
             });
