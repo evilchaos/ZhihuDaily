@@ -17,11 +17,18 @@ public class ZhihuDetail extends RealmObject{
     private RealmList<RealmString> css;
     private RealmList<RealmString> js;
     private String image_source;
-
-
+    private int type;
 
     @PrimaryKey
     private  int id;
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
 
     public String getImage_source() {
         return image_source;

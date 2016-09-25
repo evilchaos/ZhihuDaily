@@ -22,8 +22,9 @@ public class UWebView extends WebView {
 
                 @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                    context.startActivity(intent);
+//                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+//                    context.startActivity(intent);
+                    loadUrl(url);
                     return true;
                 }
 

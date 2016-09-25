@@ -156,21 +156,28 @@ public class ZhihuNewsDetailFragment extends Fragment implements NewsDetailView 
             css += "<link rel=\"stylesheet\" href=" + css_url.getVal() + ">\n";
         }
 
-        String js = "";
-        for (RealmString js_url : zhihuDetail.getJs()) {
-            js += "<script src=" + js_url.getVal() + "/>\n";
+        if (zhihuDetail.getBody() != null) {
+            String js = "";
+            for (RealmString js_url : zhihuDetail.getJs()) {
+                js += "<script src=" + js_url.getVal() + "/>\n";
+            }
+
+            //这个地方有bug,出现bug的原因是zhiDetail中某些字段，如body为空，此时要加载share_url内容
+            String mBody = zhihuDetail.getBody();
+            String body = mBody.replaceAll("<div class=\"img-place-holder\"></div>", "");
+
+            StringBuilder sb = new StringBuilder();
+            sb.append("<html>\n").append("<head>\n").append(css).append(js).append("</head>\n")
+                    .append("<body>").append(body).append("</body>\n")
+                    .append("</html>");
+
+            detailContainer.loadData(sb.toString(),"text/html;charset=UTF-8", "UTF-8");
+
+        } else {
+            detailContainer.loadUrl(zhihuDetail.getShare_url());
         }
 
-        //这个地方有bug,出现bug的原因是zhiDetail中某些字段，如body为空，此时要加载share_url内容
-        String mBody = zhihuDetail.getBody();
-        String body = mBody.replaceAll("<div class=\"img-place-holder\"></div>", "");
 
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html>\n").append("<head>\n").append(css).append(js).append("</head>\n")
-                .append("<body>").append(body).append("</body>\n")
-                .append("</html>");
-
-        detailContainer.loadData(sb.toString(),"text/html;charset=UTF-8", "UTF-8");
 
     }
 
