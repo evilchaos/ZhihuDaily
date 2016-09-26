@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.example.liujiachao.zhihudaily.entity.Edit;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
+import com.example.liujiachao.zhihudaily.entity.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
@@ -27,6 +28,7 @@ import com.example.liujiachao.zhihudaily.entity.NewsItem;
 import com.example.liujiachao.zhihudaily.entity.ZhihuJson;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
+import com.example.liujiachao.zhihudaily.utils.API;
 import com.example.liujiachao.zhihudaily.utils.DB;
 
 import java.util.ArrayList;
@@ -68,6 +70,7 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
         zhihuNewsPresenter = new ZhihuNewsPresenter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
 
+        receiveData();
 
         initBanner();
         onRefresh();
@@ -87,6 +90,25 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
         return contentFragmentView;
     }
 
+
+    private List<NewsItem> getItemList(ZhihuJson zhihuJson) {
+        List<NewsItem> list = new ArrayList<>();
+        NewsItem newsItem = new NewsItem();
+        String date = zhihuJson.getDate();
+
+        List<ZhihuItemInfo> stories = zhihuJson.getStories();
+        for(ZhihuItemInfo info : stories) {
+            NewsItem tmp = new NewsItem();
+            tmp.setDate(date);
+            tmp.setTitle(info.getTitle());
+            tmp.setId(info.getId());
+            tmp.setImage(info.getImages().get(0).getVal());
+            list.add(tmp);
+
+        }
+        return list;
+    }
+
     private void receiveData() {
         mNewsHandler = new Handler() {
             @Override
@@ -94,8 +116,24 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
                 switch (msg.what) {
                     case NEWS_LIST_MSG:
                         //更新数据处理逻辑
+                        ZhihuJson zhihuJson = (ZhihuJson)msg.getData().getSerializable("news_list");
+                        int type = msg.getData().getInt("url_type");
+                        if (type == API.TYPE_LATEST) {
+                            if (zhihuJson.getTop_stories() != null) {
+                                zhihuListAdapter.updateTopStory(zhihuJson.getTop_stories());
+                            }
 
+                            if (zhihuJson.getStories() != null) {
+                                List<NewsItem> newsItems = getItemList(zhihuJson);
+                                zhihuListAdapter.updateLatest(newsItems);
+                            }
+                        } else if (type == API.TYPE_BEFORE){
 
+                            if (zhihuJson.getStories() != null) {
+                                List<NewsItem> mItems = getItemList(zhihuJson);
+                                zhihuListAdapter.loadOldData(mItems);
+                            }
+                    }
                         break;
                 }
                 super.handleMessage(msg);
@@ -180,7 +218,13 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
 
     @Override
     public void addZhihuNews(int type ,ZhihuJson zhihuJson) {
-
+        Message msg = Message.obtain();
+        msg.what = NEWS_LIST_MSG;
+        Bundle bundle = new Bundle();
+        bundle.putInt("url_type",type);
+        bundle.putSerializable("news_list",zhihuJson);
+        msg.setData(bundle);
+        mNewsHandler.sendMessage(msg);
     }
 
     @Override

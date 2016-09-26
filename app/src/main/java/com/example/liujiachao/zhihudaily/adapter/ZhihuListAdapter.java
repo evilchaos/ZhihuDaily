@@ -42,17 +42,13 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
 
     private List<ZhihuItemInfo> zhihuItemList = new ArrayList<>();
-    private List<ZhihuTop> tops;
-    private OnShowNewsDetail mlistener;
+    private List<ZhihuTop> tops = new ArrayList<>();
     private List<NewsItem> news = new ArrayList<>();
-    private List<ZhihuTop> zhihuTopList = new ArrayList<>();
     private ArrayList<Integer> idList = new ArrayList<>();
+    private OnShowNewsDetail mlistener;
 
     public ZhihuListAdapter(OnShowNewsDetail listener) {
         mlistener = listener;
-        zhihuItemList = DB.findAll(ZhihuItemInfo.class);
-        tops = DB.findAll(ZhihuTop.class);
-        news = DB.findAll(NewsItem.class);
     }
 
     @Override
@@ -101,7 +97,7 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 }
                 // ItemViewHolder逻辑
                 itemViewHolder.mTitle.setText(news.get(position - 1).getTitle());
-                itemViewHolder.zhihuItemInfo = zhihuItemList.get(position - 1);
+                itemViewHolder.zhihuItemInfo = zhihuItemList.get(position - 1);//有问题
                 Glide.with(context).load(news.get(position - 1).getImage())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .crossFade().into(itemViewHolder.mImage);
@@ -111,13 +107,17 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v) {
                         if(mlistener != null) {
-                            mlistener.onShowNewsDetail(itemViewHolder);
+                            mlistener.onShowNewsDetail(itemViewHolder);//形参可能需要改一下
                         }
                     }
                 });
 
             }
+    }
 
+    public void updateTopStory(List<ZhihuTop> data) {
+        tops.clear();
+        tops.addAll(data);
     }
 
     public void updateLatest(List<NewsItem> data) {

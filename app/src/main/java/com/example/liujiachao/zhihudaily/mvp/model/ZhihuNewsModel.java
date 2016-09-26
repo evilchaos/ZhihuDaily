@@ -96,38 +96,38 @@ public class ZhihuNewsModel {
         }
     }
 
-    private void saveZhihuNews(ZhihuJson zhihuJson) {
-        if(zhihuJson != null) {
-            List<NewsItem> list = getItemList(zhihuJson);
-            DB.realm.beginTransaction();
-            //如果是新消息，那么banner栏保存的数据也要清除，因为这些数据可能已过时
-            if (type == API.TYPE_LATEST) {
-                DB.realm.where(ZhihuTop.class).findAll().clear();
-            }
-            DB.realm.copyToRealmOrUpdate(zhihuJson);
-            DB.realm.copyToRealmOrUpdate(list);
-            DB.realm.where(ZhihuJson.class).findAllSorted("date", Sort.DESCENDING);
-            DB.realm.commitTransaction();
-        }
-    }
+//    private void saveZhihuNews(ZhihuJson zhihuJson) {
+//        if(zhihuJson != null) {
+//            List<NewsItem> list = getItemList(zhihuJson);
+//            DB.realm.beginTransaction();
+//            //如果是新消息，那么banner栏保存的数据也要清除，因为这些数据可能已过时
+//            if (type == API.TYPE_LATEST) {
+//                DB.realm.where(ZhihuTop.class).findAll().clear();
+//            }
+//            DB.realm.copyToRealmOrUpdate(zhihuJson);
+//            DB.realm.copyToRealmOrUpdate(list);
+//            DB.realm.where(ZhihuJson.class).findAllSorted("date", Sort.DESCENDING);
+//            DB.realm.commitTransaction();
+//        }
+//    }
 
-    private List<NewsItem> getItemList(ZhihuJson zhihuJson) {
-        List<NewsItem> list = new ArrayList<>();
-        NewsItem newsItem = new NewsItem();
-        String date = zhihuJson.getDate();
-
-        RealmList<ZhihuItemInfo> stories = zhihuJson.getStories();
-        for(ZhihuItemInfo info : stories) {
-            NewsItem tmp = new NewsItem();
-            tmp.setDate(date);
-            tmp.setTitle(info.getTitle());
-            tmp.setId(info.getId());
-            tmp.setImage(info.getImages().get(0).getVal());
-            list.add(tmp);
-
-        }
-        return list;
-    }
+//    private List<NewsItem> getItemList(ZhihuJson zhihuJson) {
+//        List<NewsItem> list = new ArrayList<>();
+//        NewsItem newsItem = new NewsItem();
+//        String date = zhihuJson.getDate();
+//
+//        RealmList<ZhihuItemInfo> stories = zhihuJson.getStories();
+//        for(ZhihuItemInfo info : stories) {
+//            NewsItem tmp = new NewsItem();
+//            tmp.setDate(date);
+//            tmp.setTitle(info.getTitle());
+//            tmp.setId(info.getId());
+//            tmp.setImage(info.getImages().get(0).getVal());
+//            list.add(tmp);
+//
+//        }
+//        return list;
+//    }
 
     public void getZhihuNewsDetail(final int news_id , final OnLoadDetailListener listener) {
         lastTime = System.currentTimeMillis();
