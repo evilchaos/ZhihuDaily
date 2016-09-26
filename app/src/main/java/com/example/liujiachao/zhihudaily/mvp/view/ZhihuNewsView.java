@@ -8,7 +8,7 @@ import com.example.liujiachao.zhihudaily.entity.ZhihuJson;
  */
 public interface ZhihuNewsView {
     void showProgress();
-    void addZhihuNews(ZhihuJson zhihuJson);
+    void addZhihuNews(int type,ZhihuJson zhihuJson);
     void hideProgress();
     void loadFailed(String msg);
 }

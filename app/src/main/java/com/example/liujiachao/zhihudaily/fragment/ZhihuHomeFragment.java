@@ -3,6 +3,8 @@ package com.example.liujiachao.zhihudaily.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityOptionsCompat;
@@ -16,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
 import com.example.liujiachao.zhihudaily.entity.Edit;
+import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.interfaces.OnShowNewsDetail;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
@@ -34,6 +37,7 @@ import java.util.List;
  */
 public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowNewsDetail,SwipeRefreshLayout.OnRefreshListener{
 
+    public final static int NEWS_LIST_MSG = 3;
     private SwipeRefreshLayout swipeRefreshLayout;
     private RecyclerView recyclerView;
     private ZhihuListAdapter zhihuListAdapter;
@@ -41,6 +45,7 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
     private ZhihuNewsPresenter zhihuNewsPresenter;
 
     private LinearLayoutManager layoutManager;
+    private Handler mNewsHandler ;
     Context context;
 
 
@@ -63,6 +68,7 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
         zhihuNewsPresenter = new ZhihuNewsPresenter(this);
         swipeRefreshLayout.setOnRefreshListener(this);
 
+
         initBanner();
         onRefresh();
 
@@ -80,6 +86,23 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
 
         return contentFragmentView;
     }
+
+    private void receiveData() {
+        mNewsHandler = new Handler() {
+            @Override
+            public void handleMessage(Message msg) {
+                switch (msg.what) {
+                    case NEWS_LIST_MSG:
+                        //更新数据处理逻辑
+
+
+                        break;
+                }
+                super.handleMessage(msg);
+            }
+        };
+    }
+
 
     private void OnListScrolled() {
         initBanner();
@@ -146,13 +169,7 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
 
             itemViewHolder.mTitle.setTextColor(this.getResources().getColor(R.color.darker_gray));
         }
-
     }
-
-//    @Override
-//    public void onShowEditorDetail() {
-//
-//    }
 
     @Override
     public void showProgress() {
@@ -162,8 +179,8 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
     }
 
     @Override
-    public void addZhihuNews(ZhihuJson zhihuJson) {
-        zhihuListAdapter.notifyDataSetChanged();
+    public void addZhihuNews(int type ,ZhihuJson zhihuJson) {
+
     }
 
     @Override

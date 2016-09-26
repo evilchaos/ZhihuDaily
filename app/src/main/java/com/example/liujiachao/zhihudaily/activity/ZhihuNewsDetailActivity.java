@@ -47,7 +47,6 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         initViews();
     }
 

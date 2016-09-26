@@ -1,5 +1,6 @@
 package com.example.liujiachao.zhihudaily.mvp.presenter;
 
+import com.example.liujiachao.zhihudaily.entity.ZhihuJson;
 import com.example.liujiachao.zhihudaily.utils.API;
 import com.example.liujiachao.zhihudaily.listener.OnLoadDataListener;
 import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
@@ -33,8 +34,8 @@ public class ZhihuNewsPresenter implements OnLoadDataListener {
     };
 
     @Override
-    public void onSuccess() {
-        mNewsView.addZhihuNews(null);
+    public void onSuccess(int type,ZhihuJson zhihuJson) {
+        mNewsView.addZhihuNews(type,zhihuJson);
         mNewsView.hideProgress();
 
     }

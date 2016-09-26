@@ -48,11 +48,11 @@ public class ZhihuNewsModel {
         this.type = type;
 
         //自定义CallBack
-        final Callback<String> callback = new Callback<String>() {
+        final Callback<ZhihuJson> callback = new Callback<ZhihuJson>() {
 
             @Override
-            public void onResponse(String response, int id) {
-                listener.onSuccess();
+            public void onResponse(ZhihuJson response, int id) {
+                listener.onSuccess(type, response);
 
             }
 
@@ -73,17 +73,16 @@ public class ZhihuNewsModel {
             }
 
             @Override
-            public String parseNetworkResponse(Response response, int id) throws Exception {
+            public ZhihuJson parseNetworkResponse(Response response, int id) throws Exception {
                 //解析网络传送过来的数据
                 ZhihuJson zhihuJson = Json.parseZhihuNews(response.body().string());
-                //将这些数据插入到数据库中
-                saveZhihuNews(zhihuJson);
-                date = zhihuJson.getDate();
-                if(type == API.TYPE_BEFORE) {
-                    SPSave.save("DATE",date);
-                }
-
-                return response.body().string();
+//                //将这些数据插入到数据库中
+//                saveZhihuNews(zhihuJson);
+//                date = zhihuJson.getDate();
+//                if(type == API.TYPE_BEFORE) {
+//                    SPSave.save("DATE",date);
+//                }
+                return zhihuJson;
             }
         };
 
@@ -100,16 +99,15 @@ public class ZhihuNewsModel {
     private void saveZhihuNews(ZhihuJson zhihuJson) {
         if(zhihuJson != null) {
             List<NewsItem> list = getItemList(zhihuJson);
-            Realm realm = Realm.getDefaultInstance();
-            realm.beginTransaction();
+            DB.realm.beginTransaction();
             //如果是新消息，那么banner栏保存的数据也要清除，因为这些数据可能已过时
             if (type == API.TYPE_LATEST) {
-                realm.where(ZhihuTop.class).findAll().clear();
+                DB.realm.where(ZhihuTop.class).findAll().clear();
             }
-            realm.copyToRealmOrUpdate(zhihuJson);
-            realm.copyToRealmOrUpdate(list);
-            realm.where(ZhihuJson.class).findAllSorted("date", Sort.DESCENDING);
-            realm.commitTransaction();
+            DB.realm.copyToRealmOrUpdate(zhihuJson);
+            DB.realm.copyToRealmOrUpdate(list);
+            DB.realm.where(ZhihuJson.class).findAllSorted("date", Sort.DESCENDING);
+            DB.realm.commitTransaction();
         }
     }
 

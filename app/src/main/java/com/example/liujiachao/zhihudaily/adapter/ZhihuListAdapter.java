@@ -22,6 +22,7 @@ import com.example.liujiachao.zhihudaily.utils.DB;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -40,10 +41,12 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public static int TYPE_ITEM = 2;
 
 
-    private List<ZhihuItemInfo> zhihuItemList;
+    private List<ZhihuItemInfo> zhihuItemList = new ArrayList<>();
     private List<ZhihuTop> tops;
     private OnShowNewsDetail mlistener;
-    private List<NewsItem> news;
+    private List<NewsItem> news = new ArrayList<>();
+    private List<ZhihuTop> zhihuTopList = new ArrayList<>();
+    private ArrayList<Integer> idList = new ArrayList<>();
 
     public ZhihuListAdapter(OnShowNewsDetail listener) {
         mlistener = listener;
@@ -115,6 +118,26 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
             }
 
+    }
+
+    public void updateLatest(List<NewsItem> data) {
+        news.clear();
+        news.addAll(data);
+        idList.clear();
+
+        for (NewsItem newsItem : news) {
+            idList.add(newsItem.getId());
+        }
+        notifyDataSetChanged();
+    }
+
+    public void loadOldData(List<NewsItem> data) {
+        news.addAll(data);
+
+        for (NewsItem newsItem :news) {
+            idList.add(newsItem.getId());
+        }
+        notifyDataSetChanged();
     }
 
     @Override
