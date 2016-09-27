@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.liujiachao.zhihudaily.entity.Edit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -12,6 +13,6 @@ import java.util.List;
  */
 public interface OnShowNewsDetail {
 
-    void onShowNewsDetail(RecyclerView.ViewHolder holder);
+    void onShowNewsDetail(RecyclerView.ViewHolder holder,ArrayList<Integer> idList);
     //void onShowEditorDetail();
 }

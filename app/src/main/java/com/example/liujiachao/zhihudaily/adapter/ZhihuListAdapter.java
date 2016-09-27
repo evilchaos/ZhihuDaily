@@ -19,6 +19,7 @@ import com.example.liujiachao.zhihudaily.entity.ZhihuItemInfo;
 import com.example.liujiachao.zhihudaily.entity.ZhihuTop;
 import com.example.liujiachao.zhihudaily.mvp.view.BannerView;
 import com.example.liujiachao.zhihudaily.utils.DB;
+import com.example.liujiachao.zhihudaily.utils.Dater;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,15 +34,10 @@ import java.util.Locale;
  */
 public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    //scrolling picture banner
     public static int TYPE_BANNER = 0 ;
-    // data item
-    public static  int TYPE_DATE = 1;
-    // view item
-    public static int TYPE_ITEM = 2;
+    public static int TYPE_ITEM = 1;
 
 
-    private List<ZhihuItemInfo> zhihuItemList = new ArrayList<>();
     private List<ZhihuTop> tops = new ArrayList<>();
     private List<NewsItem> news = new ArrayList<>();
     private ArrayList<Integer> idList = new ArrayList<>();
@@ -75,7 +71,7 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 bannerViewHolder.banner.setPages(new CBViewHolderCreator<BannerView>() {
                     @Override
                     public BannerView createHolder() {
-                        return new BannerView();
+                        return new BannerView(tops);
                     }
                 },tops);
                         //.setPageIndicator(new int[]{R.drawable.ic_page_indicator,R.drawable.ic_page_indicator_focused});
@@ -90,14 +86,14 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     if((news.get(position -1).getDate()).equals(news.get(position - 2).getDate())) {
                         itemViewHolder.header.setVisibility(View.GONE);
                     } else {
-                        itemViewHolder.header.setText(getNewsLabel(news.get(position -1).getDate()));
+                        itemViewHolder.header.setText(Dater.getNewsLabel(news.get(position - 1).getDate()));
                         itemViewHolder.header.setClickable(false);
                         itemViewHolder.header.setVisibility(View.VISIBLE);
                     }
                 }
                 // ItemViewHolder逻辑
                 itemViewHolder.mTitle.setText(news.get(position - 1).getTitle());
-                itemViewHolder.zhihuItemInfo = zhihuItemList.get(position - 1);//有问题
+                itemViewHolder.newsItem = news.get(position - 1);
                 Glide.with(context).load(news.get(position - 1).getImage())
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .crossFade().into(itemViewHolder.mImage);
@@ -107,7 +103,7 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     @Override
                     public void onClick(View v) {
                         if(mlistener != null) {
-                            mlistener.onShowNewsDetail(itemViewHolder);//形参可能需要改一下
+                            mlistener.onShowNewsDetail(itemViewHolder,idList);
                         }
                     }
                 });
@@ -133,7 +129,6 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void loadOldData(List<NewsItem> data) {
         news.addAll(data);
-
         for (NewsItem newsItem :news) {
             idList.add(newsItem.getId());
         }
@@ -151,7 +146,7 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemCount() {
-        return zhihuItemList.size() + 1;
+        return news.size() + 1;
 
     }
 
@@ -165,15 +160,12 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     }
 
-
-    public class DateViewHolder extends RecyclerView.ViewHolder {
-        public TextView DateText;
-        public DateViewHolder(View view) {
-            super(view);
-            DateText = (TextView)view.findViewById(R.id.zhihuDate);
+    public NewsItem getData(int position) {
+        if (position == 0) {
+            return null;
+        } else {
+            return  news.get(position - 1);
         }
-
-
     }
 
     public class ItemViewHolder extends RecyclerView.ViewHolder {
@@ -191,50 +183,6 @@ public class ZhihuListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         public ImageView mImage;
         public TextView mTitle;
         public View mItem;
-        public ZhihuItemInfo zhihuItemInfo;
-    }
-
-    private String getNewsLabel(String date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        String today = format.format(new Date());
-        if (date.equals(today)) {
-            return "今日热闻";
-        } else {
-            SimpleDateFormat format2 = new SimpleDateFormat("MM月dd日", Locale.getDefault());
-            try {
-                Date then = format.parse(date);
-                String result = format2.format(then);
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(then);
-                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-                switch (dayOfWeek) {
-                    case Calendar.SUNDAY:
-                        result += " 星期日";
-                        break;
-                    case Calendar.MONDAY:
-                        result += " 星期一";
-                        break;
-                    case Calendar.TUESDAY:
-                        result += " 星期二";
-                        break;
-                    case Calendar.WEDNESDAY:
-                        result += " 星期三";
-                        break;
-                    case Calendar.THURSDAY:
-                        result += " 星期四";
-                        break;
-                    case Calendar.FRIDAY:
-                        result += " 星期五";
-                        break;
-                    case Calendar.SATURDAY:
-                        result += " 星期六";
-                        break;
-                }
-                return result;
-            } catch (ParseException e) {
-                e.printStackTrace();
-                return "";
-            }
-        }
+        public NewsItem newsItem;
     }
 }

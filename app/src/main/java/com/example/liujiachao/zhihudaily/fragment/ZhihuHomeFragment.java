@@ -12,11 +12,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 
 import com.bigkoo.convenientbanner.ConvenientBanner;
+import com.example.liujiachao.zhihudaily.activity.ZhihuActivity;
 import com.example.liujiachao.zhihudaily.entity.Edit;
 import com.example.liujiachao.zhihudaily.entity.ThemeContent;
 import com.example.liujiachao.zhihudaily.entity.ZhihuItemInfo;
@@ -26,6 +29,7 @@ import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
 import com.example.liujiachao.zhihudaily.adapter.ZhihuListAdapter;
 import com.example.liujiachao.zhihudaily.entity.NewsItem;
 import com.example.liujiachao.zhihudaily.entity.ZhihuJson;
+import com.example.liujiachao.zhihudaily.listener.OnSetTitleListener;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ZhihuNewsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ZhihuNewsView;
 import com.example.liujiachao.zhihudaily.utils.API;
@@ -37,7 +41,7 @@ import java.util.List;
 /**
  * Created by liujiachao on 2016/9/2.
  */
-public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowNewsDetail,SwipeRefreshLayout.OnRefreshListener{
+public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowNewsDetail,SwipeRefreshLayout.OnRefreshListener {
 
     public final static int NEWS_LIST_MSG = 3;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -85,10 +89,32 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
                 }
             }
 
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+                RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                int firstVisiableItem = ((LinearLayoutManager)layoutManager).findFirstVisibleItemPosition();
+                if (firstVisiableItem == 0) {
+                    return;
+                }
+
+                NewsItem curItem = zhihuListAdapter.getData(firstVisiableItem);
+                NewsItem preItem = zhihuListAdapter.getData(firstVisiableItem - 1);
+
+                if (preItem == null || curItem.getDate() != preItem.getDate()) {
+                    //改变标题
+                    ((OnSetTitleListener)(getActivity())).onSetTitle(curItem.getDate());
+                }
+
+            }
         });
 
         return contentFragmentView;
     }
+
+
+
 
 
     private List<NewsItem> getItemList(ZhihuJson zhihuJson) {
@@ -188,20 +214,14 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
     }
 
     @Override
-    public void onShowNewsDetail(RecyclerView.ViewHolder holder) {
+    public void onShowNewsDetail(RecyclerView.ViewHolder holder,ArrayList<Integer> idList) {
 
         //通过首页中载入的消息item个数，来确定fragment的数量
         if (holder instanceof ZhihuListAdapter.ItemViewHolder) {
-            ArrayList<Integer> idList = new ArrayList<Integer>();
-            List<NewsItem> newsItem = DB.findAll(NewsItem.class);
-            for (NewsItem item : newsItem) {
-                idList.add(item.getId());
-            }
-
             ZhihuListAdapter.ItemViewHolder itemViewHolder = (ZhihuListAdapter.ItemViewHolder)holder;
             Intent intent = new Intent(getActivity(),ZhihuNewsDetailActivity.class);
             intent.putIntegerArrayListExtra("all_id",idList);
-            intent.putExtra("id", idList.indexOf(itemViewHolder.zhihuItemInfo.getId()));
+            intent.putExtra("id", idList.indexOf(itemViewHolder.newsItem.getId()));
 
             startActivity(intent);
 

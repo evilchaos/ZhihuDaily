@@ -85,4 +85,48 @@ public class Dater {
         return format.format(date);
     }
 
+    public static String getNewsLabel(String date) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        String today = format.format(new Date());
+        if (date.equals(today)) {
+            return "今日热闻";
+        } else {
+            SimpleDateFormat format2 = new SimpleDateFormat("MM月dd日", Locale.getDefault());
+            try {
+                Date then = format.parse(date);
+                String result = format2.format(then);
+                Calendar calendar = Calendar.getInstance();
+                calendar.setTime(then);
+                int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+                switch (dayOfWeek) {
+                    case Calendar.SUNDAY:
+                        result += " 星期日";
+                        break;
+                    case Calendar.MONDAY:
+                        result += " 星期一";
+                        break;
+                    case Calendar.TUESDAY:
+                        result += " 星期二";
+                        break;
+                    case Calendar.WEDNESDAY:
+                        result += " 星期三";
+                        break;
+                    case Calendar.THURSDAY:
+                        result += " 星期四";
+                        break;
+                    case Calendar.FRIDAY:
+                        result += " 星期五";
+                        break;
+                    case Calendar.SATURDAY:
+                        result += " 星期六";
+                        break;
+                }
+                return result;
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return "";
+            }
+        }
+    }
+
 }

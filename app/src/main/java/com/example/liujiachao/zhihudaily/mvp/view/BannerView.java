@@ -18,13 +18,19 @@ import com.example.liujiachao.zhihudaily.activity.ZhihuActivity;
 import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
 import com.example.liujiachao.zhihudaily.entity.ZhihuTop;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by evilchaos on 16/7/23.
  */
 public class BannerView implements Holder<ZhihuTop> {
 
     private View view;
-
+    private List<ZhihuTop> zhihuTops;
+    public BannerView(List<ZhihuTop> zhihuTops) {
+        this.zhihuTops = zhihuTops;
+    }
 
     @Override
     public View createView(Context context) {
@@ -33,7 +39,7 @@ public class BannerView implements Holder<ZhihuTop> {
     }
 
     @Override
-    public void UpdateUI(final Context context, int position, final ZhihuTop data) {
+    public void UpdateUI(final Context context, final int position, final ZhihuTop data) {
 
         final ImageView imageView = (ImageView)view.findViewById(R.id.banner_img);
         TextView textView = (TextView)view.findViewById(R.id.banner_title);
@@ -44,11 +50,15 @@ public class BannerView implements Holder<ZhihuTop> {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context,ZhihuNewsDetailActivity.class);
-                intent.putExtra("id", data.getId());
-                ActivityOptionsCompat optionsCompat =
-                        ActivityOptionsCompat.makeSceneTransitionAnimation((ZhihuActivity)context,
-                                imageView,context.getString(R.string.shared_img));
-                ActivityCompat.startActivity((ZhihuActivity) context, intent,null);
+                intent.putExtra("id",position);
+                ArrayList<Integer> idList = new ArrayList<Integer>();
+                if (zhihuTops != null && zhihuTops.size() > 0) {
+                    for (ZhihuTop zhihuTop : zhihuTops) {
+                        idList.add(zhihuTop.getId());
+                    }
+                }
+                intent.putIntegerArrayListExtra("all_id",idList);
+                context.startActivity(intent);
             }
         });
 

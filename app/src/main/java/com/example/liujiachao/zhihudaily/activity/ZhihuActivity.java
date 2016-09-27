@@ -30,14 +30,17 @@ import com.example.liujiachao.zhihudaily.entity.Theme;
 import com.example.liujiachao.zhihudaily.entity.ThemeData;
 import com.example.liujiachao.zhihudaily.fragment.ThemeFragment;
 import com.example.liujiachao.zhihudaily.fragment.ZhihuHomeFragment;
+import com.example.liujiachao.zhihudaily.listener.OnSetTitleListener;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ThemeDataPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ThemeDataView;
+import com.example.liujiachao.zhihudaily.utils.Dater;
 
 import java.util.ArrayList;
 import java.util.List;
 
 //访问网络，加载消息数据，并将其保存到数据库， 在该activity的生命周期中完成
-public class ZhihuActivity extends AppCompatActivity {
+public class ZhihuActivity extends AppCompatActivity implements OnSetTitleListener {
+
     private DrawerLayout drawerLayout;
     private boolean isTheme = false;
     private Toolbar toolbar;
@@ -78,8 +81,14 @@ public class ZhihuActivity extends AppCompatActivity {
     private void setUpToolbar() {
         toolbar = (Toolbar)findViewById(R.id.common_toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("首页");
+        getSupportActionBar().setTitle("首页");
         toolbar.inflateMenu(R.menu.toolbar_action_menu);
+    }
+
+    @Override
+    public void onSetTitle(String title) {
+        String date = Dater.getNewsLabel(title);
+        getSupportActionBar().setTitle(date);
     }
 
 //    @Override

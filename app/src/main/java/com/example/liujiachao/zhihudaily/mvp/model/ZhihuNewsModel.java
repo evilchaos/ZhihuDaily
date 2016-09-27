@@ -76,12 +76,8 @@ public class ZhihuNewsModel {
             public ZhihuJson parseNetworkResponse(Response response, int id) throws Exception {
                 //解析网络传送过来的数据
                 ZhihuJson zhihuJson = Json.parseZhihuNews(response.body().string());
-//                //将这些数据插入到数据库中
-//                saveZhihuNews(zhihuJson);
-//                date = zhihuJson.getDate();
-//                if(type == API.TYPE_BEFORE) {
-//                    SPSave.save("DATE",date);
-//                }
+                date = zhihuJson.getDate();
+                SPSave.save("DATE",date);
                 return zhihuJson;
             }
         };
@@ -95,39 +91,6 @@ public class ZhihuNewsModel {
             OkHttpUtils.get().url(API.NEWS_BEFORE + date).tag(API.TAG_ZHIHU).build().execute(callback);
         }
     }
-
-//    private void saveZhihuNews(ZhihuJson zhihuJson) {
-//        if(zhihuJson != null) {
-//            List<NewsItem> list = getItemList(zhihuJson);
-//            DB.realm.beginTransaction();
-//            //如果是新消息，那么banner栏保存的数据也要清除，因为这些数据可能已过时
-//            if (type == API.TYPE_LATEST) {
-//                DB.realm.where(ZhihuTop.class).findAll().clear();
-//            }
-//            DB.realm.copyToRealmOrUpdate(zhihuJson);
-//            DB.realm.copyToRealmOrUpdate(list);
-//            DB.realm.where(ZhihuJson.class).findAllSorted("date", Sort.DESCENDING);
-//            DB.realm.commitTransaction();
-//        }
-//    }
-
-//    private List<NewsItem> getItemList(ZhihuJson zhihuJson) {
-//        List<NewsItem> list = new ArrayList<>();
-//        NewsItem newsItem = new NewsItem();
-//        String date = zhihuJson.getDate();
-//
-//        RealmList<ZhihuItemInfo> stories = zhihuJson.getStories();
-//        for(ZhihuItemInfo info : stories) {
-//            NewsItem tmp = new NewsItem();
-//            tmp.setDate(date);
-//            tmp.setTitle(info.getTitle());
-//            tmp.setId(info.getId());
-//            tmp.setImage(info.getImages().get(0).getVal());
-//            list.add(tmp);
-//
-//        }
-//        return list;
-//    }
 
     public void getZhihuNewsDetail(final int news_id , final OnLoadDetailListener listener) {
         lastTime = System.currentTimeMillis();
