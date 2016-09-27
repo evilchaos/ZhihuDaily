@@ -87,7 +87,15 @@ public class ZhihuActivity extends AppCompatActivity implements OnSetTitleListen
 
     @Override
     public void onSetTitle(String title) {
-        String date = Dater.getNewsLabel(title);
+        String date;
+
+        if (title.equals("今日热闻")) {
+            date = "今日热闻";
+        } else if (title.equals("homepage")) {
+            date = "首页";
+        } else {
+            date = Dater.getNewsLabel(title);
+        }
         getSupportActionBar().setTitle(date);
     }
 

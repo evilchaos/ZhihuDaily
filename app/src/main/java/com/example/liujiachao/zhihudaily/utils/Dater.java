@@ -86,14 +86,15 @@ public class Dater {
     }
 
     public static String getNewsLabel(String date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
-        String today = format.format(new Date());
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyyMMdd", Locale.getDefault());
+        Date dat = new Date();
+        String today = dateformat.format(dat);
         if (date.equals(today)) {
             return "今日热闻";
         } else {
             SimpleDateFormat format2 = new SimpleDateFormat("MM月dd日", Locale.getDefault());
             try {
-                Date then = format.parse(date);
+                Date then = dateformat.parse(date);
                 String result = format2.format(then);
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(then);

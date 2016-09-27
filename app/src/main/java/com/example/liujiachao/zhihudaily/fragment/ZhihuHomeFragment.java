@@ -96,13 +96,15 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
                 RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                 int firstVisiableItem = ((LinearLayoutManager)layoutManager).findFirstVisibleItemPosition();
                 if (firstVisiableItem == 0) {
+                    ((OnSetTitleListener)(getActivity())).onSetTitle("homepage");
                     return;
                 }
 
                 NewsItem curItem = zhihuListAdapter.getData(firstVisiableItem);
                 NewsItem preItem = zhihuListAdapter.getData(firstVisiableItem - 1);
+                NewsItem nextItem = zhihuListAdapter.getData(firstVisiableItem + 1);
 
-                if (preItem == null || curItem.getDate() != preItem.getDate()) {
+                if (preItem == null || curItem.getDate() != preItem.getDate() || curItem.getDate() != nextItem.getDate()) {
                     //改变标题
                     ((OnSetTitleListener)(getActivity())).onSetTitle(curItem.getDate());
                 }
