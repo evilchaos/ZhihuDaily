@@ -69,11 +69,14 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         final ThemeContent tm_content = themeContent.get(0);
         if (holder instanceof ThemeHeaderViewHolder) {
             final ThemeHeaderViewHolder themeHeaderViewHolder = (ThemeHeaderViewHolder)holder;
+
             Glide.with(context).load(tm_content.getBackground())
                     .diskCacheStrategy(DiskCacheStrategy.ALL).crossFade()
                     .into(themeHeaderViewHolder.headImageView);
+
             String description = tm_content.getDescription();
             themeHeaderViewHolder.themeDes.setText(description);
+
             if (tm_content.getImage_source() != null) {
                 themeHeaderViewHolder.srcImg.setText(tm_content.getImage_source());
             }
@@ -83,7 +86,6 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             if (!isEditorLoaded) {
                 addEditor(context,themeHeaderViewHolder,edits);
             }
-
 
             themeHeaderViewHolder.editContainer.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,7 +101,7 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         } else {
             ThemeItem themeItem = tm_content.getStories().get(position - 1);
             final ThemeItemViewHolder themeItemViewHolder = (ThemeItemViewHolder)holder;
-            themeItemViewHolder.storyHeader.setVisibility(View.GONE);
+
             themeItemViewHolder.mTitle.setText(themeItem.getTitle());
             themeItemViewHolder.themeItem = themeItem;
 
@@ -194,18 +196,14 @@ public class ThemeListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     public class ThemeItemViewHolder extends RecyclerView.ViewHolder {
-        public TextView storyHeader;
         public ImageView mImage;
         public TextView mTitle;
-        public View mItem;
         public ThemeItem themeItem;
 
         public ThemeItemViewHolder(View view) {
             super(view);
-            storyHeader = (TextView)view.findViewById(R.id.story_header);
             mImage =(ImageView)view.findViewById(R.id.news_img);
             mTitle = (TextView)view.findViewById(R.id.news_title);
-            mItem = view.findViewById(R.id.news_item);
         }
     }
 }

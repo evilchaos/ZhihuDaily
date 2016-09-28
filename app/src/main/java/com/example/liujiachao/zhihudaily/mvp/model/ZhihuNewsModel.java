@@ -1,6 +1,7 @@
 package com.example.liujiachao.zhihudaily.mvp.model;
 
 import com.example.liujiachao.zhihudaily.entity.Comments;
+import com.example.liujiachao.zhihudaily.listener.OnLoadCommentsListener;
 import com.example.liujiachao.zhihudaily.listener.OnLoadLongCommentsListener;
 import com.example.liujiachao.zhihudaily.listener.OnLoadShortCommentsListener;
 import com.example.liujiachao.zhihudaily.listener.OnLoadThemeContentListener;
@@ -149,7 +150,7 @@ public class ZhihuNewsModel {
 
     }
 
-    public void getLongComments(final int story_id,final OnLoadLongCommentsListener listener) {
+    public void getLongComments(final int story_id,final OnLoadCommentsListener listener) {
         lastTime = System.currentTimeMillis();
         final Callback<Comments> callback = new Callback<Comments>() {
             @Override
@@ -166,13 +167,13 @@ public class ZhihuNewsModel {
 
             @Override
             public void onResponse(Comments response, int id) {
-                listener.onLoadLongCommentsSuccess(response);
+                listener.onLoadCommentsSuccess(response,API.LONG_COMMENT_TAG);
             }
         };
         OkHttpUtils.get().url(String.format(API.STORY_LONG_COMMENTS,story_id)).tag(API.TAG_ZHIHU).build().execute(callback);
     }
 
-    public void getShortComments(final int story_id,final OnLoadShortCommentsListener listener) {
+    public void getShortComments(final int story_id,final OnLoadCommentsListener listener) {
         lastTime = System.currentTimeMillis();
         final Callback<Comments> callback = new Callback<Comments>() {
             @Override
@@ -189,7 +190,7 @@ public class ZhihuNewsModel {
 
             @Override
             public void onResponse(Comments response, int id) {
-                listener.onLoadShortCommentsSuccess(response);
+                listener.onLoadCommentsSuccess(response,API.SHORT_COMMENT_TAG);
             }
         };
         OkHttpUtils.get().url(String.format(API.STORY_SHORT_COMMENTS,story_id)).tag(API.TAG_ZHIHU).build().execute(callback);

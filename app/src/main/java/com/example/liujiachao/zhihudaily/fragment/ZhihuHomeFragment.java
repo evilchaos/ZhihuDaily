@@ -84,6 +84,7 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
+
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     OnListScrolled();
                 }
@@ -99,16 +100,12 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
                     ((OnSetTitleListener)(getActivity())).onSetTitle("homepage");
                     return;
                 }
-
                 NewsItem curItem = zhihuListAdapter.getData(firstVisiableItem);
-                NewsItem preItem = zhihuListAdapter.getData(firstVisiableItem - 1);
                 NewsItem nextItem = zhihuListAdapter.getData(firstVisiableItem + 1);
-
-                if (preItem == null || curItem.getDate() != preItem.getDate() || curItem.getDate() != nextItem.getDate()) {
-                    //改变标题
+                if (curItem.getType() == ZhihuListAdapter.TYPE_DATE || (curItem.getType() == ZhihuListAdapter.TYPE_ITEM &&
+                        nextItem.getType() == ZhihuListAdapter.TYPE_DATE)) {
                     ((OnSetTitleListener)(getActivity())).onSetTitle(curItem.getDate());
                 }
-
             }
         });
 
@@ -123,6 +120,9 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
         List<NewsItem> list = new ArrayList<>();
         NewsItem newsItem = new NewsItem();
         String date = zhihuJson.getDate();
+        newsItem.setDate(date);
+        newsItem.setType(ZhihuListAdapter.TYPE_DATE);
+        list.add(newsItem);
 
         List<ZhihuItemInfo> stories = zhihuJson.getStories();
         for(ZhihuItemInfo info : stories) {
@@ -131,8 +131,8 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
             tmp.setTitle(info.getTitle());
             tmp.setId(info.getId());
             tmp.setImage(info.getImages().get(0).getVal());
+            tmp.setType(ZhihuListAdapter.TYPE_ITEM);
             list.add(tmp);
-
         }
         return list;
     }

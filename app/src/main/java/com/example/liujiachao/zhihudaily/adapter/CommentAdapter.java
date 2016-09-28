@@ -28,6 +28,7 @@ import com.example.liujiachao.zhihudaily.entity.Reply;
 import com.example.liujiachao.zhihudaily.utils.Dater;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.Inflater;
 
@@ -36,13 +37,12 @@ import java.util.zip.Inflater;
  */
 public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private List<Comment> comments;
+    private List<Comment> comments = new ArrayList<>();
     private Context context;
     private boolean hasGetLineCount = false;
     private boolean hasMore = false;
 
-    public CommentAdapter(List<Comment> comments) {
-        this.comments = comments;
+    public CommentAdapter() {
     }
 
     @Override
@@ -130,6 +130,12 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 notifyItemChanged(position);
             }
         });
+    }
+
+    public void updateData(List<Comment> commentList) {
+        comments.clear();
+        comments.addAll(commentList);
+        notifyDataSetChanged();
     }
 
     @Override

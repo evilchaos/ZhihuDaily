@@ -38,7 +38,7 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     StoryExtraPresenter presenter;
 
     private ArrayList<Integer> idList;
-    private int id;
+        private int id;
 
     private int long_comments;
     private int popularity;
@@ -88,7 +88,7 @@ public class ZhihuNewsDetailActivity extends AppCompatActivity implements OnPage
     //切换fragment时，对应的menu bar上的数据也要更新
     @Override
     public void onPageSelected(int position) {
-        id = idList.get(position);
+        id = position;
         presenter.loadStoryExtra(idList.get(position));
     }
 

@@ -40,6 +40,8 @@ public class API {
     public static final String THEME_CONTENT = "http://news-at.zhihu.com/api/4/theme/";
     public static final String STORY_LONG_COMMENTS = "http://news-at.zhihu.com/api/4/story/%1$d/long-comments";
     public static final String STORY_SHORT_COMMENTS = "http://news-at.zhihu.com/api/4/story/%1$d/short-comments";
+    public static final int SHORT_COMMENT_TAG = 0;
+    public static final int LONG_COMMENT_TAG = 1;
 
 // {
 // "comments": [

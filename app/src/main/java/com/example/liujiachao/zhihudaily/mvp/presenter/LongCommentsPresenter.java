@@ -1,19 +1,21 @@
 package com.example.liujiachao.zhihudaily.mvp.presenter;
 
 import com.example.liujiachao.zhihudaily.entity.Comments;
+import com.example.liujiachao.zhihudaily.listener.OnLoadCommentsListener;
 import com.example.liujiachao.zhihudaily.listener.OnLoadLongCommentsListener;
 import com.example.liujiachao.zhihudaily.mvp.model.ZhihuNewsModel;
+import com.example.liujiachao.zhihudaily.mvp.view.CommentsView;
 import com.example.liujiachao.zhihudaily.mvp.view.LongCommentsView;
 
 /**
  * Created by liujiachao on 2016/9/12.
  */
-public class LongCommentsPresenter implements OnLoadLongCommentsListener {
-    private LongCommentsView longCommentsView;
+public class LongCommentsPresenter implements OnLoadCommentsListener {
+    private CommentsView commentsView;
     private ZhihuNewsModel zhihuNewsModel;
 
-    public LongCommentsPresenter(LongCommentsView longCommentsView) {
-        this.longCommentsView = longCommentsView;
+    public LongCommentsPresenter(CommentsView commentsView) {
+        this.commentsView = commentsView;
         zhihuNewsModel = new ZhihuNewsModel();
     }
 
@@ -22,7 +24,7 @@ public class LongCommentsPresenter implements OnLoadLongCommentsListener {
     }
 
     @Override
-    public void onLoadLongCommentsSuccess(Comments response) {
-        longCommentsView.showLongComments(response);
+    public void onLoadCommentsSuccess(Comments response,int comment_type) {
+        commentsView.showComments(response,comment_type);
     }
 }
