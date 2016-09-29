@@ -37,7 +37,7 @@
                 android:layout_height="1dp"
                 android:background="@color/text_gray" />
 
-            <android.support.v7.widget.RecyclerView
+            <com.example.liujiachao.zhihudaily.widgets.MyListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rv_long_comment"
@@ -57,17 +57,12 @@
                 android:text="5条短评"
                 />
 
-            <android.support.v7.widget.RecyclerView
+            <com.example.liujiachao.zhihudaily.widgets.MyListView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/rv_short_comment" />
 
         </LinearLayout>
     </ScrollView>
-
-
-
-
-
 
 </LinearLayout>
