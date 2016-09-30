@@ -10,18 +10,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.adapter.CommentAdapter;
+import com.example.liujiachao.zhihudaily.entity.Comment;
 import com.example.liujiachao.zhihudaily.entity.Comments;
 import com.example.liujiachao.zhihudaily.mvp.presenter.LongCommentsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ShortCommentsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.CommentsView;
 import com.example.liujiachao.zhihudaily.utils.API;
 import com.example.liujiachao.zhihudaily.widgets.MyListView;
+
+import java.util.ArrayList;
 
 /**
  * Created by liujiachao on 2016/9/12.
@@ -76,9 +80,11 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                                 getResources().getDrawable(R.drawable.comment_icon_expand), null);
                         // 主线程需要使用子线程初始化的变量，如何保证在主线程使用该变量时，该变量已经被子线程初始化
                         shortCommentsPresenter.loadShortComments(story_id);
-                    } else {
+                    } else if (shortCommentAdapter.getCount() > 0){
                         isExpandable = false;
-                        sCommentListView.setVisibility(View.GONE);
+                        //sCommentListView.setVisibility(View.GONE);
+                        shortCommentAdapter = new CommentAdapter(CommentActivity.this,new ArrayList<Comment>());
+                        sCommentListView.setAdapter(shortCommentAdapter);
                         scrollView.smoothScrollTo(0,0);
                     }
 
@@ -137,7 +143,7 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
         sCommentListView = (MyListView)findViewById(R.id.rv_short_comment);
         longCommentNum = (TextView)findViewById(R.id.tv_long_comment_num);
         shortCommentNum = (TextView)findViewById(R.id.tv_short_comment_num);
-        //scrollView = (ScrollView)findViewById(R.id.scroll_view);
+        scrollView = (ScrollView)findViewById(R.id.scroll_view);
 
     }
 
@@ -153,5 +159,14 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
         bundle.putSerializable("comments",comments);
         msg.setData(bundle);
         mCommentHandler.sendMessage(msg);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

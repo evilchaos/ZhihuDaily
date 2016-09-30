@@ -60,7 +60,6 @@
             android:maxLines="2"
             android:lineSpacingExtra="3dp"
             android:textColor="@color/text_gray"
-            android:ellipsize="end"
             />
 
         <RelativeLayout

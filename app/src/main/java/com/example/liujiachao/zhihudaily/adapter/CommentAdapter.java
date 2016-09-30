@@ -40,6 +40,9 @@ public class CommentAdapter extends BaseAdapter {
 
     private Context context;
     private List<Comment> comments = new ArrayList<>();
+    private boolean hasGetLineCount = false;
+    private boolean hasMore = false;
+
     public CommentAdapter(Context context,List<Comment> comments) {
         this.context = context;
         this.comments = comments;
@@ -60,9 +63,10 @@ public class CommentAdapter extends BaseAdapter {
         return position;
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+        final ViewHolder viewHolder;
         if (convertView == null ) {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.comment_content_item,null);
@@ -80,10 +84,86 @@ public class CommentAdapter extends BaseAdapter {
             viewHolder = (ViewHolder)convertView.getTag();
         }
 
+        final Comment comment = comments.get(position);
+        viewHolder.nickname.setText(comment.getAuthor());
+        viewHolder.pubTime.setText(Dater.parseTime(comment.getTime()));
+        Glide.with(context).load(comment.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL)
+                .crossFade().into(viewHolder.ivAvatar);
+        if (comment.isVoted()) {
+            viewHolder.vote.setCompoundDrawablesRelativeWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.comment_voted),null,null,null);
+        } else {
+            viewHolder.vote.setCompoundDrawablesRelativeWithIntrinsicBounds(context.getResources().getDrawable(R.drawable.comment_vote),null,null,null);
+        }
 
+        String vote_num =  comment.getLikes() > 1000 ? new DecimalFormat("#.0")
+                .format(((double)comment.getLikes())/1000) + "K" : comment.getLikes() + "";
+        viewHolder.vote.setText(vote_num);
+        viewHolder.commentContent.setText(comment.getContent());
 
+        Reply reply = comment.getReply_to();
+        if (reply != null) {
+            if (TextUtils.isEmpty(reply.getAuthor()) || TextUtils.isEmpty(reply.getContent())) {
+                viewHolder.replyContent.setText("抱歉，原点评已被作者删除");
+                viewHolder.replyContent.setTextColor(context.getResources().getColor(R.color.text_gray));
+                viewHolder.replyContent.setBackgroundColor(context.getResources().getColor(R.color.background));
+            } else {
+                SpannableStringBuilder ssBuilder = new SpannableStringBuilder("//" + reply.getAuthor() + ": " + reply.getContent());
+                ssBuilder.setSpan(new StyleSpan(Typeface.BOLD),0,reply.getAuthor().length() + 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                ssBuilder.setSpan(new ForegroundColorSpan(Color.BLACK),0,reply.getAuthor().length() + 2,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                ssBuilder.setSpan(new ForegroundColorSpan(context.getResources().getColor(R.color.text_gray))
+                        ,reply.getAuthor().length() + 3,ssBuilder.length() - 1
+                        ,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+                viewHolder.replyContent.setText(ssBuilder);
 
-        return null;
+                viewHolder.replyContent.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                    @Override
+                    public boolean onPreDraw() {
+                        if (!hasGetLineCount) {
+                            TextView tv = viewHolder.replyContent;
+                            int lin_num = tv.getLineCount();
+                            hasMore = (lin_num > 2) ;
+                            hasGetLineCount = true;
+                        }
+                        viewHolder.expand.setVisibility(hasMore ?View.VISIBLE:View.GONE);
+                        return true;
+                    }
+                });
+
+                if (hasMore) {
+                    viewHolder.expand.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((TextView)v).getText().toString().equals("展开")) {
+                                viewHolder.expand.setText("收起");
+                                viewHolder.replyContent.setMaxLines(Integer.MAX_VALUE);
+                            } else if (((TextView)v).getText().toString().equals("收起")) {
+                                viewHolder.expand.setText("展开");
+                                viewHolder.replyContent.setMaxLines(2);
+                            }
+
+                        }
+                    });
+                }
+            }
+        } else {
+            viewHolder.replyContent.setVisibility(View.GONE);
+        }
+
+//        viewHolder.vote.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!(comment.isVoted())) {
+//                    comment.setVoted(true);
+//                    comment.setLikes(comment.getLikes() + 1);
+//                } else {
+//                    comment.setLikes(comment.getLikes() - 1);
+//                    comment.setVoted(false);
+//                }
+//                notifyItemChanged(position);
+//            }
+//        });
+
+        return convertView;
     }
 
 
