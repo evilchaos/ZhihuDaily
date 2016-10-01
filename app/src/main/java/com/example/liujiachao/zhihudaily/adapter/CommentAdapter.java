@@ -38,6 +38,7 @@ import java.util.zip.Inflater;
  */
 public class CommentAdapter extends BaseAdapter {
 
+    private final static int maxDescripLine = 2;
     private Context context;
     private List<Comment> comments = new ArrayList<>();
     private boolean hasGetLineCount = false;
@@ -115,35 +116,29 @@ public class CommentAdapter extends BaseAdapter {
                         ,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
                 viewHolder.replyContent.setText(ssBuilder);
 
-                viewHolder.replyContent.getViewTreeObserver().addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                viewHolder.replyContent.setHeight(viewHolder.replyContent.getLineHeight() * maxDescripLine);
+                viewHolder.replyContent.post(new Runnable() {
                     @Override
-                    public boolean onPreDraw() {
-                        if (!hasGetLineCount) {
-                            TextView tv = viewHolder.replyContent;
-                            int lin_num = tv.getLineCount();
-                            hasMore = (lin_num > 2) ;
-                            hasGetLineCount = true;
-                        }
-                        viewHolder.expand.setVisibility(hasMore ?View.VISIBLE:View.GONE);
-                        return true;
+                    public void run() {
+                        viewHolder.expand.setVisibility(viewHolder.replyContent.getLineCount() > maxDescripLine ? View.VISIBLE:View.GONE);
+                        hasMore = true;
                     }
                 });
 
-                if (hasMore) {
                     viewHolder.expand.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             if (((TextView)v).getText().toString().equals("展开")) {
                                 viewHolder.expand.setText("收起");
-                                viewHolder.replyContent.setMaxLines(Integer.MAX_VALUE);
+                                viewHolder.replyContent.setHeight(viewHolder.replyContent.getLineHeight() * viewHolder.replyContent.getLineCount());
                             } else if (((TextView)v).getText().toString().equals("收起")) {
                                 viewHolder.expand.setText("展开");
-                                viewHolder.replyContent.setMaxLines(2);
+                                viewHolder.replyContent.setHeight(viewHolder.replyContent.getLineHeight() * 2);
                             }
 
                         }
                     });
-                }
+
             }
         } else {
             viewHolder.replyContent.setVisibility(View.GONE);

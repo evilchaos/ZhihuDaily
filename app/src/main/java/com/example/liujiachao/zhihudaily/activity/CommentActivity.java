@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -23,6 +24,7 @@ import com.example.liujiachao.zhihudaily.mvp.presenter.LongCommentsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ShortCommentsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.CommentsView;
 import com.example.liujiachao.zhihudaily.utils.API;
+import com.example.liujiachao.zhihudaily.utils.UIHelper;
 import com.example.liujiachao.zhihudaily.widgets.MyListView;
 
 import java.util.ArrayList;
@@ -85,6 +87,7 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                         //sCommentListView.setVisibility(View.GONE);
                         shortCommentAdapter = new CommentAdapter(CommentActivity.this,new ArrayList<Comment>());
                         sCommentListView.setAdapter(shortCommentAdapter);
+                        //UIHelper.setListViewHeightBasedOnChildren(sCommentListView);
                         scrollView.smoothScrollTo(0,0);
                     }
 
@@ -105,6 +108,7 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                         if (long_comments != null) {
                             longCommentAdapter = new CommentAdapter(CommentActivity.this,long_comments.getComments());
                             lCommentListView.setAdapter(longCommentAdapter);
+                            //UIHelper.setListViewHeightBasedOnChildren(lCommentListView);
                         }
                         break;
                     case SHORT_COMM_MSG:
@@ -112,6 +116,7 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                         if (short_comments != null) {
                             shortCommentAdapter = new CommentAdapter(CommentActivity.this,short_comments.getComments());
                             sCommentListView.setAdapter(shortCommentAdapter);
+                            //UIHelper.setListViewHeightBasedOnChildren(sCommentListView);
                             scrollView.smoothScrollBy(0, (int) shortCommentNum.getY());
                         }
                         break;
