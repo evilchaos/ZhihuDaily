@@ -87,7 +87,7 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                         //sCommentListView.setVisibility(View.GONE);
                         shortCommentAdapter = new CommentAdapter(CommentActivity.this,new ArrayList<Comment>());
                         sCommentListView.setAdapter(shortCommentAdapter);
-                        //UIHelper.setListViewHeightBasedOnChildren(sCommentListView);
+                        UIHelper.setListViewHeightBasedOnChildren(sCommentListView);
                         scrollView.smoothScrollTo(0,0);
                     }
 
@@ -108,7 +108,7 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                         if (long_comments != null) {
                             longCommentAdapter = new CommentAdapter(CommentActivity.this,long_comments.getComments());
                             lCommentListView.setAdapter(longCommentAdapter);
-                            //UIHelper.setListViewHeightBasedOnChildren(lCommentListView);
+                            UIHelper.setListViewHeightBasedOnChildren(lCommentListView);
                         }
                         break;
                     case SHORT_COMM_MSG:
@@ -116,7 +116,7 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                         if (short_comments != null) {
                             shortCommentAdapter = new CommentAdapter(CommentActivity.this,short_comments.getComments());
                             sCommentListView.setAdapter(shortCommentAdapter);
-                            //UIHelper.setListViewHeightBasedOnChildren(sCommentListView);
+                            UIHelper.setListViewHeightBasedOnChildren(sCommentListView);
                             scrollView.smoothScrollBy(0, (int) shortCommentNum.getY());
                         }
                         break;
