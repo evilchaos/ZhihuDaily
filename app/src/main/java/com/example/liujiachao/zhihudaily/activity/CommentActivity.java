@@ -1,7 +1,10 @@
 package com.example.liujiachao.zhihudaily.activity;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,24 +13,42 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
+import android.text.TextUtils;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.liujiachao.zhihudaily.R;
 import com.example.liujiachao.zhihudaily.adapter.CommentAdapter;
 import com.example.liujiachao.zhihudaily.entity.Comment;
 import com.example.liujiachao.zhihudaily.entity.Comments;
+import com.example.liujiachao.zhihudaily.entity.Reply;
 import com.example.liujiachao.zhihudaily.mvp.presenter.LongCommentsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.presenter.ShortCommentsPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.CommentsView;
 import com.example.liujiachao.zhihudaily.utils.API;
+import com.example.liujiachao.zhihudaily.utils.Dater;
 import com.example.liujiachao.zhihudaily.utils.UIHelper;
 import com.example.liujiachao.zhihudaily.widgets.MyListView;
+import com.example.liujiachao.zhihudaily.widgets.NestedListView;
+import com.example.liujiachao.zhihudaily.widgets.VerticalScrollView;
 
+import org.w3c.dom.Text;
+
+import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by liujiachao on 2016/9/12.
@@ -36,11 +57,12 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
 
     public final static int LONG_COMM_MSG = 0;
     public final static int SHORT_COMM_MSG = 1;
-    private MyListView lCommentListView;
-    private MyListView sCommentListView;
+    private final static int maxDescripLine = 2;
     private ScrollView scrollView;
     private TextView longCommentNum;
     private TextView shortCommentNum;
+    private LinearLayout longCommLayout;
+    private LinearLayout shortCommLayout;
     private Toolbar toolbar;
     private boolean isExpandable = false;
 
@@ -48,10 +70,8 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
     private int long_comments_num;
     private int short_comments_num;
     private int total_comments;
-    private CommentAdapter longCommentAdapter ;
-    private CommentAdapter shortCommentAdapter;
-
     private Handler mCommentHandler;
+
 
     private ShortCommentsPresenter shortCommentsPresenter;
 
@@ -60,6 +80,7 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
         super.onCreate(savedInstanceState);
 
         initViews();
+
         Intent intent = getIntent();
         story_id = intent.getIntExtra("story_id", 0);
         initToolbar();
@@ -80,14 +101,10 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                         isExpandable = true;
                         shortCommentNum.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null,
                                 getResources().getDrawable(R.drawable.comment_icon_expand), null);
-                        // 主线程需要使用子线程初始化的变量，如何保证在主线程使用该变量时，该变量已经被子线程初始化
                         shortCommentsPresenter.loadShortComments(story_id);
-                    } else if (shortCommentAdapter.getCount() > 0){
+                    } else if (short_comments_num > 0){
                         isExpandable = false;
-                        //sCommentListView.setVisibility(View.GONE);
-                        shortCommentAdapter = new CommentAdapter(CommentActivity.this,new ArrayList<Comment>());
-                        sCommentListView.setAdapter(shortCommentAdapter);
-                        UIHelper.setListViewHeightBasedOnChildren(sCommentListView);
+                        shortCommLayout.removeAllViews();
                         scrollView.smoothScrollTo(0,0);
                     }
 
@@ -105,18 +122,16 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                     case LONG_COMM_MSG:
                         //数据处理逻辑
                         Comments long_comments = (Comments)msg.getData().getSerializable("comments");
-                        if (long_comments != null) {
-                            longCommentAdapter = new CommentAdapter(CommentActivity.this,long_comments.getComments());
-                            lCommentListView.setAdapter(longCommentAdapter);
-                            UIHelper.setListViewHeightBasedOnChildren(lCommentListView);
+                        List<Comment> longCommList = long_comments.getComments();
+                        if (longCommList.size() > 0 ) {
+                            setCommentView(longCommList,longCommLayout);
                         }
                         break;
                     case SHORT_COMM_MSG:
                         Comments short_comments = (Comments)msg.getData().getSerializable("comments");
-                        if (short_comments != null) {
-                            shortCommentAdapter = new CommentAdapter(CommentActivity.this,short_comments.getComments());
-                            sCommentListView.setAdapter(shortCommentAdapter);
-                            UIHelper.setListViewHeightBasedOnChildren(sCommentListView);
+                        List<Comment> shortCommList = short_comments.getComments();
+                        if (shortCommList.size() > 0) {
+                            setCommentView(shortCommList,shortCommLayout);
                             scrollView.smoothScrollBy(0, (int) shortCommentNum.getY());
                         }
                         break;
@@ -124,6 +139,89 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
                 super.handleMessage(msg);
             }
         };
+    }
+
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
+    public void setCommentView(List<Comment> commentList,LinearLayout commLinearLayout) {
+
+        for (Comment comment : commentList) {
+            View commentView = LayoutInflater.from(CommentActivity.this).inflate(R.layout.comment_content_item,null);
+            ImageView ivAvatar = (ImageView)commentView.findViewById(R.id.iv_comment_avatar);
+            TextView nickname = (TextView)commentView.findViewById(R.id.tv_comment_nickname);
+            TextView vote = (TextView)commentView.findViewById(R.id.tv_comment_vote);
+            TextView commentContent = (TextView)commentView.findViewById(R.id.tv_comment_content);
+            final TextView replyContent = (TextView)commentView.findViewById(R.id.tv_reply_comment_content);
+            TextView pubTime = (TextView)commentView.findViewById(R.id.tv_comment_time);
+            final TextView expand = (TextView)commentView.findViewById(R.id.tv_comment_expand_or_pack);
+
+            nickname.setText(comment.getAuthor());
+            pubTime.setText(Dater.parseTime(comment.getTime()));
+            Glide.with(CommentActivity.this).load(comment.getAvatar()).diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .crossFade().into(ivAvatar);
+
+            if (comment.isVoted()) {
+                vote.setCompoundDrawablesRelativeWithIntrinsicBounds(CommentActivity.this.getResources().getDrawable(R.drawable.comment_voted),null,null,null);
+            } else {
+                vote.setCompoundDrawablesRelativeWithIntrinsicBounds(CommentActivity.this.getResources().getDrawable(R.drawable.comment_vote),null,null,null);
+            }
+
+            String vote_num =  comment.getLikes() > 1000 ? new DecimalFormat("#.0")
+                    .format(((double)comment.getLikes())/1000) + "K" : comment.getLikes() + "";
+            vote.setText(vote_num);
+            commentContent.setText(comment.getContent());
+
+            Reply reply = comment.getReply_to();
+            if (reply != null) {
+                if (TextUtils.isEmpty(reply.getAuthor()) || TextUtils.isEmpty(reply.getContent())) {
+                    replyContent.setText("抱歉，原点评已被作者删除");
+                    replyContent.setTextColor(CommentActivity.this.getResources().getColor(R.color.text_gray));
+                    replyContent.setBackgroundColor(CommentActivity.this.getResources().getColor(R.color.background));
+                } else {
+                    SpannableStringBuilder ssBuilder = makeSpStringBuilder(reply);
+                    replyContent.setText(ssBuilder);
+                    replyContent.setHeight(replyContent.getLineHeight() * maxDescripLine);
+                    replyContent.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            expand.setVisibility(replyContent.getLineCount() > maxDescripLine ? View.VISIBLE:View.GONE);
+                        }
+                    });
+
+                    expand.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (((TextView)v).getText().toString().equals("展开")) {
+                                expand.setText("收起");
+                                replyContent.setHeight(replyContent.getLineHeight() * replyContent.getLineCount());
+                            } else if (((TextView)v).getText().toString().equals("收起")) {
+                                expand.setText("展开");
+                                replyContent.setHeight(replyContent.getLineHeight() * 2);
+                            }
+
+                        }
+                    });
+
+                }
+            }
+            else {
+                replyContent.setVisibility(View.GONE);
+            }
+
+            commLinearLayout.addView(commentView);
+        }
+
+    }
+
+    private SpannableStringBuilder makeSpStringBuilder(Reply reply) {
+        SpannableStringBuilder ssBuilder = new SpannableStringBuilder("//" + reply.getAuthor() + ": " + reply.getContent());
+        ssBuilder.setSpan(new StyleSpan(Typeface.BOLD),0,reply.getAuthor().length() + 2, Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        ssBuilder.setSpan(new ForegroundColorSpan(Color.BLACK),0,reply.getAuthor().length() + 2,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        ssBuilder.setSpan(new ForegroundColorSpan(CommentActivity.this.getResources().getColor(R.color.text_gray))
+                ,reply.getAuthor().length() + 3,ssBuilder.length() - 1
+                ,Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+
+        return ssBuilder;
     }
 
     private void setCommentTextView(Intent intent) {
@@ -144,11 +242,12 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
     private void initViews() {
         setContentView(R.layout.comment_activity);
         toolbar = (Toolbar)findViewById(R.id.comment_toolbar);
-        lCommentListView = (MyListView)findViewById(R.id.rv_long_comment);
-        sCommentListView = (MyListView)findViewById(R.id.rv_short_comment);
         longCommentNum = (TextView)findViewById(R.id.tv_long_comment_num);
         shortCommentNum = (TextView)findViewById(R.id.tv_short_comment_num);
         scrollView = (ScrollView)findViewById(R.id.scroll_view);
+        longCommLayout = (LinearLayout)findViewById(R.id.long_comment_list);
+        shortCommLayout = (LinearLayout)findViewById(R.id.short_comment_list);
+
 
     }
 
@@ -174,4 +273,5 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
         }
         return super.onOptionsItemSelected(item);
     }
+
 }

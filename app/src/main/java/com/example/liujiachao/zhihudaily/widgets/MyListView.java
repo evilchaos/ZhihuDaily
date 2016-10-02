@@ -2,6 +2,7 @@ package com.example.liujiachao.zhihudaily.widgets;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.ListView;
 
 /**

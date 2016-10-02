@@ -72,13 +72,13 @@ public class CommentAdapter extends BaseAdapter {
             viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(context).inflate(R.layout.comment_content_item,null);
 
-            viewHolder.ivAvatar = (ImageView)convertView.findViewById(R.id.iv_comment_avatar);
-            viewHolder.nickname = (TextView)convertView.findViewById(R.id.tv_comment_nickname);
-            viewHolder.vote = (TextView)convertView.findViewById(R.id.tv_comment_vote);
-            viewHolder.commentContent = (TextView)convertView.findViewById(R.id.tv_comment_content);
-            viewHolder.replyContent = (TextView)convertView.findViewById(R.id.tv_reply_comment_content);
-            viewHolder.pubTime = (TextView)convertView.findViewById(R.id.tv_comment_time);
-            viewHolder.expand = (TextView)convertView.findViewById(R.id.tv_comment_expand_or_pack);
+                viewHolder.ivAvatar = (ImageView)convertView.findViewById(R.id.iv_comment_avatar);
+                viewHolder.nickname = (TextView)convertView.findViewById(R.id.tv_comment_nickname);
+                viewHolder.vote = (TextView)convertView.findViewById(R.id.tv_comment_vote);
+                viewHolder.commentContent = (TextView)convertView.findViewById(R.id.tv_comment_content);
+                viewHolder.replyContent = (TextView)convertView.findViewById(R.id.tv_reply_comment_content);
+                viewHolder.pubTime = (TextView)convertView.findViewById(R.id.tv_comment_time);
+                viewHolder.expand = (TextView)convertView.findViewById(R.id.tv_comment_expand_or_pack);
 
             convertView.setTag(viewHolder);
         } else {
@@ -140,7 +140,8 @@ public class CommentAdapter extends BaseAdapter {
                     });
 
             }
-        } else {
+        }
+        else {
             viewHolder.replyContent.setVisibility(View.GONE);
         }
 

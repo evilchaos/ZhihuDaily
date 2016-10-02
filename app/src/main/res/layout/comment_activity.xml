@@ -4,6 +4,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
+
     <android.support.v7.widget.Toolbar
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
@@ -31,19 +32,20 @@
                 android:padding="10dp"
                 android:text="5条长评"
                 />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id = "@+id/long_comment_list"
+                android:orientation="vertical"
+                >
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/text_gray" />
+                android:background="@color/divider_gray" />
 
-            <com.example.liujiachao.zhihudaily.widgets.MyListView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@color/divider_gray"
-                android:id="@+id/rv_long_comment"
-                android:dividerHeight="1dp"
-                />
 
             <View
                 android:layout_width="match_parent"
@@ -59,13 +61,20 @@
                 android:text="5条短评"
                 />
 
-            <com.example.liujiachao.zhihudaily.widgets.MyListView
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/rv_short_comment"
-                android:divider="@color/divider_gray"
-                android:dividerHeight="1dp"
-                />
+                android:id = "@+id/short_comment_list"
+                android:orientation="vertical"
+                >
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/divider_gray" />
+
 
         </LinearLayout>
     </ScrollView>
