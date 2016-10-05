@@ -207,6 +207,18 @@ public class CommentActivity extends AppCompatActivity implements CommentsView {
             else {
                 replyContent.setVisibility(View.GONE);
             }
+//            vote.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (!(comment.isVoted())) {
+//                    comment.setVoted(true);
+//                    comment.setLikes(comment.getLikes() + 1);
+//                } else {
+//                    comment.setLikes(comment.getLikes() - 1);
+//                    comment.setVoted(false);
+//                }
+//            }
+//        });
 
             commLinearLayout.addView(commentView);
         }

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.liujiachao.zhihudaily.activity.EditorDetailActivity;
+import com.example.liujiachao.zhihudaily.activity.ZhihuActivity;
 import com.example.liujiachao.zhihudaily.activity.ZhihuNewsDetailActivity;
 import com.example.liujiachao.zhihudaily.entity.Edit;
 import com.example.liujiachao.zhihudaily.entity.MyTheme;
@@ -49,6 +50,8 @@ public class ThemeFragment extends Fragment implements ThemeContentView ,OnShowT
 
         context = getActivity();
         View themeFragmentView = inflater.inflate(R.layout.navi_fragment,null);
+
+        ZhihuActivity.setThemeTag(true);
         //获取主题列表名
         String name = getArguments().getString("name");
         themeListAdapter = new ThemeListAdapter(this,name);

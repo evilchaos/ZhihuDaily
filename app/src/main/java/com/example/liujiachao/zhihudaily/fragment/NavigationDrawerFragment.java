@@ -47,10 +47,8 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private ArrayList<MyTheme> themeDatas;
-    private LinearLayout mTvHome;
     private FragmentActivity mActivity;
     RecyclerView recyclerView;
-    private boolean isTheme = false;
 
     @Nullable
     @Override
@@ -93,9 +91,15 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
                         FragmentTransaction ft = mActivity.getSupportFragmentManager().beginTransaction();
                         ft.replace(R.id.content_fragment, new ZhihuHomeFragment());
                         ft.commit();
-                        mDrawerLayout.setBackgroundColor(Color.parseColor("#f0f0f0"));
+                        view.findViewById(R.id.tv_home).setBackgroundColor(Color.parseColor("#f0f0f0"));
                         mDrawerLayout.closeDrawers();
                         ((AppCompatActivity) mActivity).getSupportActionBar().setTitle("首页");
+
+                        for (MyTheme myTheme : themeDatas) {
+                            myTheme.setSelected(false);
+                        }
+                        adapter.setHomeSelected(true);
+                        adapter.updateData(themeDatas);
                         break;
                     default:
                         break;
@@ -179,24 +183,17 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(theme.getName());
 
         mDrawerLayout.closeDrawers();
-        //setHomeBackground();
-
         themeDatas.get(position - 1).setSelected(true);
-        isTheme = true;
         for (MyTheme myTheme : themeDatas) {
             boolean tmp = myTheme == themeDatas.get(position - 1);
             myTheme.setSelected(tmp);
         }
         //invalidateOptionsMenu();//菜单项已经改变，重新创造菜单
+        adapter.setHomeSelected(false);
         adapter.updateData(themeDatas);
+
     }
 
-//    private void setHomeBackground() {
-//        RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
-//        mTvHome = (LinearLayout) layoutManager.findViewByPosition(0);
-//        TextView homePage = (TextView)mTvHome.findViewById(R.id.tv_home);
-//        homePage.setBackgroundColor(Color.WHITE);
-//    }
 
     @Override
     public void PassThemeDataToActivity(ThemeData themeData) {

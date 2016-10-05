@@ -29,6 +29,7 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     final static int UNSELECTED_WHITE = Color.WHITE;
     private OnItemClickListener mOnItemClickListener;
     private MenuCallback mCallback;
+    private  boolean isHomeSelected = true;
 
 
     public RecMenuAdapter(MenuCallback mCallback) {
@@ -73,6 +74,12 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 }
             });
 
+            if (!isHomeSelected) {
+                headerViewHolder.homeView.setBackgroundColor(Color.parseColor("#ffffff"));
+            } else {
+                headerViewHolder.homeView.setBackgroundColor(SELECTED_GRAY);
+            }
+
             headerViewHolder.homeView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -111,9 +118,6 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public void updateData(List<MyTheme> data) {
-
-       //更改数据源，不能直接赋值
-       //this.myThemeList = myThemeList;
         myThemeList.clear();
         myThemeList.addAll(data);
         notifyDataSetChanged();
@@ -136,9 +140,6 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
 
     public class HeaderViewHolder extends RecyclerView.ViewHolder {
-
-        //public ImageView imageView;
-        //public TextView loginView;
         public TextView collectView;
         public TextView downloadView;
         public TextView homeView;
@@ -147,8 +148,6 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
         public HeaderViewHolder(View view) {
             super(view);
-            //imageView = (ImageView)view.findViewById(R.id.iv_avatar);
-//            loginView = (TextView)view.findViewById(R.id.tv_login);
             collectView = (TextView)view.findViewById(R.id.tv_collect);
             loginLayoutView = (LinearLayout) view.findViewById(R.id.linear_login);
             downloadView = (TextView)view.findViewById(R.id.tv_download);
@@ -172,6 +171,10 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     public void setOnItemClickListener(OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    public void setHomeSelected(boolean isHomeSelected) {
+        this.isHomeSelected = isHomeSelected;
     }
 
 

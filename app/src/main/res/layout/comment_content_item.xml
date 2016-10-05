@@ -49,6 +49,7 @@
             android:id = "@+id/tv_comment_content"
             android:lineSpacingExtra="3dp"
             android:layout_marginBottom="3dp"
+            android:textSize="16sp"
             android:textColor="@android:color/black"
             />
 
@@ -59,6 +60,7 @@
             android:layout_marginBottom="10dp"
             android:maxLines="2"
             android:lineSpacingExtra="3dp"
+            android:textSize="16sp"
             android:textColor="@color/text_gray"
             />
 

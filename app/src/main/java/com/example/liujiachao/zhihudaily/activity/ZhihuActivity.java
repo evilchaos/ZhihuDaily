@@ -16,6 +16,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,7 +43,7 @@ import java.util.List;
 public class ZhihuActivity extends AppCompatActivity implements OnSetTitleListener {
 
     private DrawerLayout drawerLayout;
-    private boolean isTheme = false;
+    private static boolean themeTag = false;
     private Toolbar toolbar;
 
     @Override
@@ -73,7 +74,7 @@ public class ZhihuActivity extends AppCompatActivity implements OnSetTitleListen
 
     private void setUpDrawer() {
         NavigationDrawerFragment drawerFragment = (NavigationDrawerFragment)getSupportFragmentManager().findFragmentById(R.id.nav_drawer_fragment);
-        DrawerLayout drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
+        drawerLayout = (DrawerLayout)findViewById(R.id.drawer);
         drawerFragment.setUpDrawer(R.id.nav_drawer_fragment, drawerLayout, toolbar);
 
     }
@@ -82,7 +83,6 @@ public class ZhihuActivity extends AppCompatActivity implements OnSetTitleListen
         toolbar = (Toolbar)findViewById(R.id.common_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("首页");
-        toolbar.inflateMenu(R.menu.toolbar_action_menu);
     }
 
     @Override
@@ -99,27 +99,39 @@ public class ZhihuActivity extends AppCompatActivity implements OnSetTitleListen
         getSupportActionBar().setTitle(date);
     }
 
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
-//                drawerLayout.closeDrawers();
-//                return true;
-//            } else if (isTheme) {
-//                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//                fragmentTransaction.replace(R.id.content_fragment,new ZhihuHomeFragment());
-//                fragmentTransaction.commit();
-//                isTheme = false;
-//
+    //以下代码用来添加toolbar 上面的menu菜单，现把它注释掉，以后添加功能再用
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.toolbar_action_menu, menu);
+//        return super.onCreateOptionsMenu(menu);
+//    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (drawerLayout.isDrawerOpen(Gravity.LEFT)) {
+                drawerLayout.closeDrawers();
+                return true;
+            } else if (themeTag) {
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.content_fragment,new ZhihuHomeFragment());
+                fragmentTransaction.commit();
+                themeTag = false;
+                return true;
+
 //                for (MyTheme myTheme : myThemeList ) {
 //                    myTheme.setSelected(false);
 //                }
 //
 //                recMenuAdapter.notifyDataSetChanged();
-//            }
-//        }
-//
-//        return super.onKeyDown(keyCode, event);
-//    }
+            }
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public static void setThemeTag(boolean isTheme) {
+        themeTag = isTheme;
+    }
 
 }

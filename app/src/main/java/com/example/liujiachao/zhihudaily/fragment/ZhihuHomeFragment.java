@@ -60,6 +60,8 @@ public class ZhihuHomeFragment extends Fragment implements ZhihuNewsView,OnShowN
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         context = getActivity();
 
+        ZhihuActivity.setThemeTag(false);
+
         View contentFragmentView = inflater.inflate(R.layout.navi_fragment,null);
         swipeRefreshLayout = (SwipeRefreshLayout)contentFragmentView.findViewById(R.id.swipe_refresh);
         recyclerView = (RecyclerView) contentFragmentView.findViewById(R.id.recycler_view);
