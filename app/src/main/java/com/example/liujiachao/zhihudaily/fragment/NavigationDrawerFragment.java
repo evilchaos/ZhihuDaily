@@ -34,6 +34,9 @@ import com.example.liujiachao.zhihudaily.mvp.presenter.ThemeDataPresenter;
 import com.example.liujiachao.zhihudaily.mvp.view.ThemeDataView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Created by evilchaos on 16/9/18.
@@ -160,15 +163,38 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
 
     @Override
     public void onRedrawMenu(int position) {
-        themeDatas.get(position - 1).setSubscribed(true);
+        List<MyTheme> themeMenuData = adapter.getThemeMenuData();
+        themeMenuData.get(position - 1).setSubscribed(true);
         Toast.makeText(getActivity(), "无法真正订阅", Toast.LENGTH_SHORT).show();
-        adapter.notifyDataSetChanged();//mark一下，此处要改，数据集顺序可能改变
-
+        Collections.sort(themeMenuData, comparator);
+        adapter.notifyDataSetChanged();
     }
+
+    Comparator<MyTheme> comparator = new Comparator<MyTheme>() {
+        @Override
+        public int compare(MyTheme lhs, MyTheme rhs) {
+
+            if (lhs.isSubscribed() != rhs.isSubscribed()) {
+                if (lhs.isSubscribed() == true && rhs.isSubscribed() == false) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            } else if (lhs.getSerial_num() < rhs.getSerial_num()) {
+                return -1;
+            } else if (lhs.getSerial_num() > rhs.getSerial_num()) {
+                return 1;
+            }
+
+            return 0;
+        }
+    };
 
     @Override
     public void onHandleEvent(int position) {
-        Theme theme = themeDatas.get(position - 1).getTheme();
+
+        List<MyTheme> themeMenuData = adapter.getThemeMenuData();
+        Theme theme = themeMenuData.get(position - 1).getTheme();
         ThemeFragment themeFragment = new ThemeFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("theme_id", theme.getId());
@@ -183,14 +209,14 @@ public class NavigationDrawerFragment extends Fragment implements ThemeDataView,
         ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle(theme.getName());
 
         mDrawerLayout.closeDrawers();
-        themeDatas.get(position - 1).setSelected(true);
-        for (MyTheme myTheme : themeDatas) {
-            boolean tmp = myTheme == themeDatas.get(position - 1);
+        themeMenuData.get(position - 1).setSelected(true);
+        for (MyTheme myTheme : themeMenuData) {
+            boolean tmp = myTheme == themeMenuData.get(position - 1);
             myTheme.setSelected(tmp);
         }
         //invalidateOptionsMenu();//菜单项已经改变，重新创造菜单
         adapter.setHomeSelected(false);
-        adapter.updateData(themeDatas);
+        adapter.notifyDataSetChanged();
 
     }
 

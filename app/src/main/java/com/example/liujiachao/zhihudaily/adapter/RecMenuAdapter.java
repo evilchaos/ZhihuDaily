@@ -96,7 +96,7 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
             } else {
                 menuItemViewHolder.menuTextView.setBackgroundColor(UNSELECTED_WHITE);
             }
-            menuItemViewHolder.menuTextView.setSubscribed(myTheme.isSubscribed());
+            menuItemViewHolder.menuTextView.setSubs(myTheme.isSubscribed());
             menuItemViewHolder.menuTextView.setText(myTheme.getTheme().getName());
 
 
@@ -116,11 +116,14 @@ public class RecMenuAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
     }
 
-
     public void updateData(List<MyTheme> data) {
         myThemeList.clear();
         myThemeList.addAll(data);
         notifyDataSetChanged();
+    }
+
+    public List<MyTheme> getThemeMenuData() {
+        return  this.myThemeList;
     }
 
 

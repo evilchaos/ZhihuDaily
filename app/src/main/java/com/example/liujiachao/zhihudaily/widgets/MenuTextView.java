@@ -17,7 +17,7 @@ import com.example.liujiachao.zhihudaily.R;
 public class MenuTextView extends TextView {
 
     private Context context;
-    private boolean subscribed;
+    private boolean subscribed = false;
     private OnMenuHandleListener onMenuHandleListener;
 
     public MenuTextView(Context context) {
@@ -69,7 +69,7 @@ public class MenuTextView extends TextView {
                         onMenuHandleListener.onRedrawMenu();
                         Drawable drawable = context.getResources().getDrawable(R.drawable.menu_arrow);
                         setCompoundDrawablesWithIntrinsicBounds(null,null,drawable,null);
-                        setSubscribed(true);
+                        //setSubscribed(true);
                     } else {
                         onMenuHandleListener.onHandleEvent();
                     }
@@ -80,8 +80,11 @@ public class MenuTextView extends TextView {
         return true;
     }
 
-    public void setSubscribed(boolean subscribed) {
+    public void setSubs(boolean subscribed) {
         this.subscribed = subscribed;
+        Drawable drawable = subscribed ? context.getResources().getDrawable(R.drawable.menu_arrow) :
+                context.getResources().getDrawable(R.drawable.menu_follow);
+        setCompoundDrawablesWithIntrinsicBounds(null, null, drawable, null);
     }
 
     public static int dp2px(Context context, float dpValue) {
